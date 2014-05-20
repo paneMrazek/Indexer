@@ -1,0 +1,5 @@
+main.java.indexer.server.daos
+main.java.indexer.shared.communication
+main.java.indexer.shared.communication.params
+main.java.indexer.shared.communication.results
+main.java.indexer.shared.models
