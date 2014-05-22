@@ -2,8 +2,6 @@ package main.java.indexer.server.daos;
 
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import main.java.indexer.shared.models.User;
 
 /**
@@ -12,10 +10,11 @@ import main.java.indexer.shared.models.User;
  *
  */
 public class UserDAO{
-	protected DataSource dataSource;
 	
-	public UserDAO(){
-		
+	private Database database;
+	
+	public UserDAO(Database database){
+		this.database = database;
 	}
 	
 	//CREATE

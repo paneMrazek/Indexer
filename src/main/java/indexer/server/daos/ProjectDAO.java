@@ -2,8 +2,6 @@ package main.java.indexer.server.daos;
 
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import main.java.indexer.shared.models.Project;
 
 /**
@@ -12,10 +10,11 @@ import main.java.indexer.shared.models.Project;
  *
  */
 public class ProjectDAO{
-protected DataSource dataSource;
+
+	private Database database;
 	
-	public ProjectDAO(){
-		
+	public ProjectDAO(Database database){
+		this.database = database;
 	}
 	
 	//CREATE

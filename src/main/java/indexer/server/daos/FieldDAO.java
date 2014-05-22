@@ -2,8 +2,6 @@ package main.java.indexer.server.daos;
 
 import java.util.Map;
 
-import javax.sql.DataSource;
-
 import main.java.indexer.shared.models.Field;
 import main.java.indexer.shared.models.Record;
 
@@ -14,10 +12,10 @@ import main.java.indexer.shared.models.Record;
  */
 public class FieldDAO{
 	
-protected DataSource dataSource;
+	private Database database;
 	
-	public FieldDAO(){
-		
+	public FieldDAO(Database database){
+		this.database = database;
 	}
 	
 	//CREATE

@@ -1,8 +1,6 @@
-package main.java.indexer.server.daos;
+ypackage main.java.indexer.server.daos;
 
 import java.util.List;
-
-import javax.sql.DataSource;
 
 import main.java.indexer.shared.models.Batch;
 import main.java.indexer.shared.models.Project;
@@ -14,10 +12,10 @@ import main.java.indexer.shared.models.Project;
  */
 public class BatchDAO{
 	
-protected DataSource dataSource;
+	private Database database;
 	
-	public BatchDAO(){
-		
+	public BatchDAO(Database database) {
+		this.database = database;
 	}
 	
 	//CREATE

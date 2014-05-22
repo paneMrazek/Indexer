@@ -2,8 +2,6 @@ package main.java.indexer.server.daos;
 
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import main.java.indexer.shared.models.Batch;
 import main.java.indexer.shared.models.Field;
 import main.java.indexer.shared.models.Record;
@@ -16,10 +14,11 @@ import main.java.indexer.shared.models.Record;
  *
  */
 public class RecordDAO{
-protected DataSource dataSource;
+
+	private Database database;
 	
-	public RecordDAO(){
-		
+	public RecordDAO(Database database){
+		this.database = database;
 	}
 	
 	//CREATE
