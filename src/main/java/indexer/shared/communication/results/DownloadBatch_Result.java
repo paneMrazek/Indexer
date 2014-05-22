@@ -2,6 +2,10 @@ package main.java.indexer.shared.communication.results;
 
 import main.java.indexer.shared.models.Batch;
 
+/**
+ * A class with the batch that is returned from downloadBatch.
+ *
+ */
 public class DownloadBatch_Result extends Result{
 	
 	private Batch batch;

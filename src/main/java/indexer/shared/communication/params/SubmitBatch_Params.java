@@ -2,6 +2,10 @@ package main.java.indexer.shared.communication.params;
 
 import java.util.List;
 
+/**
+ * A class with the username, password, batchId, and recordValues used to call submitBatch.
+ *
+ */
 public class SubmitBatch_Params extends Params{
 	
 	private int batchId;

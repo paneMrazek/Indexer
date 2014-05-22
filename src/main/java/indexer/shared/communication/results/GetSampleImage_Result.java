@@ -1,5 +1,9 @@
 package main.java.indexer.shared.communication.results;
 
+/**
+ * A class with the imageUrl that is returned from getSampleImage.
+ *
+ */
 public class GetSampleImage_Result extends Result{
 	
 	private String url;

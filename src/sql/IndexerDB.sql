@@ -12,6 +12,7 @@ CREATE TABLE Users(
 	LastName varchar(255) NOT NULL,
 	FirstName varchar(255) NOT NULL,
 	Email varchar(255),
+	CurrentBatch integer,
 	IndexedRecords integer DEFAULT 0
 );
 
@@ -38,7 +39,8 @@ CREATE TABLE Batches(
 	ID integer PRIMARY KEY AUTOINCREMENT,
 	ImageURL varchar(255),
 	ProjectID integer,
-	Complete boolean
+	Complete boolean,
+	AssignedUserID integer
 );
 
 CREATE TABLE Records(

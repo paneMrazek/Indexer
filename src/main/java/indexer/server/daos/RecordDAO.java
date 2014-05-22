@@ -25,9 +25,9 @@ protected DataSource dataSource;
 	//CREATE
 	
 	/**
-	 * Adds the given record in the database
-	 * @param record the record to be added to the database
-	 * @return The record that has been added to the database
+	 * Adds the given record in the database.
+	 * @param record the record to be added to the database.
+	 * @return the record that has been added to the database.
 	 */
 	public Record createRecord(Record record){
 		return null;
@@ -36,18 +36,18 @@ protected DataSource dataSource;
 	//READ
 	
 	/**
-	 * Reads in the record with the given recordId
-	 * @param recordId the id of the record being searched for
-	 * @return The record with the given recordId
+	 * Reads in the record with the given recordId.
+	 * @param recordId the id of the record being searched for.
+	 * @return the record with the given recordId.
 	 */
 	public Record readRecord(String recordId){
 		return null;
 	}
 	
 	/**
-	 * Returns all records from a given batch
-	 * @param batch the batch used to query the database
-	 * @return A list of all records with the given batchId
+	 * Returns all records from a given batch.
+	 * @param batch the batch used to query the database.
+	 * @return a list of all records with the given batchId.
 	 */
 	public List<Record> readRecordsForBatch(Batch batch){
 		return null;
@@ -57,8 +57,8 @@ protected DataSource dataSource;
 	
 	/**
 	 * Updates the given record in the database. 
-	 * @param record the record to be updated
-	 * @return The updated record
+	 * @param record the record to be updated.
+	 * @return the updated record.
 	 */
 	public Record updateRecord(Record record){
 		return null;
@@ -67,41 +67,41 @@ protected DataSource dataSource;
 	//DELETE
 	
 	/**
-	 * Deletes the given record
-	 * @param record the record to be deleted
+	 * Deletes the given record.
+	 * @param record the record to be deleted.
 	 */
 	public void deleteRecord(Record record){
 		
 	}
 	
 	/**
-	 * Deletes the record with the given recordId
-	 * @param recordId the id of the record to be deleted
+	 * Deletes the record with the given recordId.
+	 * @param recordId the id of the record to be deleted.
 	 */
 	public void deleteRecord(String recordId){
 		
 	}
 	
 	/**
-	 * Deletes all records for the given batch
-	 * @param batch the batch which defines which records to be deleted
+	 * Deletes all records for the given batch.
+	 * @param batch the batch which defines which records to be deleted.
 	 */
 	public void deleteRecordsForBatch(Batch batch){
 		
 	}
 	
 	/**
-	 * Deletes the record values for the given record
-	 * @param record the record which defines which records to be deleted
+	 * Deletes the record values for the given record.
+	 * @param record the record which defines which records to be deleted.
 	 */
 	public void deleteRecordValues(Record record){
 		
 	}
 	
 	/**
-	 * Deletes the specified record and field value
-	 * @param record the record that defines the recordId of the recordvalue to be deleted
-	 * @param field the field that defines the fieldId of the recordvalue to be deleted
+	 * Deletes the specified record and field value.
+	 * @param record the record that defines the recordId of the recordvalue to be deleted.
+	 * @param field the field that defines the fieldId of the recordvalue to be deleted.
 	 */
 	public void deleteRecordValue(Record record, Field field){
 		

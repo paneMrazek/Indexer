@@ -2,6 +2,10 @@ package main.java.indexer.shared.communication.results;
 
 import main.java.indexer.shared.models.User;
 
+/**
+ * A class with the user that is returned from validateUser.
+ *
+ */
 public class ValidateUser_Result extends Result{
 	User user;
 	boolean valid;

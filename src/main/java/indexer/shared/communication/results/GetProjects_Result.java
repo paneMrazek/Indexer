@@ -4,6 +4,10 @@ import java.util.List;
 
 import main.java.indexer.shared.models.Project;
 
+/**
+ * A class with a list of projects that is returned from getProjects.
+ *
+ */
 public class GetProjects_Result extends Result{
 	
 	private List<Project> projects;

@@ -1,5 +1,9 @@
 package main.java.indexer.shared.communication.params;
 
+/**
+ * A class with the username, password, and projectId used to call download batch.
+ *
+ */
 public class DownloadBatch_Params extends Params{
 	private int projectId;
 

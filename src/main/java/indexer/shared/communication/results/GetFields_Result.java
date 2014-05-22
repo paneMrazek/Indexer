@@ -4,6 +4,10 @@ import java.util.List;
 
 import main.java.indexer.shared.models.Field;
 
+/**
+ * A class with the fields that is returned from getFields.
+ *
+ */
 public class GetFields_Result extends Result{
 	
 	private List<Field> fields;

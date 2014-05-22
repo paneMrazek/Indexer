@@ -4,6 +4,10 @@ import java.util.List;
 
 import main.java.indexer.shared.models.SearchResult;
 
+/**
+ * A class with the searchResults that is returned from search.
+ *
+ */
 public class Search_Result{
 	
 	private List<SearchResult> results;

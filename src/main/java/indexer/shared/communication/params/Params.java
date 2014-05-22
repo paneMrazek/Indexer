@@ -1,6 +1,10 @@
 package main.java.indexer.shared.communication.params;
 
-public class Params{
+/**
+ * A class with the username and password used as the base Params class.
+ *
+ */
+public abstract class Params{
 	
 	private String userName;
 	private String password;

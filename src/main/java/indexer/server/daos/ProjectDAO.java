@@ -21,9 +21,9 @@ protected DataSource dataSource;
 	//CREATE
 	
 	/**
-	 * Adds the given project to the database
-	 * @param project the project to be added to the database
-	 * @return The newly added project
+	 * Adds the given project to the database.
+	 * @param project the project to be added to the database.
+	 * @return the newly added project if successful, otherwise null.
 	 */
 	public Project createProject(Project project){
 		return null;
@@ -32,9 +32,9 @@ protected DataSource dataSource;
 	//READ
 	
 	/**
-	 * Reads from the database the project with the given name
-	 * @param title the title of the project to be read from the database
-	 * @return The project with the given title
+	 * Reads from the database the project with the given name.
+	 * @param title the title of the project to be read from the database.
+	 * @return the project with the given title
 	 */
 	public Project readProject(String title){
 		return null;
@@ -42,7 +42,7 @@ protected DataSource dataSource;
 	
 	/**
 	 * Returns all projects
-	 * @return A list of all projects in the database
+	 * @return A list of all projects in the database.
 	 */
 	public List<Project> readProjects(){
 		return null;
@@ -51,9 +51,9 @@ protected DataSource dataSource;
 	//UPDATE
 	
 	/**
-	 * Updates the given project in the database
-	 * @param project the project to be updated
-	 * @return the newly updated project
+	 * Updates the given project in the database.
+	 * @param project the project to be updated.
+	 * @return the newly updated project.
 	 */
 	public Project updateProject(Project project){
 		return null;
@@ -62,15 +62,15 @@ protected DataSource dataSource;
 	//DELETE
 	
 	/**
-	 * Deletes the given project from the database
-	 * @param project the project to be deleted
+	 * Deletes the given project from the database.
+	 * @param project the project to be deleted.
 	 */
 	public void deleteProject(Project project){
 		
 	}
 	/**
-	 * Deletes the project from the database with the given title
-	 * @param title the title of the project to be deleted
+	 * Deletes the project from the database with the given title.
+	 * @param title the title of the project to be deleted.
 	 */
 	public void deleteProject(String title){
 		

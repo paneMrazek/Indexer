@@ -23,9 +23,9 @@ protected DataSource dataSource;
 	//CREATE
 	
 	/**
-	 * Adds the given Field to the database
-	 * @param field the field to be added to the database
-	 * @return Null if unsuccessful, otherwise the field
+	 * Adds the given Field to the database.
+	 * @param field the field to be added to the database.
+	 * @return the new field if successful, otherwise null.
 	 */
 	public Field createField(Field field){
 		return null;
@@ -34,11 +34,11 @@ protected DataSource dataSource;
 	//READ
 	
 	/**
-	 * Reads and returns all fields and their values for a given record from the database
+	 * Reads and returns all fields and their values for a given record from the database.
 	 * 
-	 * This function will access both the fields table and the recordvalues table
-	 * @param record the record to be used in the query
-	 * @return A map of all fields and their values for the given record
+	 * This function accesses both the fields table and the recordvalues table.
+	 * @param record the record to be used in the query.
+	 * @return a map of all fields and their values for the given record.
 	 */
 	public Map<Field, String> readFieldsForRecord(Record record){
 		return null;
@@ -47,9 +47,9 @@ protected DataSource dataSource;
 	//UPDATE
 	
 	/**
-	 * Updates the given field in the database
-	 * @param field the field to be updated
-	 * @return The field that has been updated
+	 * Updates the given field in the database.
+	 * @param field the field to be updated.
+	 * @return the field that has been updated.
 	 */
 	public Field updateField(Field field){
 		return null;
@@ -58,16 +58,16 @@ protected DataSource dataSource;
 	//DELETE
 	
 	/**
-	 * Delete the given field from the database
-	 * @param field the field to be deleted
+	 * Delete the given field from the database.
+	 * @param field the field to be deleted.
 	 */
 	public void deleteField(Field field){
 		
 	}
 	
 	/**
-	 * Deletes all fields for the given record
-	 * @param record The record which defines which batches to be deleted
+	 * Deletes all fields for the given record.
+	 * @param record the record which defines which batches to be deleted.
 	 */
 	public void deleteFieldsForRecord(Record record){
 		

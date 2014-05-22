@@ -2,6 +2,10 @@ package main.java.indexer.shared.communication.params;
 
 import java.util.List;
 
+/**
+ * A class with the username, password, fieldIds and searchValues used to call search.
+ *
+ */
 public class Search_Params extends Params{
 	
 	private List<String> fieldId;

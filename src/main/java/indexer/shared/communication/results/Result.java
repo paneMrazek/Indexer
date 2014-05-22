@@ -1,12 +1,12 @@
 package main.java.indexer.shared.communication.results;
 
-public class Result{
+/**
+ * The base Result class that insansiates the shared error value in all result classes.
+ */
+public abstract class Result{
 	
 	private boolean error;
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	
 	@Override
 	public String toString(){
 		return error ? "FAILED\n" : "";
