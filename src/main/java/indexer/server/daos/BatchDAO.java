@@ -1,5 +1,7 @@
-ypackage main.java.indexer.server.daos;
+package main.java.indexer.server.daos;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 import main.java.indexer.shared.models.Batch;
@@ -26,6 +28,19 @@ public class BatchDAO{
 	 * @return the batch if successful, otherwise null.
 	 */
 	public Batch createBatch(Batch batch){
+		String sql = "INSERT INTO batches "
+				+ "(imageurl,projectid,firstycoordinate,recordheight) VALUES (?,?,?,?)";
+		try(PreparedStatement ps = database.getConnection().prepareStatement(sql)){
+			ps.setString(1,batch.getImageURL());
+			ps.setInt(2,batch.getProjectId());
+			ps.setInt(3,batch.getFirstYCoordinate());
+			ps.setInt(4,batch.getRecordHeight());
+			if(ps.executeUpdate() == 1){
+				
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
 		return null;
 	}
 	

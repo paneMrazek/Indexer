@@ -1,6 +1,8 @@
 package main.java.indexer.server.daos;
 
-import java.util.List;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import main.java.indexer.shared.models.User;
 
@@ -25,18 +27,26 @@ public class UserDAO{
 	 * @return the new user if successful, otherwise null.
 	 */
 	public User createUser(User user){
+		String sql = "INSERT INTO users "
+				+ "(username,password,lastname,firstname,email) VALUES (?,?,?,?,?)";
+		try(PreparedStatement ps = database.getConnection().prepareStatement(sql)){
+			ps.setString(1,user.getUserName());
+			ps.setString(2,user.getPassword());
+			ps.setString(3,user.getLastName());
+			ps.setString(4,user.getFirstName());
+			if(user.getEmail() == null)
+				user.setEmail("");
+			ps.setString(5,user.getEmail());
+			if(ps.executeUpdate() == 1){
+				
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
 		return null;
 	}
 	
 	//READ
-	
-	/**
-	 * Reads and returns all users from the database.
-	 * @return a list of all users in the database.
-	 */
-	public List<User> readUsers(){
-		return null;
-	}
 	
 	/**
 	 * Reads from the database and returns the user with the given username and password.
@@ -45,7 +55,27 @@ public class UserDAO{
 	 * @return the user with the given username and password.
 	 */
 	public User readUser(String userName, String password){
-		return null;
+		String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+		User user = new User();
+		try(PreparedStatement ps = database.getConnection().prepareStatement(sql)){
+			ps.setString(1,userName);
+			ps.setString(2,password);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()){
+				user.setUserId(rs.getInt("userid"));
+				user.setUserName(rs.getString("userName"));
+				user.setPassword(rs.getString("password"));
+				user.setFirstName(rs.getString("firstname"));
+				user.setLastName(rs.getString("lastname"));
+				user.setEmail(rs.getString("email"));
+				user.setIndexedRecords(rs.getInt("indexedrecords"));
+			}else{
+				return null;
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
 	}
 	
 	//UPDATE
@@ -56,7 +86,23 @@ public class UserDAO{
 	 * @return the User that has been updated.
 	 */
 	public User updateUser(User user){
-		return null;
+		if(user.getEmail() == null)
+			user.setEmail("");
+		String sql = "UPDATE users SET username=?,password=?,lastname=?,firstname=?,email=?,indexedrecords=? "
+				+ "WHERE userid=?";
+		try(PreparedStatement ps = database.getConnection().prepareStatement(sql)){
+			ps.setString(1,user.getUserName());
+			ps.setString(2,user.getPassword());
+			ps.setString(3,user.getLastName());
+			ps.setString(4,user.getFirstName());
+			ps.setString(5,user.getEmail());
+			ps.setInt(6,user.getIndexedRecords());
+			ps.setInt(7,user.getUserId());
+			ps.executeUpdate();
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return user;
 	}
 	
 	//DELETE
@@ -66,7 +112,13 @@ public class UserDAO{
 	 * @param user the user to be deleted.
 	 */
 	public void deleteUser(User user){
-		
+		String sql = "DELETE FROM users WHERE userid=?";
+		try(PreparedStatement ps = database.getConnection().prepareStatement(sql)){
+			ps.setInt(1,user.getUserId());
+			ps.executeUpdate();
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -75,7 +127,14 @@ public class UserDAO{
 	 * @param password the password of the user to be deleted.
 	 */
 	public void deleteUser(String userName, String password){
-		
+		String sql = "DELETE FROM users WHERE username=? AND password=?";
+		try(PreparedStatement ps = database.getConnection().prepareStatement(sql)){
+			ps.setString(1,userName);
+			ps.setString(2,password);
+			ps.executeUpdate();
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
 	}
 	
 }

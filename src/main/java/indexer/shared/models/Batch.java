@@ -33,7 +33,7 @@ public class Batch{
 	/**
 	 * @return the imageURL
 	 */
-	public String getFile(){
+	public String getImageURL(){
 		return imageURL;
 	}
 	/**
