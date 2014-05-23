@@ -10,6 +10,8 @@ import java.util.Map;
 public class Record{
 	
 	private int id;
+	private int batchId;
+	private int orderId;
 	private Map<Field, String> values;
 	
 	/**
@@ -23,6 +25,30 @@ public class Record{
 	 */
 	public void setId(int id){
 		this.id = id;
+	}
+	/**
+	 * @return the batchId
+	 */
+	public int getBatchId(){
+		return batchId;
+	}
+	/**
+	 * @param batchId the batchId to set
+	 */
+	public void setBatchId(int batchId){
+		this.batchId = batchId;
+	}
+	/**
+	 * @return the orderId
+	 */
+	public int getOrderId(){
+		return orderId;
+	}
+	/**
+	 * @param orderId the orderId to set
+	 */
+	public void setOrderId(int orderId){
+		this.orderId = orderId;
 	}
 	/**
 	 * @return the values

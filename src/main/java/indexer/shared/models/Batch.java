@@ -39,7 +39,7 @@ public class Batch{
 	/**
 	 * @param imageURL the imageURL to set
 	 */
-	public void setFile(String imageURL){
+	public void setImageURL(String imageURL){
 		this.imageURL = imageURL;
 	}
 	/**

@@ -1,5 +1,9 @@
 package main.java.indexer.server.daos;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import main.java.indexer.shared.models.Batch;
@@ -29,7 +33,37 @@ public class RecordDAO{
 	 * @return the record that has been added to the database.
 	 */
 	public Record createRecord(Record record){
-		return null;
+		String sql = "INSERT INTO records (batchid,orderid) VALUES (?,?)";
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setInt(1,record.getBatchId());
+			statement.setInt(2,record.getOrderId());
+			if(statement.executeUpdate() == 1){
+				ResultSet resultSet = statement.getGeneratedKeys();
+				if(resultSet.next())
+					record.setId(resultSet.getInt(1));
+			}
+		}catch(SQLException e){
+			database.error();
+			e.printStackTrace();
+		}
+		for(Field field : record.getValues().keySet()){
+			createRecordValues(record.getId(),field.getId(),record.getValues().get(field));
+		}
+		return record;
+	}
+	
+	
+	public void createRecordValues(int recordId,int fieldId,String value){
+		String sql = "INSERT INTO recordvalues (recordid,fieldid,value) VALUES (?,?,?)";
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setInt(1,recordId);
+			statement.setInt(2,fieldId);
+			statement.setString(3,value);
+			statement.executeUpdate();
+		}catch(SQLException e){
+			database.error();
+			e.printStackTrace();
+		}
 	}
 	
 	//READ
@@ -40,7 +74,21 @@ public class RecordDAO{
 	 * @return the record with the given recordId.
 	 */
 	public Record readRecord(String recordId){
-		return null;
+		String sql = "SELECT * FROM records WHERE recordid = ?";
+		Record record = new Record();
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setInt(1,record.getId());
+			ResultSet rs = statement.executeQuery();
+			if(rs.next()){
+				record.setId(rs.getInt("id"));
+				record.setBatchId(rs.getInt("batchid"));
+				record.setOrderId(rs.getInt("orderid"));
+			}
+		}catch(SQLException e){
+			database.error();
+			e.printStackTrace();
+		}
+		return record;
 	}
 	
 	/**
@@ -49,7 +97,23 @@ public class RecordDAO{
 	 * @return a list of all records with the given batchId.
 	 */
 	public List<Record> readRecordsForBatch(Batch batch){
-		return null;
+		String sql = "SELECT * FROM records WHERE batchid = ?";
+		List<Record> records = new ArrayList<>();
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setInt(1,batch.getId());
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()){
+				Record record = new Record();
+				record.setId(rs.getInt("id"));
+				record.setBatchId(rs.getInt("batchid"));
+				record.setOrderId(rs.getInt("orderid"));
+				records.add(record);
+			}
+		}catch(SQLException e){
+			database.error();
+			e.printStackTrace();
+		}
+		return records;
 	}
 	
 	//UPDATE
@@ -60,50 +124,54 @@ public class RecordDAO{
 	 * @return the updated record.
 	 */
 	public Record updateRecord(Record record){
-		return null;
+		String sql = "UPDATE records SET batchid=?,orderid=? WHERE id=?";
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setInt(1,record.getBatchId());
+			statement.setInt(2,record.getOrderId());
+			statement.setInt(3,record.getId());
+			statement.executeUpdate();
+		}catch(SQLException e){
+			database.error();
+			e.printStackTrace();
+		}
+		for(Field field : record.getValues().keySet()){
+			deleteRecordValues(record.getId());
+			createRecordValues(record.getId(),field.getId(),record.getValues().get(field));
+		}
+		return record;
 	}
 	
 	//DELETE
 	
 	/**
-	 * Deletes the given record.
-	 * @param record the record to be deleted.
-	 */
-	public void deleteRecord(Record record){
-		
-	}
-	
-	/**
 	 * Deletes the record with the given recordId.
 	 * @param recordId the id of the record to be deleted.
 	 */
-	public void deleteRecord(String recordId){
-		
+	public void deleteRecord(int recordId){
+		String sql = "DELETE FROM records WHERE id=?";
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setInt(1,recordId);
+			statement.executeUpdate();
+		}catch(SQLException e){
+			database.error();
+			e.printStackTrace();
+		}
+		deleteRecordValues(recordId);
 	}
 	
 	/**
-	 * Deletes all records for the given batch.
-	 * @param batch the batch which defines which records to be deleted.
+	 * Deletes the record values for the given recordId.
+	 * @param recordId the recordId which defines which records to be deleted.
 	 */
-	public void deleteRecordsForBatch(Batch batch){
-		
-	}
-	
-	/**
-	 * Deletes the record values for the given record.
-	 * @param record the record which defines which records to be deleted.
-	 */
-	public void deleteRecordValues(Record record){
-		
-	}
-	
-	/**
-	 * Deletes the specified record and field value.
-	 * @param record the record that defines the recordId of the recordvalue to be deleted.
-	 * @param field the field that defines the fieldId of the recordvalue to be deleted.
-	 */
-	public void deleteRecordValue(Record record, Field field){
-		
+	public void deleteRecordValues(int recordId){
+		String sql = "DELETE FROM recordvalues WHERE recordid=?";
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setInt(1,recordId);
+			statement.executeUpdate();
+		}catch(SQLException e){
+			database.error();
+			e.printStackTrace();
+		}
 	}
 	
 }

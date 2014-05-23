@@ -1,5 +1,9 @@
 package main.java.indexer.server.daos;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import main.java.indexer.shared.models.Project;
@@ -25,18 +29,50 @@ public class ProjectDAO{
 	 * @return the newly added project if successful, otherwise null.
 	 */
 	public Project createProject(Project project){
-		return null;
+		String sql = "INSERT INTO projects (title,recordsperimage,firstycoordinate,recordheight) "
+				+ "values (?,?,?,?)";
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setString(1,project.getTitle());
+			statement.setInt(2,project.getRecordsPerImage());
+			statement.setInt(3,project.getFirstYCoordinate());
+			statement.setInt(4,project.getRecordHeight());
+			if(statement.executeUpdate() == 1){
+				ResultSet resultSet = statement.getGeneratedKeys();
+				if(resultSet.next())
+					project.setId(resultSet.getInt(1));
+			}
+		}catch(SQLException e){
+			database.error();
+			e.printStackTrace();
+		}
+		return project;
 	}
 	
 	//READ
 	
 	/**
-	 * Reads from the database the project with the given name.
-	 * @param title the title of the project to be read from the database.
-	 * @return the project with the given title
+	 * Reads from the database the project with the given id.
+	 * @param projectId the id of the project to be read from the database.
+	 * @return the project with the given id.
 	 */
-	public Project readProject(String title){
-		return null;
+	public Project readProject(int projectId){
+		String sql = "SELECT * FROM projects WHERE id = ?";
+		Project project = new Project();
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setInt(1,projectId);
+			ResultSet rs = statement.executeQuery();
+			if(rs.next()){
+				project.setId(projectId);
+				project.setTitle(rs.getString("title"));
+				project.setRecordsPerImage(rs.getInt("recordsperimage"));
+				project.setFirstYCoordinate(rs.getInt("firstycoordinate"));
+				project.setRecordHeight(rs.getInt("recordheight"));
+			}
+		}catch(SQLException e){
+			database.error();
+			e.printStackTrace();
+		}
+		return project;
 	}
 	
 	/**
@@ -44,7 +80,24 @@ public class ProjectDAO{
 	 * @return A list of all projects in the database.
 	 */
 	public List<Project> readProjects(){
-		return null;
+		String sql = "SELECT * FROM projects";
+		List<Project> projects = new ArrayList<>();
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			ResultSet rs = statement.executeQuery();
+			if(rs.next()){
+				Project project = new Project();
+				project.setId(rs.getInt("projectid"));
+				project.setTitle(rs.getString("title"));
+				project.setRecordsPerImage(rs.getInt("recordsperimage"));
+				project.setFirstYCoordinate(rs.getInt("firstycoordinate"));
+				project.setRecordHeight(rs.getInt("recordheight"));
+				projects.add(project);
+			}
+		}catch(SQLException e){
+			database.error();
+			e.printStackTrace();
+		}
+		return projects;
 	}
 	
 	//UPDATE
@@ -55,7 +108,20 @@ public class ProjectDAO{
 	 * @return the newly updated project.
 	 */
 	public Project updateProject(Project project){
-		return null;
+		String sql = "UPDATE projects SET title=?,recordsperimage=?,firstycoordinate=?,recordheight=? "
+				+ "WHERE id = ?";
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setString(1,project.getTitle());
+			statement.setInt(2,project.getRecordsPerImage());
+			statement.setInt(3,project.getFirstYCoordinate());
+			statement.setInt(4,project.getRecordHeight());
+			statement.setInt(5,project.getId());
+			statement.executeUpdate();
+		}catch(SQLException e){
+			database.error();
+			e.printStackTrace();
+		}
+		return project;
 	}
 	
 	//DELETE
@@ -65,13 +131,13 @@ public class ProjectDAO{
 	 * @param project the project to be deleted.
 	 */
 	public void deleteProject(Project project){
-		
-	}
-	/**
-	 * Deletes the project from the database with the given title.
-	 * @param title the title of the project to be deleted.
-	 */
-	public void deleteProject(String title){
-		
+		String sql = "DELETE FROM projects WHERE id = ?";
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setInt(1,project.getId());
+			statement.executeUpdate();
+		}catch(SQLException e){
+			database.error();
+			e.printStackTrace();
+		}
 	}
 }

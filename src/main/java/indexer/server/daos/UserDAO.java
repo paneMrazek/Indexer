@@ -27,23 +27,29 @@ public class UserDAO{
 	 * @return the new user if successful, otherwise null.
 	 */
 	public User createUser(User user){
+		if(user.getEmail() == null)
+			user.setEmail("");
 		String sql = "INSERT INTO users "
-				+ "(username,password,lastname,firstname,email) VALUES (?,?,?,?,?)";
-		try(PreparedStatement ps = database.getConnection().prepareStatement(sql)){
-			ps.setString(1,user.getUserName());
-			ps.setString(2,user.getPassword());
-			ps.setString(3,user.getLastName());
-			ps.setString(4,user.getFirstName());
-			if(user.getEmail() == null)
-				user.setEmail("");
-			ps.setString(5,user.getEmail());
-			if(ps.executeUpdate() == 1){
-				
+				+ "(username,password,lastname,firstname,email,indexedrecords) VALUES (?,?,?,?,?,?)";
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setString(1,user.getUserName());
+			statement.setString(2,user.getPassword());
+			statement.setString(3,user.getLastName());
+			statement.setString(4,user.getFirstName());
+			statement.setString(5,user.getEmail());
+			statement.setInt(6,user.getIndexedRecords());
+			if(statement.executeUpdate() == 1){
+				ResultSet resultSet = statement.getGeneratedKeys();
+				if(resultSet.next())
+					user.setUserId(resultSet.getInt(1));
+			}else{
+				database.error();
 			}
 		}catch(SQLException e){
+			database.error();
 			e.printStackTrace();
 		}
-		return null;
+		return user;
 	}
 	
 	//READ
@@ -57,10 +63,10 @@ public class UserDAO{
 	public User readUser(String userName, String password){
 		String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
 		User user = new User();
-		try(PreparedStatement ps = database.getConnection().prepareStatement(sql)){
-			ps.setString(1,userName);
-			ps.setString(2,password);
-			ResultSet rs = ps.executeQuery();
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setString(1,userName);
+			statement.setString(2,password);
+			ResultSet rs = statement.executeQuery();
 			if(rs.next()){
 				user.setUserId(rs.getInt("userid"));
 				user.setUserName(rs.getString("userName"));
@@ -73,6 +79,7 @@ public class UserDAO{
 				return null;
 			}
 		}catch(SQLException e){
+			database.error();
 			e.printStackTrace();
 		}
 		return user;
@@ -90,16 +97,17 @@ public class UserDAO{
 			user.setEmail("");
 		String sql = "UPDATE users SET username=?,password=?,lastname=?,firstname=?,email=?,indexedrecords=? "
 				+ "WHERE userid=?";
-		try(PreparedStatement ps = database.getConnection().prepareStatement(sql)){
-			ps.setString(1,user.getUserName());
-			ps.setString(2,user.getPassword());
-			ps.setString(3,user.getLastName());
-			ps.setString(4,user.getFirstName());
-			ps.setString(5,user.getEmail());
-			ps.setInt(6,user.getIndexedRecords());
-			ps.setInt(7,user.getUserId());
-			ps.executeUpdate();
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setString(1,user.getUserName());
+			statement.setString(2,user.getPassword());
+			statement.setString(3,user.getLastName());
+			statement.setString(4,user.getFirstName());
+			statement.setString(5,user.getEmail());
+			statement.setInt(6,user.getIndexedRecords());
+			statement.setInt(7,user.getUserId());
+			statement.executeUpdate();
 		}catch(SQLException e){
+			database.error();
 			e.printStackTrace();
 		}
 		return user;
@@ -113,10 +121,11 @@ public class UserDAO{
 	 */
 	public void deleteUser(User user){
 		String sql = "DELETE FROM users WHERE userid=?";
-		try(PreparedStatement ps = database.getConnection().prepareStatement(sql)){
-			ps.setInt(1,user.getUserId());
-			ps.executeUpdate();
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setInt(1,user.getUserId());
+			statement.executeUpdate();
 		}catch(SQLException e){
+			database.error();
 			e.printStackTrace();
 		}
 	}
@@ -128,11 +137,12 @@ public class UserDAO{
 	 */
 	public void deleteUser(String userName, String password){
 		String sql = "DELETE FROM users WHERE username=? AND password=?";
-		try(PreparedStatement ps = database.getConnection().prepareStatement(sql)){
-			ps.setString(1,userName);
-			ps.setString(2,password);
-			ps.executeUpdate();
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setString(1,userName);
+			statement.setString(2,password);
+			statement.executeUpdate();
 		}catch(SQLException e){
+			database.error();
 			e.printStackTrace();
 		}
 	}

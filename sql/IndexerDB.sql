@@ -39,7 +39,7 @@ CREATE TABLE Batches(
 	ID integer PRIMARY KEY AUTOINCREMENT,
 	ImageURL varchar(255),
 	ProjectID integer,
-	Complete boolean,
+	Complete boolean DEFAULT false,
 	AssignedUserID integer
 );
 
@@ -51,5 +51,6 @@ CREATE TABLE Records(
 
 CREATE TABLE RecordValues(
 	FieldID integer,
-	RecordID integer
+	RecordID integer,
+	Value varchar(255)
 );

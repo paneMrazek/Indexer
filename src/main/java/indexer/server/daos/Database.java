@@ -1,10 +1,14 @@
 package main.java.indexer.server.daos;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+
+//TODO Make a delete all from database method
 public class Database{
 	
 	private BatchDAO batchDAO;
@@ -14,6 +18,7 @@ public class Database{
 	private UserDAO userDAO;
 	
 	private Connection connection;
+	private boolean success;
 	
 	public Database(){
 		batchDAO = new BatchDAO(this);
@@ -72,18 +77,22 @@ public class Database{
 		return connection;
 	}
 	
+	public void error(){
+		success = false;
+	}
+	
 	public void startTransaction(){
 		String connectionUrl = "jdbc:sqlite:sql" + File.separator + "IndexerDB.db";
 		try{
 			connection = DriverManager.getConnection(connectionUrl);
 			connection.setAutoCommit(false);
+			success = true;
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
 	}
 	
 	public void endTransaction(){
-		boolean success = true;
 		try{
 			if(success)
 				connection.commit();
@@ -99,5 +108,22 @@ public class Database{
 			}
 		}
 	}
+	
+	public void deleteData(){
+		File to = new File("sql" + File.separator + "IndexerDB.db");
+		File from = new File("sql" + File.separator + "IndexerBlank.db");
+		
+		to.delete();
+		
+		try{
+			Files.copy(from.toPath(), to.toPath());
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	    
+	   
+	}
+	
+	
 
 }
