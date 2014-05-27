@@ -50,7 +50,8 @@ CREATE TABLE Records(
 );
 
 CREATE TABLE RecordValues(
+	ID integer PRIMARY KEY AUTOINCREMENT,
 	FieldID integer,
 	RecordID integer,
 	Value varchar(255)
-);
+); 

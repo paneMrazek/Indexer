@@ -6,6 +6,10 @@ package main.java.indexer.shared.communication.results;
  */
 public class GetSampleImage_Result extends Result{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String url;
 
 	/**

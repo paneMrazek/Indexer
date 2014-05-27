@@ -8,6 +8,10 @@ import main.java.indexer.shared.models.Batch;
  */
 public class DownloadBatch_Result extends Result{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Batch batch;
 
 	/**

@@ -1,5 +1,6 @@
 package main.java.indexer.shared.models;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -7,8 +8,12 @@ import java.util.Map;
  * A record is a set of related <code>fields</code>,
  * usually about a specific person.</p>
  */
-public class Record{
+public class Record implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private int batchId;
 	private int orderId;

@@ -1,5 +1,6 @@
 package main.java.indexer.shared.models;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,8 +8,12 @@ import java.util.List;
  * that needs to be indexed.</p>
  *
  */
-public class Batch{
+public class Batch implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private String imageURL;
 	private int projectId;

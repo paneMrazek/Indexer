@@ -29,7 +29,7 @@
 	<property name="db-file" location="${sql}/IndexerDB.db"/>
 	
 	<!-- Database file containing empty tables. -->
-	<property name="empty-db-file" location="${sql}/IndexerBlank"/>
+	<property name="empty-db-file" location="${sql}/IndexerBlank.db"/>
 	
 	<!-- File containing the report output by Checkstyle -->
 	<property name="checkstyle-report-file" location="checkstyle-report.txt"/>
@@ -84,7 +84,7 @@
 	<!-- EXAMPLE: ant import -Dfile=dir1/dir2/indexer_data.xml -->
 	<target name="import" depends="compile" description="import indexer data">
 		<copy file="${empty-db-file}" tofile="${db-file}" overwrite="true"/>
-		<java classname="DataImporter" fork="yes">
+		<java classname="main.java.indexer.server.importer.DataImporter" fork="yes">
 			<classpath>
 				<path refid="all-classpath"/>
 			</classpath>
@@ -100,7 +100,7 @@
 	<!-- If port number is omitted, run on default port. -->
 	<!-- EXAMPLE: ant server -->
 	<target name="server" depends="compile" description="run server on specified port">
-		<java classname="THE NAME OF YOUR SERVER CLASS GOES HERE" fork="yes">
+		<java classname="main.java.indexer.server" fork="yes">
 			<classpath>
 				<path refid="all-classpath"/>
 			</classpath>
@@ -112,7 +112,7 @@
 	</target>
 
 	<target name="server-gui" depends="compile" description="run the server test gui">
-		<java classname="servertester.GuiTester" fork="yes">
+		<java classname="test.servertester.GuiTester" fork="yes">
 			<classpath>
 				<path refid="all-classpath"/>
 			</classpath>
@@ -123,7 +123,7 @@
 	</target>
 	
 	<target name="server-tests" depends="compile" description="run automated server tests">
-		<java classname="server.ServerUnitTests" fork="yes">
+		<java classname="test.server.ServerUnitTests" fork="yes">
 			<classpath>
 				<path refid="all-classpath"/>
 			</classpath>

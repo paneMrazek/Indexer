@@ -1,11 +1,17 @@
 package main.java.indexer.shared.communication.params;
 
+import java.io.Serializable;
+
 /**
  * A class with the username and password used as the base Params class.
  *
  */
-public abstract class Params{
+public abstract class Params implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String userName;
 	private String password;
 	

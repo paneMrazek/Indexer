@@ -1,11 +1,17 @@
 package main.java.indexer.shared.models;
 
+import java.io.Serializable;
+
 /**
  * <p>A user is anyone who has an account with our indexer program.</p>
  *
  */
-public class User {
+public class User implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int userId;
 	private String userName;
 	private String password;

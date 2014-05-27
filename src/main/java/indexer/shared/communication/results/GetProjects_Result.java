@@ -10,6 +10,10 @@ import main.java.indexer.shared.models.Project;
  */
 public class GetProjects_Result extends Result{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private List<Project> projects;
 	
 	/**

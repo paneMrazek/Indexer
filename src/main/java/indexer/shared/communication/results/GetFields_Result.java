@@ -10,6 +10,10 @@ import main.java.indexer.shared.models.Field;
  */
 public class GetFields_Result extends Result{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private List<Field> fields;
 
 	/**

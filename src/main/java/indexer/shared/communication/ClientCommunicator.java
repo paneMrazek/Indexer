@@ -72,7 +72,7 @@ public class ClientCommunicator{
 	 * @return An object containing the desired fields if succesful, otherwise the word failed.
 	 */
 	public GetFields_Result getFields(GetFields_Params params){
-		return null;
+		return (GetFields_Result) doGet("");
 	}
 	
 	/**
@@ -94,5 +94,18 @@ public class ClientCommunicator{
 	 */
 	public Byte[] downloadFile(String url){
 		return null;
+	}
+	
+	private Object doGet(String urlPath){
+		// Make HTTP GET request to the specified URL, 
+		// and return the object returned by the server
+		return null;
+	}
+	
+	
+	@SuppressWarnings("unused")
+	private void doPost(String urlPath, Object postData){
+		// Make HTTP POST request to the specified URL, 
+		// passing in the specified postData object
 	}
 }

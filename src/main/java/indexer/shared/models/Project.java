@@ -1,5 +1,6 @@
 package main.java.indexer.shared.models;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,8 +9,12 @@ import java.util.List;
  * 
  * <p>The <code>fields</code> of each batch in a project are the same</p>
  */
-public class Project{
+public class Project implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private String title;
 	private int recordsPerImage;

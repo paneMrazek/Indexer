@@ -7,6 +7,10 @@ import main.java.indexer.shared.models.User;
  *
  */
 public class ValidateUser_Result extends Result{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	User user;
 	boolean valid;
 	

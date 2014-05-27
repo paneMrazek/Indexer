@@ -8,6 +8,10 @@ import java.util.List;
  */
 public class SubmitBatch_Params extends Params{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int batchId;
 	private List<String> recordValues;
 	

@@ -1,5 +1,6 @@
 package main.java.indexer.shared.communication.results;
 
+import java.io.Serializable;
 import java.util.List;
 
 import main.java.indexer.shared.models.SearchResult;
@@ -8,8 +9,12 @@ import main.java.indexer.shared.models.SearchResult;
  * A class with the searchResults that is returned from search.
  *
  */
-public class Search_Result{
+public class Search_Result implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private List<SearchResult> results;
 
 	/**

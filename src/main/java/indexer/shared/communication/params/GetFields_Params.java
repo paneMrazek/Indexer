@@ -6,6 +6,10 @@ package main.java.indexer.shared.communication.params;
  */
 public class GetFields_Params extends Params{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int projectId;
 
 	/**

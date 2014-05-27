@@ -8,6 +8,10 @@ import java.util.List;
  */
 public class Search_Params extends Params{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private List<String> fieldId;
 	private List<String> searchValues;
 	/**

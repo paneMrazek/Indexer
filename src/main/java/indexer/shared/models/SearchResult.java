@@ -1,7 +1,13 @@
 package main.java.indexer.shared.models;
 
-public class SearchResult{
+import java.io.Serializable;
+
+public class SearchResult implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int batchId;
 	private String imageURL;
 	private int recordNumber;

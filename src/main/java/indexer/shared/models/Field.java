@@ -1,12 +1,18 @@
 package main.java.indexer.shared.models;
 
+import java.io.Serializable;
+
 /**
  * <p>A field represents each column in a batch file. 
  * The first row of the batch contains the name of the field.</p>
  *
  */
-public class Field{
+public class Field implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private int projectId;
 	private int orderId;

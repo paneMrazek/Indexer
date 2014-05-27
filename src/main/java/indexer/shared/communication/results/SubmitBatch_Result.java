@@ -7,6 +7,11 @@ package main.java.indexer.shared.communication.results;
  */
 public class SubmitBatch_Result extends Result{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public String toString(){
 		if(isError())
