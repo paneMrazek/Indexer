@@ -84,9 +84,9 @@ public class ProjectDAO{
 		List<Project> projects = new ArrayList<>();
 		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
 			ResultSet rs = statement.executeQuery();
-			if(rs.next()){
+			while(rs.next()){
 				Project project = new Project();
-				project.setId(rs.getInt("projectid"));
+				project.setId(rs.getInt("id"));
 				project.setTitle(rs.getString("title"));
 				project.setRecordsPerImage(rs.getInt("recordsperimage"));
 				project.setFirstYCoordinate(rs.getInt("firstycoordinate"));

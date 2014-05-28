@@ -2,6 +2,15 @@ package test.servertester.controllers;
 
 import java.util.*;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+
+import main.java.indexer.server.Server;
+import main.java.indexer.shared.communication.ClientCommunicator;
+import main.java.indexer.shared.communication.params.GetProjects_Params;
+import main.java.indexer.shared.communication.params.ValidateUser_Params;
+import main.java.indexer.shared.communication.results.GetProjects_Result;
+import main.java.indexer.shared.communication.results.ValidateUser_Result;
 import test.servertester.views.*;
 
 public class Controller implements IController {
@@ -28,6 +37,12 @@ public class Controller implements IController {
 		getView().setHost("localhost");
 		getView().setPort("39640");
 		operationSelected();
+		
+		String[] args = new String[1];
+		args[0] = getView().getPort();
+		Server.main(args);
+		ClientCommunicator.getInstance().setHost(getView().getHost());
+		ClientCommunicator.getInstance().setPort(Integer.parseInt(getView().getPort()));
 	}
 
 	@Override
@@ -99,9 +114,25 @@ public class Controller implements IController {
 	}
 	
 	private void validateUser() {
+		String userName = getView().getParameterValues()[0];
+		String password = getView().getParameterValues()[1];
+		ValidateUser_Params params = new ValidateUser_Params();
+		params.setUserName(userName);
+		params.setPassword(password);
+		String value = new XStream(new DomDriver()).toXML(params);
+		getView().setRequest(value);
+		ValidateUser_Result result = ClientCommunicator.getInstance().validateUser(params);
+		getView().setResponse(result.toString());
 	}
 	
 	private void getProjects() {
+		String userName = getView().getParameterValues()[0];
+		String password = getView().getParameterValues()[1];
+		GetProjects_Params params = new GetProjects_Params();
+		params.setUserName(userName);
+		params.setPassword(password);
+		GetProjects_Result result = ClientCommunicator.getInstance().getProjects(params);
+		getView().setResponse(result.toString());
 	}
 	
 	private void getSampleImage() {

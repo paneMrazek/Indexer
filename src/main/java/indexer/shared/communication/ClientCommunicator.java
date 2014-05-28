@@ -1,5 +1,12 @@
 package main.java.indexer.shared.communication;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+
 import main.java.indexer.shared.communication.params.*;
 import main.java.indexer.shared.communication.results.*;
 
@@ -10,14 +17,40 @@ import main.java.indexer.shared.communication.results.*;
  */
 public class ClientCommunicator{
 	
+	private static ClientCommunicator instance;
+	
+	private XStream xmlStream;
+	
+	private String host = "localhost";
+	private int port = 8080;
+	
+	public static ClientCommunicator getInstance(){
+		if(instance == null) {
+			instance = new ClientCommunicator();
+		}
+		return instance;
+	}
+	
+	private ClientCommunicator() {
+		xmlStream = new XStream(new DomDriver());
+	}
+	
+	public void setHost(String host){
+		this.host = host;
+	}
+	
+	public void setPort(int port){
+		this.port = port;
+	}
+	
 	/**
 	 * Validates user credentials.
 	 * @param params An object with the username and password of the user to validate.
 	 * @return The user object if succesful, false if the username or password is invalid,
 	 * and failed if any error occurs.
 	 */
-	public ValidateUser_Result ValidateUser(ValidateUser_Params params){
-		return null;
+	public ValidateUser_Result validateUser(ValidateUser_Params params){
+		return (ValidateUser_Result) doGet("/ValidateUser/",params);
 	}
 	
 	/**
@@ -27,7 +60,7 @@ public class ClientCommunicator{
 	 * otherwise the word failed.
 	 */
 	public GetProjects_Result getProjects(GetProjects_Params params){
-		return null;
+		return (GetProjects_Result) doPost("/GetProjects",params);
 	}
 	
 	/**
@@ -37,7 +70,7 @@ public class ClientCommunicator{
 	 * @return An object with the file url if successful, otherwise the word failed.
 	 */
 	public GetSampleImage_Result getSampleImage(GetSampleImage_Params params){
-		return null;
+		return (GetSampleImage_Result) doPost("/GetSampleImage",params);
 	}
 	
 	/**
@@ -49,7 +82,7 @@ public class ClientCommunicator{
 	 * @return An object with the new batch if succesful.  Otherwise the word failed.
 	 */
 	public DownloadBatch_Result downloadBatch(DownloadBatch_Params params){
-		return null;
+		return (DownloadBatch_Result) doPost("/DownloadBatch",params);
 	}
 	
 	/**
@@ -60,7 +93,7 @@ public class ClientCommunicator{
 	 * @return An object with the word true if succesful, otherwise the word failed.
 	 */
 	public SubmitBatch_Result submitBatch(SubmitBatch_Params params){
-		return null;
+		return (SubmitBatch_Result) doPost("/SubmitBatch",params);
 	}
 	
 	/**
@@ -72,7 +105,7 @@ public class ClientCommunicator{
 	 * @return An object containing the desired fields if succesful, otherwise the word failed.
 	 */
 	public GetFields_Result getFields(GetFields_Params params){
-		return (GetFields_Result) doGet("");
+		return (GetFields_Result) doPost("/GetFields",params);
 	}
 	
 	/**
@@ -84,7 +117,7 @@ public class ClientCommunicator{
 	 * and Field ID that match the search criteria.
 	 */
 	public Search_Result search(Search_Params params){
-		return null;
+		return (Search_Result) doPost("/Search",params);
 	}
 	
 	/**
@@ -93,19 +126,43 @@ public class ClientCommunicator{
 	 * @return The bytes of the requested file.
 	 */
 	public Byte[] downloadFile(String url){
-		return null;
+		return (Byte[]) doPost("/DownloadFile",url);
 	}
 	
-	private Object doGet(String urlPath){
-		// Make HTTP GET request to the specified URL, 
-		// and return the object returned by the server
-		return null;
+	private Object doGet(String urlPath, Params params){
+		Object result = null;
+		try{
+			URL url = new URL("http://" + host + ":" + port + urlPath);
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("GET");
+			connection.addRequestProperty("authorization",params.getUserName() + ":" + params.getPassword());
+			//connection.setDoOutput(true);
+			//xmlStream.toXML(params,connection.getOutputStream());
+			connection.connect();
+			result = xmlStream.fromXML(connection.getInputStream());
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
-	
-	@SuppressWarnings("unused")
-	private void doPost(String urlPath, Object postData){
+	private Object doPost(String urlPath, Object postData){
+		Object result = null;
+		try{
+			URL url = new URL("http://" + host + ":" + port + urlPath);
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("POST");
+			connection.setDoOutput(true);
+			connection.connect();
+			xmlStream.toXML(postData,connection.getOutputStream());
+			
+			result = xmlStream.fromXML(connection.getInputStream());
+		}catch(IOException e){
+			e.printStackTrace();
+		}
 		// Make HTTP POST request to the specified URL, 
+		
 		// passing in the specified postData object
+		return result;
 	}
 }

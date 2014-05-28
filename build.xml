@@ -100,7 +100,7 @@
 	<!-- If port number is omitted, run on default port. -->
 	<!-- EXAMPLE: ant server -->
 	<target name="server" depends="compile" description="run server on specified port">
-		<java classname="main.java.indexer.server" fork="yes">
+		<java classname="main.java.indexer.server.Server" fork="yes">
 			<classpath>
 				<path refid="all-classpath"/>
 			</classpath>

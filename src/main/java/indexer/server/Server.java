@@ -10,18 +10,19 @@ public class Server{
 	
 	private HttpServer server;
 	
-	private static final int SERVER_PORT_NUMBER = 8080;
-	private static final int MAX_WAITING_CONNECTIONS = 10;
+	private int portNum = 8080;
 	
-	private Server(){
+	private Server(String[] args){
+		if(args.length == 1){
+			portNum = Integer.parseInt(args[0]);
+		}
 		return;
 	}
 	
 private void run() {
 		
 		try {
-			server = HttpServer.create(new InetSocketAddress(SERVER_PORT_NUMBER),
-											MAX_WAITING_CONNECTIONS);
+			server = HttpServer.create(new InetSocketAddress(portNum),10);
 		} 
 		catch (IOException e) {
 			e.printStackTrace();
@@ -49,6 +50,6 @@ private void run() {
 	private HttpHandler validateUserHandler = new ValidateUserHandler();
 
 	public static void main(String[] args) {
-		new Server().run();
+		new Server(args).run();
 	}
 }

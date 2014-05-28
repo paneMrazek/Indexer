@@ -1,43 +1,38 @@
 package main.java.indexer.server;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 
 import com.sun.net.httpserver.*;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import main.java.indexer.server.daos.Database;
+import main.java.indexer.shared.communication.params.GetProjects_Params;
+import main.java.indexer.shared.communication.params.ValidateUser_Params;
+import main.java.indexer.shared.communication.results.ValidateUser_Result;
+import main.java.indexer.shared.models.User;
 
 
-public class ValidateUserHandler implements HttpHandler{
+public class ValidateUserHandler extends BasicHandler{
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
 
-		Database database = new Database();
+		database = new Database();
 		XStream xmlStream = new XStream(new DomDriver());
-		ValidateUserParam param = xmlStream.fromXML(exchange.getRequestBody());
-
-		try {
-			db.startTransaction();
-			db.get
-			db.endTransaction();
-		}
-		catch (ServerException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			db.endTransaction(false);
-			exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, -1);
-			return;
-		}
-
-		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, -1);
-
+		String auth = exchange.getRequestHeaders().getFirst("authorization");
+		User user = validateUser(auth);
 		
-		// Process AddContact request
-		// 1. Deserialize the request object from the request body
-		// 2. Extract the new contact object from the request object
-		// 3. Call the model to add the new contact
+		ValidateUser_Result result = new ValidateUser_Result();
+		result.setError(!database.wasSuccesful());
+		result.setValid(user != null);
+		result.setUser(user);
+		
+
+		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+		xmlStream.toXML(result,exchange.getResponseBody());
+		exchange.getResponseBody().close();
 
 	}
 }

@@ -81,6 +81,10 @@ public class Database{
 		success = false;
 	}
 	
+	public boolean wasSuccesful(){
+		return success;
+	}
+	
 	public void startTransaction(){
 		String connectionUrl = "jdbc:sqlite:sql" + File.separator + "IndexerDB.db";
 		try{

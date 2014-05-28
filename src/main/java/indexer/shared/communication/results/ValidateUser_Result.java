@@ -11,9 +11,24 @@ public class ValidateUser_Result extends Result{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	User user;
-	boolean valid;
+	private User user;
+	private boolean valid;
 	
+	public User getUser(){
+		return user;
+	}
+	public void setUser(User user){
+		this.user = user;
+	}
+	public boolean isValid(){
+		return valid;
+	}
+	public void setValid(boolean valid){
+		this.valid = valid;
+	}
+
+
+
 	/* 
 	 * 
 	 */
