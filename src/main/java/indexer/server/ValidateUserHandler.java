@@ -8,8 +8,6 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import main.java.indexer.server.daos.Database;
-import main.java.indexer.shared.communication.params.GetProjects_Params;
-import main.java.indexer.shared.communication.params.ValidateUser_Params;
 import main.java.indexer.shared.communication.results.ValidateUser_Result;
 import main.java.indexer.shared.models.User;
 

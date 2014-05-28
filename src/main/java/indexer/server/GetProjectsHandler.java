@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.java.indexer.server.daos.Database;
-import main.java.indexer.shared.communication.params.GetProjects_Params;
 import main.java.indexer.shared.communication.results.GetProjects_Result;
 import main.java.indexer.shared.models.Project;
 import main.java.indexer.shared.models.User;
@@ -16,23 +15,21 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 
-public class GetProjectsHandler implements HttpHandler{
+public class GetProjectsHandler extends BasicHandler{
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
 		
-		Database database = new Database();
+		database = new Database();
 		XStream xmlStream = new XStream(new DomDriver());
-		GetProjects_Params param = (GetProjects_Params) xmlStream.fromXML(exchange.getRequestBody());
+		String auth = exchange.getRequestHeaders().getFirst("authorization");
+		User user = validateUser(auth);
 
-		database.startTransaction();
-		User user = database.getUserDAO().readUser(param.getUserName(),param.getPassword());
-		
+		database.startTransaction();		
 		List<Project> projects = new ArrayList<>();
 		if(user != null && database.wasSuccesful()){
 			projects = database.getProjectDAO().readProjects();
 		}
-		
 		database.endTransaction();
 		
 		GetProjects_Result result = new GetProjects_Result();

@@ -60,7 +60,7 @@ public class ClientCommunicator{
 	 * otherwise the word failed.
 	 */
 	public GetProjects_Result getProjects(GetProjects_Params params){
-		return (GetProjects_Result) doPost("/GetProjects",params);
+		return (GetProjects_Result) doGet("/GetProjects",params);
 	}
 	
 	/**
@@ -136,8 +136,6 @@ public class ClientCommunicator{
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 			connection.addRequestProperty("authorization",params.getUserName() + ":" + params.getPassword());
-			//connection.setDoOutput(true);
-			//xmlStream.toXML(params,connection.getOutputStream());
 			connection.connect();
 			result = xmlStream.fromXML(connection.getInputStream());
 		}catch(IOException e){
@@ -160,9 +158,6 @@ public class ClientCommunicator{
 		}catch(IOException e){
 			e.printStackTrace();
 		}
-		// Make HTTP POST request to the specified URL, 
-		
-		// passing in the specified postData object
 		return result;
 	}
 }
