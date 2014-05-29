@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.indexer.shared.models.Batch;
 import main.java.indexer.shared.models.Field;
 import main.java.indexer.shared.models.Record;
 
@@ -96,11 +95,11 @@ public class RecordDAO{
 	 * @param batch the batch used to query the database.
 	 * @return a list of all records with the given batchId.
 	 */
-	public List<Record> readRecordsForBatch(Batch batch){
+	public List<Record> readRecordsForBatch(int batchId){
 		String sql = "SELECT * FROM records WHERE batchid = ?";
 		List<Record> records = new ArrayList<>();
 		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
-			statement.setInt(1,batch.getId());
+			statement.setInt(1,batchId);
 			ResultSet rs = statement.executeQuery();
 			while(rs.next()){
 				Record record = new Record();

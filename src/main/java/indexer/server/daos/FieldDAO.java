@@ -3,7 +3,9 @@ package main.java.indexer.server.daos;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import main.java.indexer.shared.models.Field;
@@ -50,6 +52,31 @@ public class FieldDAO{
 			e.printStackTrace();
 		}
 		return field;
+	}
+	
+	public List<Field> readFieldsForProject(int projectId){
+		String sql = "SELECT * FROM fields WHERE projectid = ?";
+		List<Field> fields = new ArrayList<Field>();
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setInt(1,projectId);
+			ResultSet rs = statement.executeQuery();
+			while(rs.next()){
+				Field field = new Field();
+				field.setId(rs.getInt("id"));
+				field.setProjectId(rs.getInt("projectid"));
+				field.setOrderId(rs.getInt("orderid"));
+				field.setTitle(rs.getString("title"));
+				field.setXCoordinate(rs.getInt("xcoordinate"));
+				field.setWidth(rs.getInt("width"));
+				field.setHelpFile(rs.getString("helpfile"));
+				field.setKnownData(rs.getString("knowndata"));
+				fields.add(field);
+			}
+		}catch(SQLException e){
+			database.error();
+			e.printStackTrace();
+		}
+		return fields;
 	}
 	
 	//READ

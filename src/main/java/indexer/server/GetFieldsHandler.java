@@ -5,7 +5,6 @@ import java.net.HttpURLConnection;
 
 import main.java.indexer.server.daos.Database;
 import main.java.indexer.shared.communication.params.GetFields_Params;
-import main.java.indexer.shared.communication.params.ValidateUser_Params;
 import main.java.indexer.shared.communication.results.ValidateUser_Result;
 import main.java.indexer.shared.models.User;
 

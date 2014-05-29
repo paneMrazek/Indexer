@@ -1,7 +1,5 @@
 package main.java.indexer.shared.communication.params;
 
-import java.util.List;
-
 /**
  * A class with the username, password, batchId, and recordValues used to call submitBatch.
  *
@@ -13,7 +11,7 @@ public class SubmitBatch_Params extends Params{
 	 */
 	private static final long serialVersionUID = 1L;
 	private int batchId;
-	private List<String> recordValues;
+	private String[] recordValues;
 	
 	/**
 	 * @return the batchId
@@ -30,13 +28,13 @@ public class SubmitBatch_Params extends Params{
 	/**
 	 * @return the recordValues
 	 */
-	public List<String> getRecordValues(){
+	public String[] getRecordValues(){
 		return recordValues;
 	}
 	/**
 	 * @param recordValues the recordValues to set
 	 */
-	public void setRecordValues(List<String> recordValues){
+	public void setRecordValues(String[] recordValues){
 		this.recordValues = recordValues;
 	}
 }

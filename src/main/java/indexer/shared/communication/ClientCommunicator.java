@@ -70,7 +70,7 @@ public class ClientCommunicator{
 	 * @return An object with the file url if successful, otherwise the word failed.
 	 */
 	public GetSampleImage_Result getSampleImage(GetSampleImage_Params params){
-		return (GetSampleImage_Result) doPost("/GetSampleImage",params);
+		return (GetSampleImage_Result) doGet("/GetSampleImage/" + params.getProjectId(),params);
 	}
 	
 	/**
@@ -82,7 +82,7 @@ public class ClientCommunicator{
 	 * @return An object with the new batch if succesful.  Otherwise the word failed.
 	 */
 	public DownloadBatch_Result downloadBatch(DownloadBatch_Params params){
-		return (DownloadBatch_Result) doPost("/DownloadBatch",params);
+		return (DownloadBatch_Result) doGet("/DownloadBatch/" + params.getProjectId(),params);
 	}
 	
 	/**
@@ -105,7 +105,7 @@ public class ClientCommunicator{
 	 * @return An object containing the desired fields if succesful, otherwise the word failed.
 	 */
 	public GetFields_Result getFields(GetFields_Params params){
-		return (GetFields_Result) doPost("/GetFields",params);
+		return (GetFields_Result) doGet("/GetFields",params);
 	}
 	
 	/**
@@ -117,7 +117,7 @@ public class ClientCommunicator{
 	 * and Field ID that match the search criteria.
 	 */
 	public Search_Result search(Search_Params params){
-		return (Search_Result) doPost("/Search",params);
+		return (Search_Result) doGet("/Search",params);
 	}
 	
 	/**
@@ -126,8 +126,23 @@ public class ClientCommunicator{
 	 * @return The bytes of the requested file.
 	 */
 	public Byte[] downloadFile(String url){
-		return (Byte[]) doPost("/DownloadFile",url);
+		return (Byte[]) doGet("/DownloadFile/" + url);
 	}
+	
+	private Object doGet(String urlPath){
+		Object result = null;
+		try{
+			URL url = new URL("http://" + host + ":" + port + urlPath);
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("GET");
+			connection.connect();
+			result = xmlStream.fromXML(connection.getInputStream());
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 	
 	private Object doGet(String urlPath, Params params){
 		Object result = null;
@@ -144,15 +159,16 @@ public class ClientCommunicator{
 		return result;
 	}
 	
-	private Object doPost(String urlPath, Object postData){
+	private Object doPost(String urlPath, Params params){
 		Object result = null;
 		try{
 			URL url = new URL("http://" + host + ":" + port + urlPath);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");
 			connection.setDoOutput(true);
+			connection.addRequestProperty("authorization",params.getUserName() + ":" + params.getPassword());
 			connection.connect();
-			xmlStream.toXML(postData,connection.getOutputStream());
+			xmlStream.toXML(params,connection.getOutputStream());
 			
 			result = xmlStream.fromXML(connection.getInputStream());
 		}catch(IOException e){

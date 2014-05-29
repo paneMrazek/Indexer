@@ -54,21 +54,22 @@ public class BatchDAO{
 	 * @param project the project to be used in the query.
 	 * @return a list of all batches in the given project.
 	 */
-	public List<Batch> readBatchesForProject(Project project){
-		String sql = "SELECT * FROM batches WHERE projectid = ?";
+	public List<Batch> readBatchesForProject(int projectId){
+		String sql = "SELECT * FROM batches WHERE projectid = ? AND NOT complete";
 		ResultSet rs;
 		List<Batch> batches = new ArrayList<>();
 		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
-			statement.setInt(1,project.getId());
+			statement.setInt(1,projectId);
 			rs = statement.executeQuery();
 			while(rs.next()){
 				if(!rs.getBoolean("complete")){
 					Batch batch = new Batch();
+					batch.setProjectId(projectId);
 					batch.setComplete(false);
-					batch.setId(rs.getInt("batchid"));
+					batch.setId(rs.getInt("id"));
 					batch.setImageURL(rs.getString("imageurl"));
-					batch.setFirstYCoordinate(rs.getInt("firstycoordinate"));
-					batch.setRecordHeight(rs.getInt("recordheight"));
+					//batch.setFirstYCoordinate(rs.getInt("firstycoordinate"));
+					//batch.setRecordHeight(rs.getInt("recordheight"));
 					batches.add(batch);
 				}
 				
@@ -87,17 +88,16 @@ public class BatchDAO{
 	 * @return the batch with the given batchId if exists, otherwise null.
 	 */
 	public Batch readBatch(int batchId){
-		String sql = "SELECT * FROM batches WHERE batchId = ?";
+		String sql = "SELECT * FROM batches WHERE id = ?";
 		Batch batch = null;
 		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
 			statement.setInt(1,batchId);
 			ResultSet rs = statement.executeQuery();
 			if(rs.next()){
 				batch = new Batch();
-				batch.setId(rs.getInt("batchid"));
+				batch.setId(rs.getInt("id"));
+				batch.setProjectId(rs.getInt("projectid"));
 				batch.setImageURL(rs.getString("imageurl"));
-				batch.setFirstYCoordinate(rs.getInt("firstycoordinate"));
-				batch.setRecordHeight(rs.getInt("recordheight"));
 				batch.setComplete(rs.getBoolean("complete"));
 			}
 			rs.close();
@@ -109,6 +109,19 @@ public class BatchDAO{
 	}
 	
 	//UPDATE
+	
+
+	public void updateBatchToComplete(int batchId){
+		String sql = "UPDATE batches SET complete=? WHERE id=?";
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setBoolean(1,true);
+			statement.setInt(2,batchId);
+			statement.executeUpdate();
+		}catch(SQLException e){
+			database.error();
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * Updates the given batch in the database.
@@ -163,4 +176,5 @@ public class BatchDAO{
 			e.printStackTrace();
 		}
 	}
+
 }
