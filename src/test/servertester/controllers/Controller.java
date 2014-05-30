@@ -8,6 +8,7 @@ import main.java.indexer.shared.communication.params.DownloadBatch_Params;
 import main.java.indexer.shared.communication.params.GetFields_Params;
 import main.java.indexer.shared.communication.params.GetProjects_Params;
 import main.java.indexer.shared.communication.params.GetSampleImage_Params;
+import main.java.indexer.shared.communication.params.Search_Params;
 import main.java.indexer.shared.communication.params.SubmitBatch_Params;
 import main.java.indexer.shared.communication.params.ValidateUser_Params;
 import test.servertester.views.IView;
@@ -158,7 +159,7 @@ public class Controller implements IController {
 		GetFields_Params params = new GetFields_Params();
 		params.setUserName(paramValues[0]);
 		params.setPassword(paramValues[1]);
-		if(paramValues.length == 3)
+		if(!paramValues[2].equals(""))
 			params.setProjectId(Integer.parseInt(paramValues[2]));
 		getView().setRequest(new XStream(new DomDriver()).toXML(params));
 		getView().setResponse(ClientCommunicator.getInstance().getFields(params).toString());
@@ -179,6 +180,15 @@ public class Controller implements IController {
 	}
 	
 	private void search() {
+		String[] paramValues = getView().getParameterValues();
+		Search_Params params = new Search_Params();
+		params.setUserName(paramValues[0]);
+		params.setPassword(paramValues[1]);
+		params.setFieldId(paramValues[2].split(","));
+		params.setSearchValues(paramValues[3].split(","));
+		
+		getView().setRequest(new XStream(new DomDriver()).toXML(params));
+		getView().setResponse(ClientCommunicator.getInstance().search(params).toString());
 		
 	}
 

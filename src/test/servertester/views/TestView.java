@@ -28,6 +28,10 @@ public class TestView implements IView {
 		_controller = value;
 	}
 	
+	public IController getController(){
+		return _controller;
+	}
+	
 	//
 	// IView
 	//

@@ -55,10 +55,13 @@ public class FieldDAO{
 	}
 	
 	public List<Field> readFieldsForProject(int projectId){
-		String sql = "SELECT * FROM fields WHERE projectid = ?";
+		String sql;
+		if(projectId > 0){ sql = "SELECT * FROM fields WHERE projectid = ?"; }
+		else{ sql = "SELECT * FROM fields"; }
+		
 		List<Field> fields = new ArrayList<Field>();
 		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
-			statement.setInt(1,projectId);
+			if(projectId > 0){ statement.setInt(1,projectId); }
 			ResultSet rs = statement.executeQuery();
 			while(rs.next()){
 				Field field = new Field();

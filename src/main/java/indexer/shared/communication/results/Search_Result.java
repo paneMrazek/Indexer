@@ -1,6 +1,5 @@
 package main.java.indexer.shared.communication.results;
 
-import java.io.Serializable;
 import java.util.List;
 
 import main.java.indexer.shared.models.SearchResult;
@@ -9,7 +8,7 @@ import main.java.indexer.shared.models.SearchResult;
  * A class with the searchResults that is returned from search.
  *
  */
-public class Search_Result implements Serializable{
+public class Search_Result extends Result{
 	
 	/**
 	 * 
@@ -33,6 +32,9 @@ public class Search_Result implements Serializable{
 
 	@Override
 	public String toString(){
+		if(isError()){
+			return super.toString();
+		}
 		String ret = "";
 		for(SearchResult result : results){
 			ret += result.toString();

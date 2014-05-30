@@ -10,7 +10,7 @@ public class GetFields_Params extends Params{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private int projectId;
+	private int projectId = -1;
 
 	/**
 	 * @return the projectId

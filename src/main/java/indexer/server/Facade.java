@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Random;
 
 import main.java.indexer.server.daos.Database;
-import main.java.indexer.shared.communication.params.GetFields_Params;
 import main.java.indexer.shared.communication.params.Search_Params;
 import main.java.indexer.shared.communication.params.SubmitBatch_Params;
 import main.java.indexer.shared.communication.results.DownloadBatch_Result;
@@ -20,6 +19,7 @@ import main.java.indexer.shared.models.Batch;
 import main.java.indexer.shared.models.Field;
 import main.java.indexer.shared.models.Project;
 import main.java.indexer.shared.models.Record;
+import main.java.indexer.shared.models.SearchResult;
 import main.java.indexer.shared.models.User;
 
 public class Facade{
@@ -168,8 +168,21 @@ public class Facade{
 	 * and the optional project id.
 	 * @return An object containing the desired fields if succesful, otherwise the word failed.
 	 */
-	public GetFields_Result getFields(GetFields_Params params){
-		return null;
+	public GetFields_Result getFields(String auth, int projectId){
+		GetFields_Result result = new GetFields_Result();
+		Database database = new Database();
+		List<Field> fields = new ArrayList<>();
+		if(validateUser(auth).isValid()){
+			database.startTransaction();
+			fields = database.getFieldDAO().readFieldsForProject(projectId);
+			database.endTransaction();
+			if(database.wasSuccesful()){
+				result.setFields(fields);
+				return result;
+			}
+		}
+		result.setError(true);
+		return result;
 	}
 	
 	/**
@@ -180,8 +193,28 @@ public class Facade{
 	 * which contains the batchId, Image URL, Record Number, 
 	 * and Field ID that match the search criteria.
 	 */
-	public Search_Result search(Search_Params params){
-		return null;
+	public Search_Result search(String auth,Search_Params params){
+		Search_Result result = new Search_Result();
+		Database database = new Database();
+		List<SearchResult> searchResults = new ArrayList<>();
+		if(validateUser(auth).isValid()){
+			database.startTransaction();
+			for(String fieldId : params.getFieldId()){
+				searchResults.addAll(database.getRecordDAO()
+						.searchRecords(Integer.parseInt(fieldId),params.getSearchValues()));
+			}
+			for(SearchResult searchResult : searchResults){
+				searchResult.setImageURL(database.getBatchDAO()
+						.readBatch(searchResult.getBatchId()).getImageURL());
+			}
+			database.endTransaction();
+			if(database.wasSuccesful()){
+				result.setResults(searchResults);
+				return result;
+			}
+		}
+		result.setError(true);
+		return result;
 	}
 	
 	/**

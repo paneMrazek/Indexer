@@ -8,6 +8,7 @@ import java.util.List;
 
 import main.java.indexer.shared.models.Field;
 import main.java.indexer.shared.models.Record;
+import main.java.indexer.shared.models.SearchResult;
 
 /**
  * <p> Used to access the Record table in the database.  
@@ -72,11 +73,11 @@ public class RecordDAO{
 	 * @param recordId the id of the record being searched for.
 	 * @return the record with the given recordId.
 	 */
-	public Record readRecord(String recordId){
-		String sql = "SELECT * FROM records WHERE recordid = ?";
+	public Record readRecord(int recordId){
+		String sql = "SELECT * FROM records WHERE id = ?";
 		Record record = new Record();
 		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
-			statement.setInt(1,record.getId());
+			statement.setInt(1,recordId);
 			ResultSet rs = statement.executeQuery();
 			if(rs.next()){
 				record.setId(rs.getInt("id"));
@@ -171,6 +172,34 @@ public class RecordDAO{
 			database.error();
 			e.printStackTrace();
 		}
+	}
+	
+	public List<SearchResult> searchRecords(int fieldId,String[] searchValues){
+		List<SearchResult> results = new ArrayList<>();
+		for(String value : searchValues){
+			results.add(searchRecord(fieldId,value));
+		}
+		return results;
+	}
+	
+	public SearchResult searchRecord(int fieldId,String searchValue){
+		String sql = "SELECT * FROM recordvalues WHERE fieldid = ? AND value LIKE ?";
+		SearchResult result = new SearchResult();
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setInt(1,fieldId);
+			statement.setString(2,searchValue);
+			ResultSet rs = statement.executeQuery();
+			if(rs.next()){
+				Record record = readRecord(rs.getInt("recordid"));
+				result.setFieldId(fieldId);
+				result.setRecordNumber(record.getOrderId());
+				result.setBatchId(record.getBatchId());
+			}
+		}catch(SQLException e){
+			database.error();
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 }

@@ -105,7 +105,7 @@ public class ClientCommunicator{
 	 * @return An object containing the desired fields if succesful, otherwise the word failed.
 	 */
 	public GetFields_Result getFields(GetFields_Params params){
-		return (GetFields_Result) doGet("/GetFields",params);
+		return (GetFields_Result) doGet("/GetFields/" + params.getProjectId(),params);
 	}
 	
 	/**
@@ -117,7 +117,7 @@ public class ClientCommunicator{
 	 * and Field ID that match the search criteria.
 	 */
 	public Search_Result search(Search_Params params){
-		return (Search_Result) doGet("/Search",params);
+		return (Search_Result) doPost("/Search",params);
 	}
 	
 	/**
