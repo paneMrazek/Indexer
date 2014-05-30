@@ -1,6 +1,7 @@
 package main.java.indexer.shared.models;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -17,7 +18,7 @@ public class Record implements Serializable{
 	private int id;
 	private int batchId;
 	private int orderId;
-	private Map<Field, String> values;
+	private Map<Field, String> values = new HashMap<>();
 	
 	/**
 	 * @return the id
@@ -67,4 +68,26 @@ public class Record implements Serializable{
 	public void setValues(Map<Field, String> values){
 		this.values = values;
 	}
+	@Override
+	public int hashCode(){
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + batchId;
+		result = prime * result + id;
+		result = prime * result + orderId;
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj) return true;
+		if(obj == null) return false;
+		if(getClass() != obj.getClass()) return false;
+		Record other = (Record) obj;
+		if(batchId != other.batchId) return false;
+		if(id != other.id) return false;
+		if(orderId != other.orderId) return false;
+		return true;
+	}
+	
+	
 }

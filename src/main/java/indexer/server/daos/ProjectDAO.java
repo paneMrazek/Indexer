@@ -67,6 +67,8 @@ public class ProjectDAO{
 				project.setRecordsPerImage(rs.getInt("recordsperimage"));
 				project.setFirstYCoordinate(rs.getInt("firstycoordinate"));
 				project.setRecordHeight(rs.getInt("recordheight"));
+			}else{
+				return null;
 			}
 		}catch(SQLException e){
 			database.error();
@@ -130,10 +132,10 @@ public class ProjectDAO{
 	 * Deletes the given project from the database.
 	 * @param project the project to be deleted.
 	 */
-	public void deleteProject(Project project){
+	public void deleteProject(int projectId){
 		String sql = "DELETE FROM projects WHERE id = ?";
 		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
-			statement.setInt(1,project.getId());
+			statement.setInt(1,projectId);
 			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();

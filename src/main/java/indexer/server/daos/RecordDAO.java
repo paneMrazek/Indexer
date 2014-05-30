@@ -83,6 +83,8 @@ public class RecordDAO{
 				record.setId(rs.getInt("id"));
 				record.setBatchId(rs.getInt("batchid"));
 				record.setOrderId(rs.getInt("orderid"));
+			}else{
+				return null;
 			}
 		}catch(SQLException e){
 			database.error();

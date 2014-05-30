@@ -23,7 +23,12 @@ public class ServerUnitTests {
 	public static void main(String[] args) {
 		
 		String[] testClasses = new String[] {
-				"test.server.ServerUnitTests"
+				"test.server.ServerUnitTests",
+				"test.java.indexer.server.daos.BatchDAOTest",
+				"test.java.indexer.server.daos.FieldDAOTest",
+				"test.java.indexer.server.daos.ProjectDAOTest",
+				"test.java.indexer.server.daos.RecordDAOTest",
+				"test.java.indexer.server.daos.UserDAOTest"
 		};
 
 		org.junit.runner.JUnitCore.main(testClasses);

@@ -24,6 +24,7 @@ public class UserDAOTest{
 		user.setEmail("jj@gmail.com");
 		user.setIndexedRecords(0);
 		user.setUserId(id);
+		database.deleteData();
 	}
 	
 	@Test
@@ -39,6 +40,7 @@ public class UserDAOTest{
 	@Test
 	public void readUserTest(){
 		database.startTransaction();
+		user = database.getUserDAO().createUser(user);
 		User user2 = database.getUserDAO().readUser(user.getUserName(),user.getPassword());
 		database.endTransaction();
 		Assert.assertTrue(database.wasSuccesful());
@@ -48,6 +50,7 @@ public class UserDAOTest{
 	@Test
 	public void updateUserTest(){
 		database.startTransaction();
+		user = database.getUserDAO().createUser(user);
 		user.setFirstName("zack");
 		User user2 = database.getUserDAO().updateUser(user);
 		database.endTransaction();
@@ -59,6 +62,7 @@ public class UserDAOTest{
 	@Test
 	public void deleteUserTest(){
 		database.startTransaction();
+		user = database.getUserDAO().createUser(user);
 		database.getUserDAO().updateUser(user);
 		database.getUserDAO().deleteUser(user.getUserName(),user.getPassword());
 		Assert.assertNull(database.getUserDAO().readUser(user.getUserName(),user.getPassword()));

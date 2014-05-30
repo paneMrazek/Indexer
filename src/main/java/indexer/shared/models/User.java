@@ -140,7 +140,7 @@ public class User implements Serializable{
 		if(password == null){
 			if(other.password != null) return false;
 		}else if(!password.equals(other.password)) return false;
-		//if(userId != other.userId) return false;
+		if(userId != other.userId) return false;
 		if(userName == null){
 			if(other.userName != null) return false;
 		}else if(!userName.equals(other.userName)) return false;

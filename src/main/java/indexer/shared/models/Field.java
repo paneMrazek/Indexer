@@ -126,4 +126,44 @@ public class Field implements Serializable{
 				+ width + "\n" + knownData + "\n";
 		return ret;
 	}
+	@Override
+	public int hashCode(){
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((helpFile == null) ? 0 : helpFile.hashCode());
+		result = prime * result + id;
+		result = prime * result
+				+ ((knownData == null) ? 0 : knownData.hashCode());
+		result = prime * result + orderId;
+		result = prime * result + projectId;
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + width;
+		result = prime * result + xCoordinate;
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj) return true;
+		if(obj == null) return false;
+		if(getClass() != obj.getClass()) return false;
+		Field other = (Field) obj;
+		if(helpFile == null){
+			if(other.helpFile != null) return false;
+		}else if(!helpFile.equals(other.helpFile)) return false;
+		if(id != other.id) return false;
+		if(knownData == null){
+			if(other.knownData != null) return false;
+		}else if(!knownData.equals(other.knownData)) return false;
+		if(orderId != other.orderId) return false;
+		if(projectId != other.projectId) return false;
+		if(title == null){
+			if(other.title != null) return false;
+		}else if(!title.equals(other.title)) return false;
+		if(width != other.width) return false;
+		if(xCoordinate != other.xCoordinate) return false;
+		return true;
+	}
+	
+	
 }

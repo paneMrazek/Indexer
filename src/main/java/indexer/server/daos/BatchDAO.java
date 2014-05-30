@@ -129,14 +129,12 @@ public class BatchDAO{
 	 * @return the updated branch.
 	 */
 	public Batch updateBatch(Batch batch){
-		String sql = "UPDATE batches SET imageurl=?,projectid=?,firstycoordinate=?,recordheight=?"
-				+ "WHERE batchId=?";
+		String sql = "UPDATE batches SET imageurl=?,projectid=?"
+				+ "WHERE id=?";
 		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
 			statement.setString(1,batch.getImageURL());
 			statement.setInt(2,batch.getProjectId());
-			statement.setInt(3,batch.getFirstYCoordinate());
-			statement.setInt(4,batch.getRecordHeight());
-			statement.setInt(5,batch.getId());
+			statement.setInt(3,batch.getId());
 			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();
@@ -151,10 +149,10 @@ public class BatchDAO{
 	 * Delete the given batch from the database.
 	 * @param batch the batch to be deleted.
 	 */
-	public void deleteBatch(Batch batch){
-		String sql = "DELETE FROM batches WHERE batchid=?";
+	public void deleteBatch(int batchId){
+		String sql = "DELETE FROM batches WHERE id=?";
 		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
-			statement.setInt(1,batch.getId());
+			statement.setInt(1,batchId);
 			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();

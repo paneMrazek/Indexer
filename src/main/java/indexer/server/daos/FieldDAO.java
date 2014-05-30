@@ -115,13 +115,13 @@ public class FieldDAO{
 	 * @return the field with the given id.
 	 */
 	public Field readField(int fieldId){
-		String sql = "SELECT * FROM fields WHERE fieldid = ?";
+		String sql = "SELECT * FROM fields WHERE id = ?";
 		Field field = new Field();
 		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
 			statement.setInt(1,fieldId);
 			ResultSet rs = statement.executeQuery();
 			if(rs.next()){
-				field.setId(rs.getInt("fieldid"));
+				field.setId(rs.getInt("id"));
 				field.setProjectId(rs.getInt("projectid"));
 				field.setOrderId(rs.getInt("orderid"));
 				field.setTitle(rs.getString("title"));
@@ -129,9 +129,12 @@ public class FieldDAO{
 				field.setWidth(rs.getInt("width"));
 				field.setHelpFile(rs.getString("helpfile"));
 				field.setKnownData(rs.getString("knowndata"));
+			}else{
+				return null;
 			}
 		}catch(SQLException e){
-			
+			e.printStackTrace();
+			database.error();
 		}
 		return field;
 	}
@@ -155,7 +158,7 @@ public class FieldDAO{
 			statement.setString(6,field.getHelpFile());
 			statement.setString(7,field.getKnownData());
 			statement.setInt(8,field.getId());
-			statement.executeQuery();
+			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();
 			e.printStackTrace();
@@ -169,11 +172,11 @@ public class FieldDAO{
 	 * Delete the given field from the database.
 	 * @param field the field to be deleted.
 	 */
-	public void deleteField(Field field){
+	public void deleteField(int fieldId){
 		String sql = "DELETE FROM fields WHERE id = ?";
 		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
-			statement.setInt(1,field.getId());
-			statement.executeQuery();
+			statement.setInt(1,fieldId);
+			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();
 			e.printStackTrace();

@@ -21,11 +21,11 @@ public class Database{
 	private boolean success;
 	
 	public Database(){
-		batchDAO = new BatchDAO(this);
+		batchDAO = new BatchDAO(this); //Tested
 		fieldDAO = new FieldDAO(this);
 		projectDAO = new ProjectDAO(this);
 		recordDAO = new RecordDAO(this);
-		userDAO = new UserDAO(this);
+		userDAO = new UserDAO(this); //Tested
 		
 		try{
 			final String driver = "org.sqlite.JDBC";
@@ -110,6 +110,15 @@ public class Database{
 			}catch (SQLException e){
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	public void rollbackTransaction(){
+		try{
+			connection.rollback();
+			connection.close();
+		}catch(SQLException e){
+			e.printStackTrace();
 		}
 	}
 	

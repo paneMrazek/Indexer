@@ -131,6 +131,45 @@ public class Batch implements Serializable{
 		}
 		return ret;
 	}
+	@Override
+	public int hashCode(){
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (complete ? 1231 : 1237);
+		result = prime * result + ((fields == null) ? 0 : fields.hashCode());
+		result = prime * result + firstYCoordinate;
+		result = prime * result + id;
+		result = prime * result
+				+ ((imageURL == null) ? 0 : imageURL.hashCode());
+		result = prime * result + projectId;
+		result = prime * result + recordHeight;
+		result = prime * result + ((records == null) ? 0 : records.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj) return true;
+		if(obj == null) return false;
+		if(getClass() != obj.getClass()) return false;
+		Batch other = (Batch) obj;
+		if(complete != other.complete) return false;
+		if(fields == null){
+			if(other.fields != null) return false;
+		}else if(!fields.equals(other.fields)) return false;
+		if(firstYCoordinate != other.firstYCoordinate) return false;
+		if(id != other.id) return false;
+		if(imageURL == null){
+			if(other.imageURL != null) return false;
+		}else if(!imageURL.equals(other.imageURL)) return false;
+		if(projectId != other.projectId) return false;
+		if(recordHeight != other.recordHeight) return false;
+		if(records == null){
+			if(other.records != null) return false;
+		}else if(!records.equals(other.records)) return false;
+		return true;
+	}
+	
+	
 	
 	
 	
