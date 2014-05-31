@@ -54,4 +54,16 @@ private void run() {
 	public static void main(String[] args) {
 		new Server(args).run();
 	}
+	
+	private static Server testServer;
+	
+	public static void test(){
+		String[] args = {"39600"};
+		testServer = new Server(args);
+		testServer.run();
+	}
+	
+	public static void endTest(){
+		testServer.server.stop(10);
+	}
 }

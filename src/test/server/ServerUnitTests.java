@@ -1,6 +1,7 @@
 package test.server;
 
 import main.java.indexer.server.importer.DataImporter;
+import main.java.indexer.server.Server;
 import main.java.indexer.shared.communication.ClientCommunicator;
 import main.java.indexer.shared.communication.params.DownloadBatch_Params;
 import main.java.indexer.shared.communication.params.GetFields_Params;
@@ -23,15 +24,21 @@ import static org.junit.Assert.* ;
 
 public class ServerUnitTests {
 	
+	@BeforeClass
+	public static void allTestsSetup(){
+		Server.test();
+	}
+	
 	@Before
 	public void setup(){
 		new DataImporter().importData("Records/Records.xml");
 		ClientCommunicator.getInstance().setHost("localhost");
-		ClientCommunicator.getInstance().setPort(39640);
+		ClientCommunicator.getInstance().setPort(39600);
 	}
 	
-	@After
-	public void teardown() {
+	@AfterClass
+	public static void teardown() {
+		Server.endTest();
 	}
 	
 	@Test

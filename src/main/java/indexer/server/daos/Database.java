@@ -97,6 +97,7 @@ public class Database{
 	}
 	
 	public void endTransaction(){
+		System.out.println(success);
 		try{
 			if(success)
 				connection.commit();

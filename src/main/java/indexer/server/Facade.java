@@ -134,6 +134,7 @@ public class Facade{
 		ValidateUser_Result validationResult = validateUser(auth);
 		database.startTransaction();
 		Batch batch = database.getBatchDAO().readBatch(params.getBatchId());
+		database.endTransaction();
 		if(validationResult.isValid() && 
 				validationResult.getUser().getCurrentBatch() == params.getBatchId()
 				&& !batch.isComplete()){
@@ -157,10 +158,12 @@ public class Facade{
 					fieldCount = 0;
 				}
 			}
-			int recordsPerBatch = database.getProjectDAO().readProject(projectId).getRecordsPerImage();
+			int recordsPerBatch = database.getProjectDAO().readProject(projectId)
+					.getRecordsPerImage();
 			user.setIndexedRecords(user.getIndexedRecords() + recordsPerBatch);
 			user.setCurrentBatch(0);
-			database.getUserDAO().updateUser(user);
+			database.getUserDAO().updateUserAssignedBatch(user.getCurrentBatch(),
+					user.getUserId(),user.getIndexedRecords() + recordsPerBatch);
 			database.getBatchDAO().updateBatchToComplete(params.getBatchId());
 			database.endTransaction();
 			if(database.wasSuccesful()){

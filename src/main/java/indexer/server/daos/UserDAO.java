@@ -88,6 +88,19 @@ public class UserDAO{
 	
 	//UPDATE
 	
+	public void updateUserAssignedBatch(int batchid, int userid,int indexedrecords){
+		String sql = "UPDATE users SET currentBatch=?,indexedrecords=? WHERE userid=?";
+		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
+			statement.setInt(1,batchid);
+			statement.setInt(2,indexedrecords);
+			statement.setInt(3,userid);
+			statement.executeUpdate();
+		}catch(SQLException e){
+			database.error();
+			//e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Updates the given user in the database.
 	 * @param user the user to be updated.
