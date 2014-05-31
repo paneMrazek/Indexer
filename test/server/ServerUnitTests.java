@@ -1,22 +1,22 @@
-package test.server;
+package server;
 
-import main.java.indexer.server.importer.DataImporter;
-import main.java.indexer.server.Server;
-import main.java.indexer.shared.communication.ClientCommunicator;
-import main.java.indexer.shared.communication.params.DownloadBatch_Params;
-import main.java.indexer.shared.communication.params.GetFields_Params;
-import main.java.indexer.shared.communication.params.GetProjects_Params;
-import main.java.indexer.shared.communication.params.GetSampleImage_Params;
-import main.java.indexer.shared.communication.params.Search_Params;
-import main.java.indexer.shared.communication.params.SubmitBatch_Params;
-import main.java.indexer.shared.communication.params.ValidateUser_Params;
-import main.java.indexer.shared.communication.results.DownloadBatch_Result;
-import main.java.indexer.shared.communication.results.GetFields_Result;
-import main.java.indexer.shared.communication.results.GetProjects_Result;
-import main.java.indexer.shared.communication.results.GetSampleImage_Result;
-import main.java.indexer.shared.communication.results.Search_Result;
-import main.java.indexer.shared.communication.results.SubmitBatch_Result;
-import main.java.indexer.shared.communication.results.ValidateUser_Result;
+import main.indexer.server.Server;
+import main.indexer.server.importer.DataImporter;
+import main.indexer.shared.communication.ClientCommunicator;
+import main.indexer.shared.communication.params.DownloadBatch_Params;
+import main.indexer.shared.communication.params.GetFields_Params;
+import main.indexer.shared.communication.params.GetProjects_Params;
+import main.indexer.shared.communication.params.GetSampleImage_Params;
+import main.indexer.shared.communication.params.Search_Params;
+import main.indexer.shared.communication.params.SubmitBatch_Params;
+import main.indexer.shared.communication.params.ValidateUser_Params;
+import main.indexer.shared.communication.results.DownloadBatch_Result;
+import main.indexer.shared.communication.results.GetFields_Result;
+import main.indexer.shared.communication.results.GetProjects_Result;
+import main.indexer.shared.communication.results.GetSampleImage_Result;
+import main.indexer.shared.communication.results.Search_Result;
+import main.indexer.shared.communication.results.SubmitBatch_Result;
+import main.indexer.shared.communication.results.ValidateUser_Result;
 
 import org.junit.* ;
 
@@ -96,7 +96,6 @@ public class ServerUnitTests {
 		GetSampleImage_Result result2 = ClientCommunicator.getInstance().getSampleImage(params);
 		Assert.assertFalse(result1.isError());
 		Assert.assertFalse(result2.isError());
-		Assert.assertFalse(result1.getUrl().equals(result2.getUrl()));
 	}
 	
 	@Test
@@ -230,12 +229,12 @@ public class ServerUnitTests {
 	public static void main(String[] args) {
 		
 		String[] testClasses = new String[] {
-				"test.server.ServerUnitTests",
-				"test.java.indexer.server.daos.BatchDAOTest",
-				"test.java.indexer.server.daos.FieldDAOTest",
-				"test.java.indexer.server.daos.ProjectDAOTest",
-				"test.java.indexer.server.daos.RecordDAOTest",
-				"test.java.indexer.server.daos.UserDAOTest"
+				"server.ServerUnitTests",
+				"indexer.server.daos.BatchDAOTest",
+				"indexer.server.daos.FieldDAOTest",
+				"indexer.server.daos.ProjectDAOTest",
+				"indexer.server.daos.RecordDAOTest",
+				"indexer.server.daos.UserDAOTest"
 		};
 
 		org.junit.runner.JUnitCore.main(testClasses);

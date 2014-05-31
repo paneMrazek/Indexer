@@ -1,16 +1,16 @@
-package test.servertester.controllers;
+package servertester.controllers;
 
 import java.util.ArrayList;
 
-import main.java.indexer.shared.communication.ClientCommunicator;
-import main.java.indexer.shared.communication.params.DownloadBatch_Params;
-import main.java.indexer.shared.communication.params.GetFields_Params;
-import main.java.indexer.shared.communication.params.GetProjects_Params;
-import main.java.indexer.shared.communication.params.GetSampleImage_Params;
-import main.java.indexer.shared.communication.params.Search_Params;
-import main.java.indexer.shared.communication.params.SubmitBatch_Params;
-import main.java.indexer.shared.communication.params.ValidateUser_Params;
-import test.servertester.views.IView;
+import main.indexer.shared.communication.ClientCommunicator;
+import main.indexer.shared.communication.params.DownloadBatch_Params;
+import main.indexer.shared.communication.params.GetFields_Params;
+import main.indexer.shared.communication.params.GetProjects_Params;
+import main.indexer.shared.communication.params.GetSampleImage_Params;
+import main.indexer.shared.communication.params.Search_Params;
+import main.indexer.shared.communication.params.SubmitBatch_Params;
+import main.indexer.shared.communication.params.ValidateUser_Params;
+import servertester.views.IView;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;

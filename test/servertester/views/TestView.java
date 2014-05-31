@@ -1,6 +1,6 @@
-package test.servertester.views;
+package servertester.views;
 
-import test.servertester.controllers.*;
+import servertester.controllers.*;
 
 public class TestView implements IView {
 

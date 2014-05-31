@@ -1,9 +1,9 @@
-package test.servertester;
+package servertester;
 
 import java.awt.*;
 
-import test.servertester.controllers.*;
-import test.servertester.views.*;
+import servertester.controllers.*;
+import servertester.views.*;
 
 public class GuiTester {
 

@@ -1,8 +1,8 @@
-package test.servertester.views;
+package servertester.views;
 
 import java.awt.*;
 import javax.swing.*;
-import test.servertester.controllers.*;
+import servertester.controllers.*;
 
 @SuppressWarnings("serial")
 public class BasePanel extends JPanel {

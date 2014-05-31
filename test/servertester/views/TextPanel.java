@@ -1,4 +1,4 @@
-package test.servertester.views;
+package servertester.views;
 
 import java.awt.*;
 import javax.swing.*;

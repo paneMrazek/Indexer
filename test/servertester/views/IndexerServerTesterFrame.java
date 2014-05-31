@@ -1,11 +1,11 @@
-package test.servertester.views;
+package servertester.views;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import test.servertester.controllers.*;
-import static test.servertester.views.Constants.*;
+import servertester.controllers.*;
+import static servertester.views.Constants.*;
 
 @SuppressWarnings("serial")
 public class IndexerServerTesterFrame extends JFrame implements IView {

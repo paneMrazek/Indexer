@@ -1,10 +1,10 @@
-package test.servertester.views;
+package servertester.views;
 
 import java.awt.event.*;
 
 import javax.swing.*;
 
-import static test.servertester.views.Constants.*;
+import static servertester.views.Constants.*;
 
 @SuppressWarnings({"serial", "rawtypes", "unchecked"})
 public class SettingsPanel extends BasePanel {

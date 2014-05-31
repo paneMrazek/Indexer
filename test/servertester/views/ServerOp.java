@@ -1,4 +1,4 @@
-package test.servertester.views;
+package servertester.views;
 
 public enum ServerOp {
 	VALIDATE_USER("Validate User"),	// Username, Password (String, String)

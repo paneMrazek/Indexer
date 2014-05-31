@@ -1,4 +1,4 @@
-package test.servertester.views;
+package servertester.views;
 
 public interface IView {
 	

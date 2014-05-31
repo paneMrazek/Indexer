@@ -8,7 +8,7 @@
 	<property name="src" location="src"/>
 	
 	<!-- Directory containing testing source code -->
-	<property name="test" location="src/test"/>
+	<property name="test" location="test"/>
 	
 	<!-- Directory containing Java libraries -->
 	<property name="lib" location="lib"/>
@@ -112,7 +112,7 @@
 	</target>
 
 	<target name="server-gui" depends="compile" description="run the server test gui">
-		<java classname="test.servertester.GuiTester" fork="yes">
+		<java classname="servertester.GuiTester" fork="yes">
 			<classpath>
 				<path refid="all-classpath"/>
 			</classpath>
@@ -123,7 +123,7 @@
 	</target>
 	
 	<target name="server-tests" depends="compile" description="run automated server tests">
-		<java classname="test.server.ServerUnitTests" fork="yes">
+		<java classname="server.ServerUnitTests" fork="yes">
 			<classpath>
 				<path refid="all-classpath"/>
 			</classpath>

@@ -1,4 +1,4 @@
-package test.servertester.controllers;
+package servertester.controllers;
 
 public interface IController {
 
