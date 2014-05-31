@@ -229,7 +229,6 @@ public class Facade{
 	 * @return The bytes of the requested file.
 	 */
 	public byte[] downloadFile(String url){
-		System.out.println("Reached here: " + url);
 		File file = new File("Server/data/" + url);
 		byte[] result = new byte[(int) file.length()];
 		FileInputStream fileInputStream = null;
@@ -245,7 +244,6 @@ public class Facade{
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Returning result " + result.toString());
 		return result;
 	}
 	

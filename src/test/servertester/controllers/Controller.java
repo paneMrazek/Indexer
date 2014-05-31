@@ -2,7 +2,6 @@ package test.servertester.controllers;
 
 import java.util.ArrayList;
 
-import main.java.indexer.server.Server;
 import main.java.indexer.shared.communication.ClientCommunicator;
 import main.java.indexer.shared.communication.params.DownloadBatch_Params;
 import main.java.indexer.shared.communication.params.GetFields_Params;
@@ -40,8 +39,6 @@ public class Controller implements IController {
 		getView().setHost("localhost");
 		getView().setPort("39640");
 		operationSelected();
-		ClientCommunicator.getInstance().setHost(getView().getHost());
-		ClientCommunicator.getInstance().setPort(Integer.parseInt(getView().getPort()));
 	}
 
 	@Override
@@ -84,6 +81,8 @@ public class Controller implements IController {
 
 	@Override
 	public void executeOperation() {
+		ClientCommunicator.getInstance().setHost(getView().getHost());
+		ClientCommunicator.getInstance().setPort(Integer.parseInt(getView().getPort()));
 		switch (getView().getOperation()) {
 		case VALIDATE_USER:
 			validateUser();
