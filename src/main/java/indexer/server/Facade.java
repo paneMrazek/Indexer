@@ -132,10 +132,15 @@ public class Facade{
 		SubmitBatch_Result result = new SubmitBatch_Result();
 		Database database = new Database();
 		ValidateUser_Result validationResult = validateUser(auth);
-		if(validationResult.isValid() && validationResult.getUser().getCurrentBatch() == params.getBatchId()){
+		database.startTransaction();
+		Batch batch = database.getBatchDAO().readBatch(params.getBatchId());
+		if(validationResult.isValid() && 
+				validationResult.getUser().getCurrentBatch() == params.getBatchId()
+				&& !batch.isComplete()){
 			User user = validationResult.getUser();
 			database.startTransaction();
-			int projectId = database.getBatchDAO().readBatch(params.getBatchId()).getProjectId();
+			
+			int projectId = batch.getProjectId();
 			List<Field> fields = database.getFieldDAO().readFieldsForProject(projectId);
 			int fieldCount = 0;
 			Record record = new Record();
