@@ -34,10 +34,10 @@ public class ValidateUser_Result extends Result{
 	 */
 	@Override
 	public String toString(){
-		if(!valid)
-			return "FALSE\n";
 		if(isError())
 			return super.toString();
+		if(!valid)
+			return "FALSE\n";
 		else
 			return "TRUE\n" + user.getFirstName() + "\n" + 
 				user.getLastName() + "\n" + user.getIndexedRecords() + "\n";

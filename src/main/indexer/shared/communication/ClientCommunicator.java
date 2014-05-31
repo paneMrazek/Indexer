@@ -54,7 +54,12 @@ public class ClientCommunicator{
 	 * and failed if any error occurs.
 	 */
 	public ValidateUser_Result validateUser(ValidateUser_Params params){
-		return (ValidateUser_Result) doGet("/ValidateUser/",params);
+		ValidateUser_Result result = (ValidateUser_Result) doGet("/ValidateUser",params);
+		if(result == null){
+			result = new ValidateUser_Result();
+			result.setError(true);
+		}
+		return result;
 	}
 	
 	/**
@@ -64,7 +69,12 @@ public class ClientCommunicator{
 	 * otherwise the word failed.
 	 */
 	public GetProjects_Result getProjects(GetProjects_Params params){
-		return (GetProjects_Result) doGet("/GetProjects",params);
+		GetProjects_Result result = (GetProjects_Result) doGet("/GetProjects",params);
+		if(result == null){
+			result = new GetProjects_Result();
+			result.setError(true);
+		}
+		return result;
 	}
 	
 	/**
@@ -75,6 +85,11 @@ public class ClientCommunicator{
 	 */
 	public GetSampleImage_Result getSampleImage(GetSampleImage_Params params){
 		GetSampleImage_Result result = (GetSampleImage_Result) doGet("/GetSampleImage/" + params.getProjectId(),params);
+		if(result == null){
+			result = new GetSampleImage_Result();
+			result.setError(true);
+			return result;
+		}
 		result.setUrl("http://" + host + ":" + port + "/" + result.getUrl());
 		return result;
 	}
@@ -89,6 +104,10 @@ public class ClientCommunicator{
 	 */
 	public DownloadBatch_Result downloadBatch(DownloadBatch_Params params){
 		DownloadBatch_Result result = (DownloadBatch_Result) doGet("/DownloadBatch/" + params.getProjectId(),params);
+		if(result == null){
+			result = new DownloadBatch_Result();
+			result.setError(true);
+		}
 		if(result.getBatch() == null)
 			return result;
 		for(Field field : result.getBatch().getFields()){
@@ -109,7 +128,12 @@ public class ClientCommunicator{
 	 * @return An object with the word true if succesful, otherwise the word failed.
 	 */
 	public SubmitBatch_Result submitBatch(SubmitBatch_Params params){
-		return (SubmitBatch_Result) doPost("/SubmitBatch",params);
+		SubmitBatch_Result result = (SubmitBatch_Result) doPost("/SubmitBatch",params);
+		if(result == null){
+			result = new SubmitBatch_Result();
+			result.setError(true);
+		}
+		return result;
 	}
 	
 	/**
@@ -122,6 +146,10 @@ public class ClientCommunicator{
 	 */
 	public GetFields_Result getFields(GetFields_Params params){
 		GetFields_Result result = (GetFields_Result) doGet("/GetFields/" + params.getProjectId(),params);
+		if(result == null){
+			result = new GetFields_Result();
+			result.setError(true);
+		}
 		if(result.getFields() == null)
 			return result;
 		for(Field field : result.getFields()){
@@ -141,6 +169,10 @@ public class ClientCommunicator{
 	 */
 	public Search_Result search(Search_Params params){
 		Search_Result result = (Search_Result) doPost("/Search",params);
+		if(result == null){
+			result = new Search_Result();
+			result.setError(true);
+		}
 		if(result.getResults() == null)
 			return result;
 		for(SearchResult searchResult : result.getResults()){
@@ -161,8 +193,8 @@ public class ClientCommunicator{
 			connection.setRequestMethod("GET");
 			connection.connect();
 			return extract(connection.getInputStream());
-		}catch(IOException e){
-			e.printStackTrace();
+		}catch(IOException | NumberFormatException e){
+			//e.printStackTrace();
 		}
 		return null;
 	}	
@@ -187,8 +219,8 @@ public class ClientCommunicator{
 			connection.addRequestProperty("authorization",params.getUserName() + ":" + params.getPassword());
 			connection.connect();
 			result = xmlStream.fromXML(connection.getInputStream());
-		}catch(IOException e){
-			//e.printStackTrace();
+		}catch(IOException | NumberFormatException e){
+			e.printStackTrace();
 		}
 		return result;
 	}
@@ -205,7 +237,7 @@ public class ClientCommunicator{
 			xmlStream.toXML(params,connection.getOutputStream());
 			
 			result = xmlStream.fromXML(connection.getInputStream());
-		}catch(IOException e){
+		}catch(IOException | NumberFormatException e){
 			//e.printStackTrace();
 		}
 		return result;

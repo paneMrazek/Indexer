@@ -82,6 +82,10 @@ public class Controller implements IController {
 	@Override
 	public void executeOperation() {
 		ClientCommunicator.getInstance().setHost(getView().getHost());
+		if(!getView().getPort().matches("^[0-9]+$")){
+			getView().setResponse("FAILED\n");
+			return;
+		}
 		ClientCommunicator.getInstance().setPort(Integer.parseInt(getView().getPort()));
 		switch (getView().getOperation()) {
 		case VALIDATE_USER:
