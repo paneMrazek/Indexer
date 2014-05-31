@@ -134,7 +134,8 @@ public class Controller implements IController {
 		GetSampleImage_Params params = new GetSampleImage_Params();
 		params.setUserName(paramValues[0]);
 		params.setPassword(paramValues[1]);
-		params.setProjectId(Integer.parseInt(paramValues[2]));
+		if(!paramValues[2].equals(""))
+			params.setProjectId(Integer.parseInt(paramValues[2]));
 		getView().setRequest(new XStream(new DomDriver()).toXML(params));
 		getView().setResponse(ClientCommunicator.getInstance().getSampleImage(params).toString());
 	}
@@ -144,7 +145,8 @@ public class Controller implements IController {
 		DownloadBatch_Params params = new DownloadBatch_Params();
 		params.setUserName(paramValues[0]);
 		params.setPassword(paramValues[1]);
-		params.setProjectId(Integer.parseInt(paramValues[2]));
+		if(!paramValues[2].equals(""))
+			params.setProjectId(Integer.parseInt(paramValues[2]));
 		getView().setRequest(new XStream(new DomDriver()).toXML(params));
 		getView().setResponse(ClientCommunicator.getInstance().downloadBatch(params).toString());
 	}
@@ -165,7 +167,8 @@ public class Controller implements IController {
 		SubmitBatch_Params params = new SubmitBatch_Params();
 		params.setUserName(paramValues[0]);
 		params.setPassword(paramValues[1]);
-		params.setBatchId(Integer.parseInt(paramValues[2]));
+		if(!paramValues[2].equals(""))
+			params.setBatchId(Integer.parseInt(paramValues[2]));
 		
 		String[] recordValues = paramValues[3].split("[;,]");
 		params.setRecordValues(recordValues);

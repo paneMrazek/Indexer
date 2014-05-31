@@ -141,6 +141,8 @@ public class ClientCommunicator{
 	 */
 	public Search_Result search(Search_Params params){
 		Search_Result result = (Search_Result) doPost("/Search",params);
+		if(result.getResults() == null)
+			return result;
 		for(SearchResult searchResult : result.getResults()){
 			searchResult.setImageURL("http://" + host + ":" + port + "/" + searchResult.getImageURL());
 		}

@@ -28,13 +28,17 @@ import main.indexer.shared.models.User;
 public class Facade{
 	
 	public ValidateUser_Result validateUser(String auth){
+		ValidateUser_Result result = new ValidateUser_Result();
+		if(!auth.matches(".+:.+")){
+			result.setError(true);
+			return result;
+		}
 		String decoded = auth;
 		Database database = new Database();
 		String[] split = decoded.split(":(?=[^:]+$)");
 		database.startTransaction();
 		User user = database.getUserDAO().readUser(split[0],split[1]);
 		database.endTransaction();
-		ValidateUser_Result result = new ValidateUser_Result();
 		result.setError(!database.wasSuccesful());
 		result.setValid(user != null);
 		result.setUser(user);
@@ -72,6 +76,10 @@ public class Facade{
 	 */
 	public GetSampleImage_Result getSampleImage(String auth, int projectId){
 		GetSampleImage_Result result = new GetSampleImage_Result();
+		if(projectId == 0){
+			result.setError(true);
+			return result;
+		}
 		Database database = new Database();
 		List<Batch> batches = new ArrayList<>();
 		if(validateUser(auth).isValid()){
@@ -97,6 +105,10 @@ public class Facade{
 	 */
 	public DownloadBatch_Result downloadBatch(String auth, int projectId){
 		DownloadBatch_Result result = new DownloadBatch_Result();
+		if(projectId == 0){
+			result.setError(true);
+			return result;
+		}
 		Database database = new Database();
 		List<Batch> batches = new ArrayList<>();
 		ValidateUser_Result validationResult = validateUser(auth);
@@ -130,6 +142,10 @@ public class Facade{
 	 */
 	public SubmitBatch_Result submitBatch(String auth, SubmitBatch_Params params){
 		SubmitBatch_Result result = new SubmitBatch_Result();
+		if(!validateSubmitBatchParams(params)){
+			result.setError(true);
+			return result;
+		}
 		Database database = new Database();
 		ValidateUser_Result validationResult = validateUser(auth);
 		database.startTransaction();
@@ -174,6 +190,16 @@ public class Facade{
 		return result;
 	}
 	
+	private boolean validateSubmitBatchParams(SubmitBatch_Params params){
+		if(params.getBatchId() == 0)
+			return false;
+		if(params.getRecordValues().length == 0)
+			return false;
+		if(params.getRecordValues()[0].equals(""))
+			return false;
+		return true;
+	}
+
 	/**
 	 * Returns information about all of the fields for the specified project 
 	 * If no project is specified, returns information about all of the fields
@@ -184,6 +210,10 @@ public class Facade{
 	 */
 	public GetFields_Result getFields(String auth, int projectId){
 		GetFields_Result result = new GetFields_Result();
+		if(projectId == 0){
+			result.setError(true);
+			return result;
+		}
 		Database database = new Database();
 		List<Field> fields = new ArrayList<>();
 		if(validateUser(auth).isValid()){
@@ -209,6 +239,10 @@ public class Facade{
 	 */
 	public Search_Result search(String auth,Search_Params params){
 		Search_Result result = new Search_Result();
+		if(!validateSearchParams(params)){
+			result.setError(true);
+			return result;
+		}
 		Database database = new Database();
 		List<SearchResult> searchResults = new ArrayList<>();
 		if(validateUser(auth).isValid()){
@@ -231,6 +265,18 @@ public class Facade{
 		return result;
 	}
 	
+	private boolean validateSearchParams(Search_Params params){
+		if(params.getFieldId().length == 0)
+			return false;
+		if(params.getSearchValues().length == 0)
+			return false;
+		if(!params.getFieldId()[0].matches("[0-9]*"))
+			return false;
+		if(!params.getSearchValues()[0].matches("[A-Za-z0-9]*"))
+			return false;
+		return true;
+	}
+
 	/**
 	 * Downloads and returns the bytes for the requested file.
 	 * @param url The url of the file to download.

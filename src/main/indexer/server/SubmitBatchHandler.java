@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 
 import main.indexer.shared.communication.params.SubmitBatch_Params;
-import main.indexer.shared.communication.results.GetProjects_Result;
 import main.indexer.shared.communication.results.SubmitBatch_Result;
 
 import com.sun.net.httpserver.*;
@@ -12,7 +11,6 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 
-@SuppressWarnings("unused")
 public class SubmitBatchHandler implements HttpHandler{
 
 	@Override

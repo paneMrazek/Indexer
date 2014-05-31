@@ -32,6 +32,8 @@ public class GetFields_Result extends Result{
 
 	@Override
 	public String toString(){
+		if(isError())
+			return super.toString();
 		String ret = "";
 		for(Field field : fields){
 			ret += field.getProjectId() + "\n" + field.getId() + "\n"

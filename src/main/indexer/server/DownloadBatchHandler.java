@@ -19,9 +19,13 @@ public class DownloadBatchHandler implements HttpHandler{
 		String auth = exchange.getRequestHeaders().getFirst("authorization");
 		String uri = exchange.getRequestURI().toString();
 		String[] splitUri = uri.split("/");
-		int projectId = Integer.parseInt(splitUri[splitUri.length-1]);
-		
-		DownloadBatch_Result result = facade.downloadBatch(auth,projectId);		
+		DownloadBatch_Result result = new DownloadBatch_Result();
+		if(splitUri.length > 0){
+			int projectId = Integer.parseInt(splitUri[splitUri.length-1]);		
+			result = facade.downloadBatch(auth,projectId);
+		}else{
+			result.setError(true);
+		}
 
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 		xmlStream.toXML(result,exchange.getResponseBody());

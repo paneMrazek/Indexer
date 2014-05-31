@@ -21,9 +21,13 @@ public class GetFieldsHandler implements HttpHandler{
 		String auth = exchange.getRequestHeaders().getFirst("authorization");
 		String uri = exchange.getRequestURI().toString();
 		String[] splitUri = uri.split("/");
-		int projectId = Integer.parseInt(splitUri[splitUri.length-1]);
-		
-		GetFields_Result result = facade.getFields(auth,projectId);		
+		GetFields_Result result = new GetFields_Result();
+		if(splitUri.length > 0){
+			int projectId = Integer.parseInt(splitUri[splitUri.length-1]);		
+			result = facade.getFields(auth,projectId);
+		}else{
+			result.setError(true);
+		}
 
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 		xmlStream.toXML(result,exchange.getResponseBody());
