@@ -31,7 +31,7 @@ public class Database{
 			final String driver = "org.sqlite.JDBC";
 			Class.forName(driver);
 		}catch(ClassNotFoundException e){
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 
@@ -92,7 +92,7 @@ public class Database{
 			connection.setAutoCommit(false);
 			success = true;
 		}catch(SQLException e){
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 	
@@ -103,12 +103,12 @@ public class Database{
 			else
 				connection.rollback();
 		}catch(SQLException e){
-			e.printStackTrace();
+			//e.printStackTrace();
 		}finally{
 			try{
 				connection.close();
 			}catch (SQLException e){
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 	}
@@ -118,7 +118,7 @@ public class Database{
 			connection.rollback();
 			connection.close();
 		}catch(SQLException e){
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 	
@@ -131,7 +131,7 @@ public class Database{
 		try{
 			Files.copy(from.toPath(), to.toPath());
 		}catch(IOException e){
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	    
 	   

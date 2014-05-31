@@ -18,7 +18,6 @@ public class ValidateUserHandler implements HttpHandler{
 		Facade facade = new Facade();
 		String auth = exchange.getRequestHeaders().getFirst("authorization");
 		ValidateUser_Result result = facade.validateUser(auth);
-		
 		XStream xmlStream = new XStream(new DomDriver());
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 		xmlStream.toXML(result,exchange.getResponseBody());

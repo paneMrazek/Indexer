@@ -2,6 +2,7 @@ package main.java.indexer.server.importer;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,23 +32,20 @@ public class DataImporter{
 		new DataImporter().importData(args[0]);
 	}
 
-	private void importData(String filename){
+	public void importData(String filename){
 		try{
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			database.deleteData();
 			database.startTransaction();
 			File file = new File(filename);
-			File[] sub = file.listFiles();
-			Document doc = null;
-			for(File f : sub){
-				if(f.getPath().contains(".xml"))
-					doc = builder.parse(f);
-			}
+			Document doc = builder.parse(file);
 			parseUsers(doc.getElementsByTagName("user"));
 			parseProjects(doc.getElementsByTagName("project"));
 			database.endTransaction();
+			
+			copyFiles(file.getParentFile(),file.getParent());
 		}catch(SAXException | IOException | ParserConfigurationException e){
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 
@@ -170,4 +168,28 @@ public class DataImporter{
 			database.getRecordDAO().createRecord(record);
 		}
 	}
+	
+	private void copyFiles(File file,String parentFile){
+		if(file.isDirectory()){
+			for(File child : file.listFiles()){
+				if(!file.getPath().equals(parentFile))
+					new File("Server/data/" + file.getPath().substring(parentFile.length())).mkdir();
+				copyFiles(child,parentFile);
+			}
+		}else{
+			File to = new File("Server/data/" + file.getPath().substring(parentFile.length()));
+			copyFile(to,file);
+		}
+	}
+	
+	private void copyFile(File to, File from){
+		try{
+			if(to.exists()) 
+				to.delete();
+			Files.copy(from.toPath(), to.toPath());
+		}catch(IOException e){
+			//e.printStackTrace();
+		}
+	}
+	
 }

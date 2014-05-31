@@ -1,6 +1,8 @@
 package main.java.indexer.shared.communication;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -9,6 +11,8 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import main.java.indexer.shared.communication.params.*;
 import main.java.indexer.shared.communication.results.*;
+import main.java.indexer.shared.models.Field;
+import main.java.indexer.shared.models.SearchResult;
 
 /**
  * The ClientCommunicator class is the class shared in order to communicate between the
@@ -70,7 +74,9 @@ public class ClientCommunicator{
 	 * @return An object with the file url if successful, otherwise the word failed.
 	 */
 	public GetSampleImage_Result getSampleImage(GetSampleImage_Params params){
-		return (GetSampleImage_Result) doGet("/GetSampleImage/" + params.getProjectId(),params);
+		GetSampleImage_Result result = (GetSampleImage_Result) doGet("/GetSampleImage/" + params.getProjectId(),params);
+		result.setUrl("http://" + host + ":" + port + "/" + result.getUrl());
+		return result;
 	}
 	
 	/**
@@ -82,7 +88,17 @@ public class ClientCommunicator{
 	 * @return An object with the new batch if succesful.  Otherwise the word failed.
 	 */
 	public DownloadBatch_Result downloadBatch(DownloadBatch_Params params){
-		return (DownloadBatch_Result) doGet("/DownloadBatch/" + params.getProjectId(),params);
+		DownloadBatch_Result result = (DownloadBatch_Result) doGet("/DownloadBatch/" + params.getProjectId(),params);
+		if(result.getBatch() == null)
+			return result;
+		for(Field field : result.getBatch().getFields()){
+			if(field.getHelpFile() != null && !field.getHelpFile().equals(""))
+				field.setHelpFile("http://" + host + ":" + port + "/" + field.getHelpFile());
+			if(field.getKnownData() != null && !field.getKnownData().equals(""))
+				field.setKnownData("http://" + host + ":" + port + "/" + field.getKnownData());
+		}
+		result.getBatch().setImageURL("http://" + host + ":" + port + result.getBatch().getImageURL());
+		return result;
 	}
 	
 	/**
@@ -105,7 +121,14 @@ public class ClientCommunicator{
 	 * @return An object containing the desired fields if succesful, otherwise the word failed.
 	 */
 	public GetFields_Result getFields(GetFields_Params params){
-		return (GetFields_Result) doGet("/GetFields/" + params.getProjectId(),params);
+		GetFields_Result result = (GetFields_Result) doGet("/GetFields/" + params.getProjectId(),params);
+		if(result.getFields() == null)
+			return result;
+		for(Field field : result.getFields()){
+			field.setHelpFile("http://" + host + ":" + port + "/" + field.getHelpFile());
+			field.setKnownData("http://" + host + ":" + port + "/" + field.getKnownData());
+		}
+		return result;
 	}
 	
 	/**
@@ -117,7 +140,11 @@ public class ClientCommunicator{
 	 * and Field ID that match the search criteria.
 	 */
 	public Search_Result search(Search_Params params){
-		return (Search_Result) doPost("/Search",params);
+		Search_Result result = (Search_Result) doPost("/Search",params);
+		for(SearchResult searchResult : result.getResults()){
+			searchResult.setImageURL("http://" + host + ":" + port + "/" + searchResult.getImageURL());
+		}
+		return result;
 	}
 	
 	/**
@@ -125,24 +152,29 @@ public class ClientCommunicator{
 	 * @param url The url of the file to download.
 	 * @return The bytes of the requested file.
 	 */
-	public Byte[] downloadFile(String url){
-		return (Byte[]) doGet("/DownloadFile/" + url);
-	}
-	
-	private Object doGet(String urlPath){
-		Object result = null;
+	public byte[] downloadFile(String urlPath){
 		try{
 			URL url = new URL("http://" + host + ":" + port + urlPath);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 			connection.connect();
-			result = xmlStream.fromXML(connection.getInputStream());
+			return extract(connection.getInputStream());
 		}catch(IOException e){
 			e.printStackTrace();
 		}
-		return result;
-	}
+		return null;
+	}	
 	
+	private byte[] extract(InputStream inputStream) throws IOException {	
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();				
+		byte[] result = new byte[1024];
+		int read = 0;
+		while ((read = inputStream.read(result, 0, result.length)) != -1) {
+			byteStream.write(result, 0, read);
+		}		
+		byteStream.flush();		
+		return  byteStream.toByteArray();
+	}
 	
 	private Object doGet(String urlPath, Params params){
 		Object result = null;
@@ -154,7 +186,7 @@ public class ClientCommunicator{
 			connection.connect();
 			result = xmlStream.fromXML(connection.getInputStream());
 		}catch(IOException e){
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return result;
 	}
@@ -172,7 +204,7 @@ public class ClientCommunicator{
 			
 			result = xmlStream.fromXML(connection.getInputStream());
 		}catch(IOException e){
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return result;
 	}

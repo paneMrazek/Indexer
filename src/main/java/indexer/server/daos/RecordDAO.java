@@ -44,7 +44,7 @@ public class RecordDAO{
 			}
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		for(Field field : record.getValues().keySet()){
 			createRecordValues(record.getId(),field.getId(),record.getValues().get(field));
@@ -62,7 +62,7 @@ public class RecordDAO{
 			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 	
@@ -88,7 +88,7 @@ public class RecordDAO{
 			}
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return record;
 	}
@@ -113,7 +113,7 @@ public class RecordDAO{
 			}
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return records;
 	}
@@ -134,7 +134,7 @@ public class RecordDAO{
 			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		for(Field field : record.getValues().keySet()){
 			deleteRecordValues(record.getId());
@@ -156,7 +156,7 @@ public class RecordDAO{
 			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		deleteRecordValues(recordId);
 	}
@@ -172,14 +172,16 @@ public class RecordDAO{
 			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 	
 	public List<SearchResult> searchRecords(int fieldId,String[] searchValues){
 		List<SearchResult> results = new ArrayList<>();
 		for(String value : searchValues){
-			results.add(searchRecord(fieldId,value));
+			SearchResult result = searchRecord(fieldId,value);
+			if(result != null)	
+				results.add(result);
 		}
 		return results;
 	}
@@ -196,10 +198,12 @@ public class RecordDAO{
 				result.setFieldId(fieldId);
 				result.setRecordNumber(record.getOrderId());
 				result.setBatchId(record.getBatchId());
+			}else{
+				return null;
 			}
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return result;
 	}

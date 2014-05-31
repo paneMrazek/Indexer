@@ -49,7 +49,7 @@ public class FieldDAO{
 			}
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return field;
 	}
@@ -77,7 +77,7 @@ public class FieldDAO{
 			}
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return fields;
 	}
@@ -104,7 +104,7 @@ public class FieldDAO{
 			}
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return values;
 	}
@@ -133,7 +133,7 @@ public class FieldDAO{
 				return null;
 			}
 		}catch(SQLException e){
-			e.printStackTrace();
+			//e.printStackTrace();
 			database.error();
 		}
 		return field;
@@ -161,7 +161,7 @@ public class FieldDAO{
 			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return field;
 	}
@@ -179,7 +179,7 @@ public class FieldDAO{
 			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 }

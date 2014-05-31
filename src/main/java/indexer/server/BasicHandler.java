@@ -16,7 +16,7 @@ public abstract class BasicHandler implements HttpHandler{
 		/*try{
 			decoded = new String(Base64.decode(auth));
 		}catch(Base64DecodingException e){
-			e.printStackTrace();
+			//e.printStackTrace();
 		}*/
 		String[] split = decoded.split(":(?=[^:]+$)");
 		database.startTransaction();

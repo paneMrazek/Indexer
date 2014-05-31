@@ -22,7 +22,6 @@ public class SearchHandler implements HttpHandler{
 		Search_Params params = (Search_Params) xmlStream.fromXML(exchange.getRequestBody());
 
 		Search_Result result = facade.search(auth,params);
-
 		exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 		xmlStream.toXML(result,exchange.getResponseBody());
 		exchange.getResponseBody().close();

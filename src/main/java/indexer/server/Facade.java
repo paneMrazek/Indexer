@@ -1,5 +1,8 @@
 package main.java.indexer.server;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +34,6 @@ public class Facade{
 		database.startTransaction();
 		User user = database.getUserDAO().readUser(split[0],split[1]);
 		database.endTransaction();
-		
 		ValidateUser_Result result = new ValidateUser_Result();
 		result.setError(!database.wasSuccesful());
 		result.setValid(user != null);
@@ -97,7 +99,8 @@ public class Facade{
 		DownloadBatch_Result result = new DownloadBatch_Result();
 		Database database = new Database();
 		List<Batch> batches = new ArrayList<>();
-		if(validateUser(auth).isValid()){
+		ValidateUser_Result validationResult = validateUser(auth);
+		if(validationResult.isValid() && validationResult.getUser().getCurrentBatch() == 0){
 			database.startTransaction();
 			batches = database.getBatchDAO().readBatchesForProject(projectId);
 			Batch batch = batches.get(new Random().nextInt(batches.size()));
@@ -106,6 +109,8 @@ public class Facade{
 			Project project = database.getProjectDAO().readProject(projectId);
 			batch.setFirstYCoordinate(project.getFirstYCoordinate());
 			batch.setRecordHeight(project.getRecordHeight());
+			validationResult.getUser().setCurrentBatch(batch.getId());
+			database.getUserDAO().updateUser(validationResult.getUser());
 			database.endTransaction();
 			if(database.wasSuccesful()){
 				result.setBatch(batch);
@@ -127,7 +132,7 @@ public class Facade{
 		SubmitBatch_Result result = new SubmitBatch_Result();
 		Database database = new Database();
 		ValidateUser_Result validationResult = validateUser(auth);
-		if(validationResult.isValid()){
+		if(validationResult.isValid() && validationResult.getUser().getCurrentBatch() == params.getBatchId()){
 			User user = validationResult.getUser();
 			database.startTransaction();
 			int projectId = database.getBatchDAO().readBatch(params.getBatchId()).getProjectId();
@@ -149,6 +154,7 @@ public class Facade{
 			}
 			int recordsPerBatch = database.getProjectDAO().readProject(projectId).getRecordsPerImage();
 			user.setIndexedRecords(user.getIndexedRecords() + recordsPerBatch);
+			user.setCurrentBatch(0);
 			database.getUserDAO().updateUser(user);
 			database.getBatchDAO().updateBatchToComplete(params.getBatchId());
 			database.endTransaction();
@@ -222,8 +228,25 @@ public class Facade{
 	 * @param url The url of the file to download.
 	 * @return The bytes of the requested file.
 	 */
-	public Byte[] downloadFile(String url){
-		return null;
+	public byte[] downloadFile(String url){
+		System.out.println("Reached here: " + url);
+		File file = new File("Server/data/" + url);
+		byte[] result = new byte[(int) file.length()];
+		FileInputStream fileInputStream = null;
+		try{
+			fileInputStream = new FileInputStream(file);
+			fileInputStream.read(result);
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally{
+			try{
+				fileInputStream.close();
+			}catch(IOException e){
+				e.printStackTrace();
+			}
+		}
+		System.out.println("Returning result " + result.toString());
+		return result;
 	}
 	
 }

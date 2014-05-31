@@ -40,10 +40,6 @@ public class Controller implements IController {
 		getView().setHost("localhost");
 		getView().setPort("39640");
 		operationSelected();
-		
-		String[] args = new String[1];
-		args[0] = getView().getPort();
-		Server.main(args);
 		ClientCommunicator.getInstance().setHost(getView().getHost());
 		ClientCommunicator.getInstance().setPort(Integer.parseInt(getView().getPort()));
 	}
@@ -172,7 +168,7 @@ public class Controller implements IController {
 		params.setPassword(paramValues[1]);
 		params.setBatchId(Integer.parseInt(paramValues[2]));
 		
-		String[] recordValues = paramValues[3].split(" ");
+		String[] recordValues = paramValues[3].split("[;,]");
 		params.setRecordValues(recordValues);
 		
 		getView().setRequest(new XStream(new DomDriver()).toXML(params));

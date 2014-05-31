@@ -43,7 +43,7 @@ public class ProjectDAO{
 			}
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return project;
 	}
@@ -72,7 +72,7 @@ public class ProjectDAO{
 			}
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return project;
 	}
@@ -97,7 +97,7 @@ public class ProjectDAO{
 			}
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return projects;
 	}
@@ -121,7 +121,7 @@ public class ProjectDAO{
 			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return project;
 	}
@@ -139,7 +139,7 @@ public class ProjectDAO{
 			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 }

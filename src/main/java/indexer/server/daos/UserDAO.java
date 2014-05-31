@@ -47,7 +47,7 @@ public class UserDAO{
 			}
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return user;
 	}
@@ -75,12 +75,13 @@ public class UserDAO{
 				user.setLastName(rs.getString("lastname"));
 				user.setEmail(rs.getString("email"));
 				user.setIndexedRecords(rs.getInt("indexedrecords"));
+				user.setCurrentBatch(rs.getInt("currentbatch"));
 			}else{
 				return null;
 			}
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return user;
 	}
@@ -95,7 +96,7 @@ public class UserDAO{
 	public User updateUser(User user){
 		if(user.getEmail() == null)
 			user.setEmail("");
-		String sql = "UPDATE users SET username=?,password=?,lastname=?,firstname=?,email=?,indexedrecords=? "
+		String sql = "UPDATE users SET username=?,password=?,lastname=?,firstname=?,email=?,indexedrecords=?,currentBatch=? "
 				+ "WHERE userid=?";
 		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
 			statement.setString(1,user.getUserName());
@@ -104,11 +105,12 @@ public class UserDAO{
 			statement.setString(4,user.getFirstName());
 			statement.setString(5,user.getEmail());
 			statement.setInt(6,user.getIndexedRecords());
-			statement.setInt(7,user.getUserId());
+			statement.setInt(7,user.getCurrentBatch());
+			statement.setInt(8,user.getUserId());
 			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return user;
 	}
@@ -126,7 +128,7 @@ public class UserDAO{
 			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 
@@ -143,7 +145,7 @@ public class UserDAO{
 			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 	

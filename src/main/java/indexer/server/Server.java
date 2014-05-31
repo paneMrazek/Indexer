@@ -25,7 +25,7 @@ private void run() {
 			server = HttpServer.create(new InetSocketAddress(portNum),10);
 		} 
 		catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 
 		server.setExecutor(null); // use the default executor
@@ -37,6 +37,7 @@ private void run() {
 		server.createContext("/Search",searchHandler);
 		server.createContext("/SubmitBatch",submitBatchHandler);
 		server.createContext("/ValidateUser", validateUserHandler);
+		server.createContext("/",downloadFileHandler);
 				
 		server.start();
 	}
@@ -48,6 +49,7 @@ private void run() {
 	private HttpHandler searchHandler = new SearchHandler();
 	private HttpHandler submitBatchHandler = new SubmitBatchHandler();
 	private HttpHandler validateUserHandler = new ValidateUserHandler();
+	private HttpHandler downloadFileHandler = new DownloadFileHandler();
 
 	public static void main(String[] args) {
 		new Server(args).run();

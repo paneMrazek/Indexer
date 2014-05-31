@@ -18,6 +18,7 @@ public class User implements Serializable{
 	private String lastName;
 	private String firstName;
 	private String email;
+	private int currentBatch;
 	private int indexedRecords;
 	
 	/**
@@ -91,6 +92,18 @@ public class User implements Serializable{
 	 */
 	public void setEmail(String email){
 		this.email = email;
+	}
+	/**
+	 * @return the currentBatch
+	 */
+	public int getCurrentBatch(){
+		return currentBatch;
+	}
+	/**
+	 * @param currentBatch the currentBatch to set
+	 */
+	public void setCurrentBatch(int currentBatch){
+		this.currentBatch = currentBatch;
 	}
 	/**
 	 * @return the indexedRecords

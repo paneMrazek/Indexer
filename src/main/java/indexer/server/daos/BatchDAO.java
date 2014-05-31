@@ -42,7 +42,7 @@ public class BatchDAO{
 			}
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return batch;
 	}
@@ -77,7 +77,7 @@ public class BatchDAO{
 			rs.close();
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return batches;
 	}
@@ -103,7 +103,7 @@ public class BatchDAO{
 			rs.close();
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return batch;
 	}
@@ -119,7 +119,7 @@ public class BatchDAO{
 			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 	
@@ -138,7 +138,7 @@ public class BatchDAO{
 			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return batch;
 	}
@@ -156,7 +156,7 @@ public class BatchDAO{
 			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 	
@@ -171,7 +171,7 @@ public class BatchDAO{
 			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 
