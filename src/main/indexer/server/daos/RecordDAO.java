@@ -179,33 +179,31 @@ public class RecordDAO{
 	public List<SearchResult> searchRecords(int fieldId,String[] searchValues){
 		List<SearchResult> results = new ArrayList<>();
 		for(String value : searchValues){
-			SearchResult result = searchRecord(fieldId,value);
-			if(result != null)	
-				results.add(result);
+			results.addAll(searchRecord(fieldId,value));
 		}
 		return results;
 	}
 	
-	public SearchResult searchRecord(int fieldId,String searchValue){
+	public List<SearchResult> searchRecord(int fieldId,String searchValue){
 		String sql = "SELECT * FROM recordvalues WHERE fieldid = ? AND value LIKE ?";
-		SearchResult result = new SearchResult();
+		List<SearchResult> results = new ArrayList<SearchResult>();
 		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
 			statement.setInt(1,fieldId);
 			statement.setString(2,searchValue);
 			ResultSet rs = statement.executeQuery();
 			if(rs.next()){
+				SearchResult result = new SearchResult();
 				Record record = readRecord(rs.getInt("recordid"));
 				result.setFieldId(fieldId);
 				result.setRecordNumber(record.getOrderId());
 				result.setBatchId(record.getBatchId());
-			}else{
-				return null;
+				results.add(result);
 			}
 		}catch(SQLException e){
 			database.error();
 			//e.printStackTrace();
 		}
-		return result;
+		return results;
 	}
 	
 }

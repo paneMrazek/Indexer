@@ -43,24 +43,26 @@ public class Login extends JFrame{
 	private void createComponents(){
 		addWindowListener(windowAdapter);
 		
+		this.setSize(150,70);
+		
 		JLabel username = new JLabel("Username:");
 		JLabel password = new JLabel("Password:");
 		JTextField usernameField = new JTextField(25);
 		JTextField passwordField = new JTextField(25);
 		
 		Panel usernamePanel = new Panel();
-		usernamePanel.add(username);
-		usernamePanel.add(usernameField);
+		usernamePanel.add(username,BorderLayout.EAST);
+		usernamePanel.add(usernameField,BorderLayout.WEST);
 		
 		Panel passwordPanel = new Panel();
-		passwordPanel.add(password);
-		passwordPanel.add(passwordField);
+		passwordPanel.add(password,BorderLayout.EAST);
+		passwordPanel.add(passwordField,BorderLayout.WEST);
 		
 		Panel inputPanel = new Panel();
-		inputPanel.add(usernamePanel);
-		inputPanel.add(passwordPanel);
+		inputPanel.add(usernamePanel, BorderLayout.NORTH);
+		inputPanel.add(passwordPanel, BorderLayout.SOUTH);
 		
-		this.add(inputPanel, BorderLayout.NORTH);
+		this.add(inputPanel, BorderLayout.CENTER);
 		
 		loginButton = new JButton("Login");
         loginButton.addActionListener(actionListener);
