@@ -191,7 +191,7 @@ public class RecordDAO{
 			statement.setInt(1,fieldId);
 			statement.setString(2,searchValue);
 			ResultSet rs = statement.executeQuery();
-			if(rs.next()){
+			while(rs.next()){
 				SearchResult result = new SearchResult();
 				Record record = readRecord(rs.getInt("recordid"));
 				result.setFieldId(fieldId);
