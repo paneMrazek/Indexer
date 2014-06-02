@@ -40,7 +40,8 @@ CREATE TABLE Batches(
 	ImageURL varchar(255),
 	ProjectID integer,
 	Complete boolean DEFAULT false,
-	AssignedUserID integer
+	AssignedUserID integer,
+	RecordNum integer
 );
 
 CREATE TABLE Records(

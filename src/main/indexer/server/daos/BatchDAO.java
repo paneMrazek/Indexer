@@ -31,10 +31,11 @@ public class BatchDAO{
 	 */
 	public Batch createBatch(Batch batch){
 		String sql = "INSERT INTO batches "
-				+ "(imageurl,projectid) VALUES (?,?)";
+				+ "(imageurl,projectid,recordnum) VALUES (?,?,?)";
 		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
 			statement.setString(1,batch.getImageURL());
 			statement.setInt(2,batch.getProjectId());
+			statement.setInt(3,batch.getRecordNum());
 			if(statement.executeUpdate() == 1){
 				ResultSet resultSet = statement.getGeneratedKeys();
 				if(resultSet.next())
@@ -68,6 +69,7 @@ public class BatchDAO{
 					batch.setComplete(false);
 					batch.setId(rs.getInt("id"));
 					batch.setImageURL(rs.getString("imageurl"));
+					batch.setRecordNum(rs.getInt("recordnum"));
 					//batch.setFirstYCoordinate(rs.getInt("firstycoordinate"));
 					//batch.setRecordHeight(rs.getInt("recordheight"));
 					batches.add(batch);
@@ -99,6 +101,7 @@ public class BatchDAO{
 				batch.setProjectId(rs.getInt("projectid"));
 				batch.setImageURL(rs.getString("imageurl"));
 				batch.setComplete(rs.getBoolean("complete"));
+				batch.setRecordNum(rs.getInt("recordnum"));
 			}
 			rs.close();
 		}catch(SQLException e){
@@ -129,12 +132,13 @@ public class BatchDAO{
 	 * @return the updated branch.
 	 */
 	public Batch updateBatch(Batch batch){
-		String sql = "UPDATE batches SET imageurl=?,projectid=?"
+		String sql = "UPDATE batches SET imageurl=?,projectid=?,recordnum=?"
 				+ "WHERE id=?";
 		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
 			statement.setString(1,batch.getImageURL());
 			statement.setInt(2,batch.getProjectId());
-			statement.setInt(3,batch.getId());
+			statement.setInt(3,batch.getRecordNum());
+			statement.setInt(4,batch.getId());
 			statement.executeUpdate();
 		}catch(SQLException e){
 			database.error();

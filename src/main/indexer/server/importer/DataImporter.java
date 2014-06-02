@@ -147,6 +147,7 @@ public class DataImporter{
 			Batch batch = new Batch();
 			batch.setProjectId(projectId);
 			batch.setImageURL(imageURL);
+			batch.setRecordNum(batchElem.getElementsByTagName("record").getLength());
 			int batchId = database.getBatchDAO().createBatch(batch).getId();
 			parseRecords(batchElem.getElementsByTagName("record"),projectId,batchId,fields);
 		}

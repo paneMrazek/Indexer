@@ -18,6 +18,7 @@ public class Batch implements Serializable{
 	private String imageURL;
 	private int projectId;
 	private int firstYCoordinate;
+	private int recordNum;
 	private int recordHeight;
 	private boolean complete;
 	private List<Field> fields;
@@ -70,6 +71,12 @@ public class Batch implements Serializable{
 	 */
 	public void setRecordHeight(int recordHeight){
 		this.recordHeight = recordHeight;
+	}
+	public int getRecordNum(){
+		return recordNum;
+	}
+	public void setRecordNum(int recordNum){
+		this.recordNum = recordNum;
 	}
 	/**
 	 * @return the complete
@@ -125,7 +132,7 @@ public class Batch implements Serializable{
 	public String toString(){
 		String ret = id + "\n" + projectId + "\n" + imageURL + "\n"
 				+ firstYCoordinate + "\n" + recordHeight + "\n"
-				+ records.size() + "\n" + fields.size() + "\n";
+				+ recordNum + "\n" + fields.size() + "\n";
 		for(Field field : fields){
 			ret += field.toString();
 		}
