@@ -123,7 +123,9 @@ public class Field implements Serializable{
 	public String toString(){
 		String ret = id + "\n" + orderId + "\n" + title + "\n"
 				+ helpFile + "\n" + xCoordinate + "\n"
-				+ width + "\n" + knownData + "\n";
+				+ width + "\n";
+		if(!knownData.equals(""))
+			ret += knownData + "\n";
 		return ret;
 	}
 	@Override

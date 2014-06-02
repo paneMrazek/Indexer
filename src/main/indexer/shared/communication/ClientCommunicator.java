@@ -116,7 +116,7 @@ public class ClientCommunicator{
 			if(field.getKnownData() != null && !field.getKnownData().equals(""))
 				field.setKnownData("http://" + host + ":" + port + "/" + field.getKnownData());
 		}
-		result.getBatch().setImageURL("http://" + host + ":" + port + result.getBatch().getImageURL());
+		result.getBatch().setImageURL("http://" + host + ":" + port + "/" + result.getBatch().getImageURL());
 		return result;
 	}
 	
@@ -188,6 +188,7 @@ public class ClientCommunicator{
 	 */
 	public byte[] downloadFile(String urlPath){
 		try{
+			urlPath = urlPath.contains("http") ? "http://" + host + ":" + port + urlPath : urlPath;
 			URL url = new URL("http://" + host + ":" + port + urlPath);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
