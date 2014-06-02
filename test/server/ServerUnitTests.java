@@ -1,5 +1,8 @@
 package server;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import main.indexer.server.Server;
 import main.indexer.server.importer.DataImporter;
 import main.indexer.shared.communication.ClientCommunicator;
@@ -122,8 +125,12 @@ public class ServerUnitTests {
 		params.setUserName("test1");
 		params.setPassword("test1");
 		params.setBatchId(result1.getBatch().getId());
-		String[] recordValues = {"j","j","j","j","k","k","k","k"};
-		params.setRecordValues(recordValues);
+		String[] recordValues = {"j","j","j","j"};
+		String[] recordValues2 = {"k","k","k","k"};
+		List<String[]> records = new ArrayList<>();
+		records.add(recordValues);
+		records.add(recordValues2);
+		params.setRecordValues(records);
 		SubmitBatch_Result result2 = ClientCommunicator.getInstance().submitBatch(params);
 		DownloadBatch_Result result3 = ClientCommunicator.getInstance().downloadBatch(downloadParams);
 		Assert.assertFalse(result1.isError());
@@ -137,8 +144,12 @@ public class ServerUnitTests {
 		params.setUserName("test1");
 		params.setPassword("test1");
 		params.setBatchId(4);
-		String[] recordValues = {"j","j","j","j","k","k","k","k"};
-		params.setRecordValues(recordValues);
+		String[] recordValues = {"j","j","j","j"};
+		String[] recordValues2 = {"k","k","k","k"};
+		List<String[]> records = new ArrayList<>();
+		records.add(recordValues);
+		records.add(recordValues2);
+		params.setRecordValues(records);
 		SubmitBatch_Result result = ClientCommunicator.getInstance().submitBatch(params);
 		Assert.assertTrue(result.isError());
 	}

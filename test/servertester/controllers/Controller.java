@@ -1,6 +1,7 @@
 package servertester.controllers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import main.indexer.shared.communication.ClientCommunicator;
 import main.indexer.shared.communication.params.DownloadBatch_Params;
@@ -174,7 +175,12 @@ public class Controller implements IController {
 		if(!paramValues[2].equals(""))
 			params.setBatchId(Integer.parseInt(paramValues[2]));
 		
-		String[] recordValues = paramValues[3].split("[;,]");
+		String[] records = paramValues[3].split(";");
+		List<String[]> recordValues= new ArrayList<>();
+		for(String record : records){
+			String[] values = record.split(",");
+			recordValues.add(values);
+		}
 		params.setRecordValues(recordValues);
 		
 		getView().setRequest(new XStream(new DomDriver()).toXML(params));

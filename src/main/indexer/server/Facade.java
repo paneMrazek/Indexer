@@ -159,20 +159,20 @@ public class Facade{
 			
 			int projectId = batch.getProjectId();
 			List<Field> fields = database.getFieldDAO().readFieldsForProject(projectId);
-			int fieldCount = 0;
 			Record record = new Record();
 			record.setBatchId(params.getBatchId());
 			record.setValues(new HashMap<Field,String>());
-			for(String value : params.getRecordValues()){
-				record.getValues().put(fields.get(fieldCount),value);
-				fieldCount++;
-				if(fieldCount >= fields.size()){
-					database.getRecordDAO().createRecord(record);
-					record = new Record();
-					record.setBatchId(params.getBatchId());
-					record.setValues(new HashMap<Field,String>());
-					fieldCount = 0;
+			for(String[] values : params.getRecordValues()){
+				int fieldCount = 0;
+				record = new Record();
+				record.setBatchId(params.getBatchId());
+				record.setValues(new HashMap<Field,String>());
+				fieldCount = 0;
+				for(String value : values){
+					record.getValues().put(fields.get(fieldCount),value);
+					fieldCount++;
 				}
+				database.getRecordDAO().createRecord(record);
 			}
 			int recordsPerBatch = database.getProjectDAO().readProject(projectId)
 					.getRecordsPerImage();
@@ -192,9 +192,11 @@ public class Facade{
 	private boolean validateSubmitBatchParams(SubmitBatch_Params params){
 		if(params.getBatchId() == 0)
 			return false;
-		if(params.getRecordValues().length == 0)
+		if(params.getRecordValues().size() == 0)
 			return false;
-		if(params.getRecordValues()[0].equals(""))
+		if(params.getRecordValues().get(0).length == 0)
+			return false;
+		if(params.getRecordValues().get(0)[0].equals(""))
 			return false;
 		return true;
 	}
