@@ -115,10 +115,20 @@ public class Facade{
 		if(validationResult.isValid() && validationResult.getUser().getCurrentBatch() == 0){
 			database.startTransaction();
 			batches = database.getBatchDAO().readBatchesForProject(projectId);
+			if(batches == null || batches.size() == 0){
+				result.setError(true);
+				database.endTransaction();
+				return result;
+			}
 			Batch batch = batches.get(new Random().nextInt(batches.size()));
 			batch.setFields(database.getFieldDAO().readFieldsForProject(batch.getProjectId()));
 			batch.setRecords(database.getRecordDAO().readRecordsForBatch(batch.getId()));
 			Project project = database.getProjectDAO().readProject(projectId);
+			if(project == null){
+				result.setError(true);
+				database.endTransaction();
+				return result;
+			}
 			batch.setFirstYCoordinate(project.getFirstYCoordinate());
 			batch.setRecordHeight(project.getRecordHeight());
 			validationResult.getUser().setCurrentBatch(batch.getId());
