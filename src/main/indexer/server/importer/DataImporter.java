@@ -96,7 +96,7 @@ public class DataImporter{
 			project = database.getProjectDAO().createProject(project);
 			
 			List<Field> fields = parseFields(projectElem.getElementsByTagName("field"),project.getId());
-			parseBatches(projectElem.getElementsByTagName("image"),project.getId(),fields);
+			parseBatches(projectElem.getElementsByTagName("image"),project.getRecordsPerImage(),project.getId(),fields);
 			
 		}
 	}
@@ -137,7 +137,7 @@ public class DataImporter{
 		return fields;
 	}
 	
-	private void parseBatches(NodeList batchList, int projectId, List<Field> fields){
+	private void parseBatches(NodeList batchList, int recordNum, int projectId, List<Field> fields){
 		for(int i = 0; i < batchList.getLength(); i++){
 			Element batchElem = (Element) batchList.item(i);
 			String imageURL = ((Element)batchElem.getElementsByTagName("file")
@@ -147,7 +147,7 @@ public class DataImporter{
 			Batch batch = new Batch();
 			batch.setProjectId(projectId);
 			batch.setImageURL(imageURL);
-			batch.setRecordNum(batchElem.getElementsByTagName("record").getLength());
+			batch.setRecordNum(recordNum);
 			int batchId = database.getBatchDAO().createBatch(batch).getId();
 			parseRecords(batchElem.getElementsByTagName("record"),projectId,batchId,fields);
 		}
