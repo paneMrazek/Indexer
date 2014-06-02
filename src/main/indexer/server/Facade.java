@@ -275,16 +275,17 @@ public class Facade{
 		result.setError(true);
 		return result;
 	}
-	
+	//4,5
+	//Mr Incredable Bob Parr
 	private boolean validateSearchParams(Search_Params params){
 		if(params.getFieldId().length == 0)
 			return false;
 		if(params.getSearchValues().length == 0)
 			return false;
-		if(!params.getFieldId()[0].matches("[0-9]*"))
+		/*if(!params.getFieldId()[0].matches("[0-9]*"))
 			return false;
 		if(!params.getSearchValues()[0].matches("[A-Za-z0-9]*"))
-			return false;
+			return false;*/
 		return true;
 	}
 
