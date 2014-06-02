@@ -164,17 +164,19 @@ public class Facade{
 				validationResult.getUser().getCurrentBatch() == params.getBatchId()
 				&& !batch.isComplete()){
 			User user = validationResult.getUser();
-			
 			int projectId = batch.getProjectId();
 			List<Field> fields = database.getFieldDAO().readFieldsForProject(projectId);
 			Record record = new Record();
 			record.setBatchId(params.getBatchId());
 			record.setValues(new HashMap<Field,String>());
+			int orderId = 0;
 			for(String[] values : params.getRecordValues()){
+				orderId++;
 				int fieldCount = 0;
 				record = new Record();
 				record.setBatchId(params.getBatchId());
 				record.setValues(new HashMap<Field,String>());
+				record.setOrderId(orderId);
 				fieldCount = 0;
 				for(String value : values){
 					record.getValues().put(fields.get(fieldCount),value);
