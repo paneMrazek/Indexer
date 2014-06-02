@@ -176,7 +176,6 @@ public class Facade{
 			}
 			int recordsPerBatch = database.getProjectDAO().readProject(projectId)
 					.getRecordsPerImage();
-			user.setIndexedRecords(user.getIndexedRecords() + recordsPerBatch);
 			user.setCurrentBatch(0);
 			database.getUserDAO().updateUserAssignedBatch(user.getCurrentBatch(),
 					user.getUserId(),user.getIndexedRecords() + recordsPerBatch);
