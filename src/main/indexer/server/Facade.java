@@ -230,7 +230,7 @@ public class Facade{
 		if(validateUser(auth).isValid()){
 			database.startTransaction();
 			Project project = database.getProjectDAO().readProject(projectId);
-			if(project != null){
+			if(projectId == -1 || project != null){
 				fields = database.getFieldDAO().readFieldsForProject(projectId);
 				database.endTransaction();
 				if(database.wasSuccesful()){
