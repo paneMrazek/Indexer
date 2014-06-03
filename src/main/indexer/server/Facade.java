@@ -221,21 +221,22 @@ public class Facade{
 	 */
 	public GetFields_Result getFields(String auth, int projectId){
 		GetFields_Result result = new GetFields_Result();
-		Database database = new Database();
-		database.startTransaction();
-		Project project = database.getProjectDAO().readProject(projectId);
-		if(projectId == 0 || project == null){
-			database.endTransaction();
+		if(projectId == 0){
 			result.setError(true);
 			return result;
 		}
+		Database database = new Database();
 		List<Field> fields = new ArrayList<>();
 		if(validateUser(auth).isValid()){
-			fields = database.getFieldDAO().readFieldsForProject(projectId);
-			database.endTransaction();
-			if(database.wasSuccesful()){
-				result.setFields(fields);
-				return result;
+			database.startTransaction();
+			Project project = database.getProjectDAO().readProject(projectId);
+			if(project != null){
+				fields = database.getFieldDAO().readFieldsForProject(projectId);
+				database.endTransaction();
+				if(database.wasSuccesful()){
+					result.setFields(fields);
+					return result;
+				}
 			}
 		}
 		result.setError(true);
