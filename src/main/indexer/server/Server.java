@@ -13,7 +13,7 @@ public class Server{
 	private int portNum = 8080;
 	
 	private Server(String[] args){
-		if(args.length == 1){
+		if(args.length >= 1){
 			portNum = Integer.parseInt(args[0]);
 		}
 		return;

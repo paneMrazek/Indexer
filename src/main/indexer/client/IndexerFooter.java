@@ -1,11 +1,5 @@
 package main.indexer.client;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
-import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
@@ -13,8 +7,9 @@ import main.indexer.client.panels.FieldHelpPanel;
 import main.indexer.client.panels.FormEntryPanel;
 import main.indexer.client.panels.ImageNavPanel;
 import main.indexer.client.panels.TableEntryPanel;
+import main.indexer.shared.models.Batch;
 
-public class IndexerFooter extends JPanel{
+public class IndexerFooter extends JSplitPane{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -27,6 +22,8 @@ public class IndexerFooter extends JPanel{
 	private ImageNavPanel imageNavPanel;
 	
 	public IndexerFooter(){
+		super(JSplitPane.HORIZONTAL_SPLIT);
+		setDividerLocation(600);
 		createComponents();
 	}
 
@@ -44,9 +41,12 @@ public class IndexerFooter extends JPanel{
 		rightTabbedPane.addTab("Field Help",fieldHelpPanel);
 		rightTabbedPane.addTab("Image Navigation",imageNavPanel);
 		
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,leftTabbedPane,rightTabbedPane);
-		splitPane.setDividerLocation(400);
-		this.add(splitPane, BorderLayout.CENTER);
+		this.setLeftComponent(leftTabbedPane);
+		this.setRightComponent(rightTabbedPane);
+	}
+
+	public void setBatch(Batch batch, byte[] file){
+		
 	}
 	
 }

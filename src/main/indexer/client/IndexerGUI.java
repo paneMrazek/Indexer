@@ -21,6 +21,7 @@ import main.indexer.shared.communication.params.DownloadBatch_Params;
 import main.indexer.shared.communication.params.GetProjects_Params;
 import main.indexer.shared.communication.params.GetSampleImage_Params;
 import main.indexer.shared.communication.results.GetProjects_Result;
+import main.indexer.shared.models.Batch;
 import main.indexer.shared.models.Project;
 import main.indexer.shared.models.User;
 
@@ -60,7 +61,6 @@ public class IndexerGUI extends JFrame implements LoginListener, MenuListener, B
 	
 		footer = new IndexerFooter();
 		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,imageViewer,footer);
-		//splitPane.setOneTouchExpandable(true);
 		splitPane.setDividerLocation(400);
 		this.add(splitPane, BorderLayout.CENTER);
 		
@@ -143,8 +143,11 @@ public class IndexerGUI extends JFrame implements LoginListener, MenuListener, B
 		params.setUserName(user.getUserName());
 		params.setPassword(user.getPassword());
 		params.setProjectId(projectId);
-		//Batch batch = ClientCommunicator.getInstance().downloadBatch(params).getBatch();
+		Batch batch = ClientCommunicator.getInstance().downloadBatch(params).getBatch();
+		byte[] image = ClientCommunicator.getInstance().downloadFile(batch.getImageURL());
 		buttonToolBar.setEnabled(true);
+		footer.setBatch(batch,image);
+		imageViewer.setBatch(batch,image);
 	}
 	
 	private WindowAdapter windowAdapter = new WindowAdapter() {

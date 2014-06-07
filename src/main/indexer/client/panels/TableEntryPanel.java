@@ -1,6 +1,5 @@
 package main.indexer.client.panels;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class TableEntryPanel extends JPanel{
@@ -13,9 +12,7 @@ public class TableEntryPanel extends JPanel{
 	}
 
 	private void createComponents(){
-		JLabel label = new JLabel("Table Entry");
-		this.setSize(500,300);
-		this.add(label);
+		
 	}
 	
 }
