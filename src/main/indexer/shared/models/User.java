@@ -160,6 +160,13 @@ public class User implements Serializable{
 		return true;
 	}
 	
+	public String getWelcomeString(){
+		return "Welcome, " + getFirstName()
+	    + " " + getLastName() 
+	    + ".\nYou have indexed " + getIndexedRecords()
+	    + " records.";
+	}
+	
 	
 	
 	

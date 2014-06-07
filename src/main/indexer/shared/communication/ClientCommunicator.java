@@ -39,6 +39,12 @@ public class ClientCommunicator{
 		xmlStream = new XStream(new DomDriver());
 	}
 	
+	public void initilize(String host, int port){
+		this.host = host;
+		this.port = port;
+				
+	}
+	
 	public void setHost(String host){
 		this.host = host;
 	}
@@ -188,8 +194,7 @@ public class ClientCommunicator{
 	 */
 	public byte[] downloadFile(String urlPath){
 		try{
-			urlPath = urlPath.contains("http") ? "http://" + host + ":" + port + urlPath : urlPath;
-			URL url = new URL("http://" + host + ":" + port + urlPath);
+			URL url = new URL(urlPath);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 			connection.connect();
@@ -243,4 +248,5 @@ public class ClientCommunicator{
 		}
 		return result;
 	}
+
 }

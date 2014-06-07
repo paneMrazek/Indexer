@@ -6,6 +6,10 @@ package main.indexer.shared.communication.params;
  */
 public class ValidateUser_Params extends Params{
 
+	public ValidateUser_Params(String username, String password){
+		super(username, password);
+	}
+
 	/**
 	 * 
 	 */

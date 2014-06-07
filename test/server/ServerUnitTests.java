@@ -53,9 +53,7 @@ public class ServerUnitTests {
 	
 	@Test
 	public void testValidateUserValidUser(){
-		ValidateUser_Params params = new ValidateUser_Params();
-		params.setUserName("test1");
-		params.setPassword("test1");
+		ValidateUser_Params params = new ValidateUser_Params("test1","test1");
 		ValidateUser_Result result = ClientCommunicator.getInstance().validateUser(params);
 		Assert.assertFalse(result.isError());
 		Assert.assertEquals("test1",result.getUser().getUserName());
@@ -68,9 +66,7 @@ public class ServerUnitTests {
 	
 	@Test
 	public void testValidateUserInvalidUser(){
-		ValidateUser_Params params = new ValidateUser_Params();
-		params.setUserName("test");
-		params.setPassword("test");
+		ValidateUser_Params params = new ValidateUser_Params("test","test");
 		ValidateUser_Result result = ClientCommunicator.getInstance().validateUser(params);
 		Assert.assertFalse(result.isValid());
 		Assert.assertNull(result.getUser());

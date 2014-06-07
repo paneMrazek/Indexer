@@ -15,6 +15,14 @@ public abstract class Params implements Serializable{
 	private String userName;
 	private String password;
 	
+	public Params(){
+		
+	}
+	
+	public Params(String username, String password){
+		this.userName = username;
+		this.password = password;
+	}
 	/**
 	 * @return the userName
 	 */

@@ -118,9 +118,7 @@ public class Controller implements IController {
 	
 	private void validateUser() {
 		String[] paramValues = getView().getParameterValues();
-		ValidateUser_Params params = new ValidateUser_Params();
-		params.setUserName(paramValues[0]);
-		params.setPassword(paramValues[1]);
+		ValidateUser_Params params = new ValidateUser_Params(paramValues[0],paramValues[1]);
 		getView().setRequest(new XStream(new DomDriver()).toXML(params));
 		getView().setResponse(ClientCommunicator.getInstance().validateUser(params).toString());
 	}
