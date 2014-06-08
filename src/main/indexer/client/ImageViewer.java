@@ -2,10 +2,13 @@ package main.indexer.client;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -18,29 +21,31 @@ public class ImageViewer extends JPanel{
 
 	private static final long serialVersionUID = 1L;
 	
+	Image image;
+	JLabel imageLabel = new JLabel();
+	
 	public ImageViewer(){
+		super(new FlowLayout(FlowLayout.CENTER));
+		
+		this.setLayout(null);
 		this.setBackground(new Color(128,128,128));
+		this.add(imageLabel);
 	}
 
 	public void setBatch(Batch batch, byte[] file){
-		this.setSize(510,430);
-		ImageIcon icon;
 		try{
-			icon = new ImageIcon(ImageIO.read(new ByteArrayInputStream(file)));
-			this.add(new JLabel(icon), BorderLayout.CENTER);
+			image = ImageIO.read(new URL(batch.getImageURL()));
+			imageLabel.setIcon(new ImageIcon(image));
+			this.setSize(image.getWidth(null),image.getHeight(null));
 		}catch(IOException e){
 			e.printStackTrace();
 		}
 	}
 	
-	private BufferedImage redraw(BufferedImage icon,double zoomLevel){
-		int newImageWidth = (int) (icon.getWidth() * zoomLevel);
-		int newImageHeight = (int) (icon.getHeight() * zoomLevel);
-		BufferedImage resizedImage = new BufferedImage(newImageWidth , newImageHeight, BufferedImage.TYPE_INT_RGB);
-		Graphics2D g = resizedImage.createGraphics();
-		g.drawImage(icon, 0, 0, newImageWidth , newImageHeight , null);
-		g.dispose();
-		return resizedImage;
+	@Override
+	public void setSize(int width, int height){
+		imageLabel.setSize(width, height);
+		super.setSize(width, height);
 	}
 	
 }

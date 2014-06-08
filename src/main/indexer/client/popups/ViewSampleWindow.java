@@ -5,8 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -21,12 +21,13 @@ public class ViewSampleWindow extends JFrame{
 	
 	
 
-	public ViewSampleWindow(String string, byte[] file){
+	public ViewSampleWindow(String string, String url){
 		super(string);
 		try{
 			this.setSize(510,430);
-			ImageIcon icon = new ImageIcon(redraw(ImageIO.read(new ByteArrayInputStream(file))));
+			ImageIcon icon = new ImageIcon(redraw(ImageIO.read(new URL(url))));
 			
+			this.setSize(icon.getIconWidth(),icon.getIconHeight()+25);
 			this.add(new JLabel(icon), BorderLayout.CENTER);
 			
 			JButton cancelButton = new JButton("Close");

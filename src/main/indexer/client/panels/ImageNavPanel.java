@@ -17,5 +17,9 @@ public class ImageNavPanel extends JPanel{
 	private void createComponents(){
 		
 	}
+
+	public void setBatch(byte[] file){
+		
+	}
 	
 }

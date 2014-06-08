@@ -46,6 +46,10 @@ public class IndexerFooter extends JSplitPane{
 	}
 
 	public void setBatch(Batch batch, byte[] file){
+		tableEntryPanel.setBatch(batch);
+		formEntryPanel.setBatch(batch);
+		fieldHelpPanel.setBatch(batch);
+		imageNavPanel.setBatch(file);
 		
 	}
 	

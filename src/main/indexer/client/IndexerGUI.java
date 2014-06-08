@@ -132,8 +132,7 @@ public class IndexerGUI extends JFrame implements LoginListener, MenuListener, B
 		params.setPassword(user.getPassword());
 		params.setProjectId(project.getId());
 		String url = ClientCommunicator.getInstance().getSampleImage(params).getUrl();
-		byte[] file = ClientCommunicator.getInstance().downloadFile(url);
-	    ViewSampleWindow window = new ViewSampleWindow("Sample Image from " + project.getTitle(), file);
+	    ViewSampleWindow window = new ViewSampleWindow("Sample Image from " + project.getTitle(), url);
 	    window.setVisible(true);
 	}
 	
