@@ -106,22 +106,34 @@ public class IndexerGUI extends JFrame implements LoginListener, MenuListener, B
 	//ButtonMenuListener Methods
 	
 	@Override
-	public void zoomIn(){}
+	public void zoomIn(){
+		imageViewer.zoomIn();
+	}
 
 	@Override
-	public void zoomOut(){}
+	public void zoomOut(){
+		imageViewer.zoomOut();
+	}
 
 	@Override
-	public void invertImage(){}
+	public void invertImage(){
+		imageViewer.invertImage();
+	}
 
 	@Override
-	public void toggleHighlight(){}
+	public void toggleHighlight(){
+		
+	}
 
 	@Override
-	public void save(){}
+	public void save(){
+		
+	}
 
 	@Override
-	public void submit(){}
+	public void submit(){
+		
+	}
 	
 	//DownloadBatchWindowListener Methods
 	
@@ -146,7 +158,7 @@ public class IndexerGUI extends JFrame implements LoginListener, MenuListener, B
 		byte[] image = ClientCommunicator.getInstance().downloadFile(batch.getImageURL());
 		buttonToolBar.setEnabled(true);
 		footer.setBatch(batch,image);
-		imageViewer.setBatch(batch,image);
+		imageViewer.setBatch(batch);
 	}
 	
 	private WindowAdapter windowAdapter = new WindowAdapter() {

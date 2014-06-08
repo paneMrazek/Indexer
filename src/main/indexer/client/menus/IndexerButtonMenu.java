@@ -77,17 +77,23 @@ public class IndexerButtonMenu extends JPanel{
 	    public void actionPerformed(ActionEvent e){
 	    	
 	    	if(e.getSource() == zoomInButton){
-	    		
+	    		for(ButtonMenuListener listener : listeners)
+	    			listener.zoomIn();
 	    	}else if(e.getSource() == zoomOutButton){
-	    		
+	    		for(ButtonMenuListener listener : listeners)
+	    			listener.zoomOut();
 	    	}else if(e.getSource() == invertImageButton){
-	    		
+	    		for(ButtonMenuListener listener : listeners)
+	    			listener.invertImage();
 	    	}else if(e.getSource() == toggleHighlightsButton){
-	    		
+	    		for(ButtonMenuListener listener : listeners)
+	    			listener.toggleHighlight();
 	    	}else if(e.getSource() == saveButton){
-	    		
+	    		for(ButtonMenuListener listener : listeners)
+	    			listener.save();
 	    	}else if(e.getSource() == submitButton){
-	    		
+	    		for(ButtonMenuListener listener : listeners)
+	    			listener.submit();
 	    	}
 	    }
     };
