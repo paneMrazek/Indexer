@@ -11,20 +11,19 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class ViewSampleWindow extends JFrame{
+public class ViewSampleWindow extends JDialog{
 
 	private static final long serialVersionUID = 1L;
 	
-	
-
-	public ViewSampleWindow(String string, String url){
-		super(string);
+	public ViewSampleWindow(JFrame parent, String string, String url){
+		super(parent,string,JDialog.DEFAULT_MODALITY_TYPE);
 		try{
-			this.setSize(510,430);
+			this.setResizable(false);
 			ImageIcon icon = new ImageIcon(redraw(ImageIO.read(new URL(url))));
 			
 			this.setSize(icon.getIconWidth(),icon.getIconHeight()+25);

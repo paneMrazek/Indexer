@@ -143,6 +143,43 @@ public class Facade{
 		return result;
 	}
 	
+	public DownloadBatch_Result getBatch(String auth, int batchId){
+		DownloadBatch_Result result = new DownloadBatch_Result();
+		if(batchId == 0){
+			result.setError(true);
+			return result;
+		}
+		Database database = new Database();
+		Batch batch = new Batch();
+		ValidateUser_Result validationResult = validateUser(auth);
+		if(validationResult.isValid() && validationResult.getUser().getCurrentBatch() == batchId){
+			database.startTransaction();
+			batch = database.getBatchDAO().readBatch(batchId);
+			if(batch == null){
+				result.setError(true);
+				database.endTransaction();
+				return result;
+			}
+			batch.setFields(database.getFieldDAO().readFieldsForProject(batch.getProjectId()));
+			batch.setRecords(database.getRecordDAO().readRecordsForBatch(batch.getId()));
+			Project project = database.getProjectDAO().readProject(batch.getProjectId());
+			if(project == null){
+				result.setError(true);
+				database.endTransaction();
+				return result;
+			}
+			batch.setFirstYCoordinate(project.getFirstYCoordinate());
+			batch.setRecordHeight(project.getRecordHeight());
+			database.endTransaction();
+			if(database.wasSuccesful()){
+				result.setBatch(batch);
+				return result;
+			}
+		}
+		result.setError(true);
+		return result;
+	}
+	
 	/**
 	 * Submits the indexed record field values for a batch to the Server. Unassigns the
 	 * User from the given batch and increments the Users indexed record count.

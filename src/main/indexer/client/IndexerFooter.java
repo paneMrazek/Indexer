@@ -6,6 +6,7 @@ import javax.swing.JTabbedPane;
 import main.indexer.client.panels.FieldHelpPanel;
 import main.indexer.client.panels.FormEntryPanel;
 import main.indexer.client.panels.ImageNavPanel;
+import main.indexer.client.panels.IndexerDataModel;
 import main.indexer.client.panels.TableEntryPanel;
 import main.indexer.shared.models.Batch;
 
@@ -21,23 +22,23 @@ public class IndexerFooter extends JSplitPane{
 	private FieldHelpPanel fieldHelpPanel;
 	private ImageNavPanel imageNavPanel;
 	
-	public IndexerFooter(){
+	public IndexerFooter(IndexerDataModel model){
 		super(JSplitPane.HORIZONTAL_SPLIT);
 		setDividerLocation(600);
-		createComponents();
+		createComponents(model);
 	}
 
-	private void createComponents(){
+	private void createComponents(IndexerDataModel model){
 				
 		leftTabbedPane = new JTabbedPane();
-		tableEntryPanel = new TableEntryPanel();
-		formEntryPanel = new FormEntryPanel();
+		tableEntryPanel = new TableEntryPanel(model);
+		formEntryPanel = new FormEntryPanel(model);
 		leftTabbedPane.addTab("Table Entry",tableEntryPanel);
 		leftTabbedPane.addTab("Form Entry",formEntryPanel);
 		
 		rightTabbedPane = new JTabbedPane();
-		fieldHelpPanel = new FieldHelpPanel();
-		imageNavPanel = new ImageNavPanel();
+		fieldHelpPanel = new FieldHelpPanel(model);
+		imageNavPanel = new ImageNavPanel(model);
 		rightTabbedPane.addTab("Field Help",fieldHelpPanel);
 		rightTabbedPane.addTab("Image Navigation",imageNavPanel);
 		
@@ -45,11 +46,11 @@ public class IndexerFooter extends JSplitPane{
 		this.setRightComponent(rightTabbedPane);
 	}
 
-	public void setBatch(Batch batch, byte[] file){
+	public void setBatch(Batch batch){
 		tableEntryPanel.setBatch(batch);
 		formEntryPanel.setBatch(batch);
 		fieldHelpPanel.setBatch(batch);
-		imageNavPanel.setBatch(file);
+		imageNavPanel.setBatch(batch);
 		
 	}
 	

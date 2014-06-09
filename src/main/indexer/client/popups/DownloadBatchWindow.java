@@ -9,12 +9,13 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import main.indexer.shared.models.Project;
 
-public class DownloadBatchWindow extends JFrame{
+public class DownloadBatchWindow extends JDialog{
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -42,10 +43,11 @@ public class DownloadBatchWindow extends JFrame{
 	}
 	
 
-	public DownloadBatchWindow(String title, List<Project> projects){
-		super(title);
-		setProjects(projects);
-		createComponents();
+	public DownloadBatchWindow(JFrame parent, String title, List<Project> projects){
+		super(parent,title,JDialog.DEFAULT_MODALITY_TYPE);
+		this.setProjects(projects);
+		this.setResizable(false);
+		this.createComponents();
 	}
 
 	private void createComponents(){

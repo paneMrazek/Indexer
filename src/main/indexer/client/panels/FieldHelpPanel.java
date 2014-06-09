@@ -1,22 +1,43 @@
 package main.indexer.client.panels;
 
-import javax.swing.JPanel;
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
 
+import javax.swing.JEditorPane;
+import main.indexer.client.panels.IndexerDataModel.IndexerDataListener;
 import main.indexer.shared.models.Batch;
+import main.indexer.shared.models.Field;
 
-public class FieldHelpPanel extends JPanel{
+public class FieldHelpPanel extends JEditorPane implements IndexerDataListener{
 
 	private static final long serialVersionUID = 1L;
 	
-	public FieldHelpPanel(){
+	private List<Field> fields;
+	
+	public FieldHelpPanel(IndexerDataModel model){
 		super();
-		createComponents();
+		this.setContentType("text/html");
+		model.addListener(this);
 	}
 
-	private void createComponents(){
-		
+	public void setBatch(Batch batch){
+		fields = batch.getFields();
 	}
 
-	public void setBatch(Batch batch){}
+	@Override
+	public void cellSelect(int row, int col){
+		try{
+			if(col > 0)
+				this.setPage(new URL(fields.get(col-1).getHelpFile()));
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void dataChange(int row, int col, String data){
+		return;
+	}
 	
 }

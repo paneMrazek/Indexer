@@ -19,7 +19,7 @@ public class Server{
 		return;
 	}
 	
-private void run() {
+	private void run() {
 		
 		try {
 			server = HttpServer.create(new InetSocketAddress(portNum),10);
@@ -31,6 +31,7 @@ private void run() {
 		server.setExecutor(null); // use the default executor
 		
 		server.createContext("/DownloadBatch", downloadBatchHandler);
+		server.createContext("/GetBatch", getBatchHandler);
 		server.createContext("/GetFields",getFieldsHandler);
 		server.createContext("/GetProjects",getProjectsHandler);
 		server.createContext("/GetSampleImage",getSampleImageHandler);
@@ -43,6 +44,7 @@ private void run() {
 	}
 
 	private HttpHandler downloadBatchHandler = new DownloadBatchHandler();
+	private HttpHandler getBatchHandler = new GetBatchHandler();
 	private HttpHandler getFieldsHandler = new GetFieldsHandler();
 	private HttpHandler getProjectsHandler = new GetProjectsHandler();
 	private HttpHandler getSampleImageHandler = new GetSampleImageHandler();

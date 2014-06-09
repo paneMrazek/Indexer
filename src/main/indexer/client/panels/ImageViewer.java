@@ -1,12 +1,10 @@
-package main.indexer.client;
+package main.indexer.client.panels;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
@@ -18,24 +16,50 @@ import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import main.indexer.client.panels.IndexerDataModel.IndexerDataListener;
 import main.indexer.shared.models.Batch;
 
-public class ImageViewer extends JPanel{
+public class ImageViewer extends JPanel implements IndexerDataListener{
 
 	private static final long serialVersionUID = 1L;
 	
-	Image image;
-	Image displayImage;
-	Double scale;
-	boolean inverted;
-	int x;
-	int y;
+	private Batch batch;
 	
-	JLabel imageLabel = new JLabel();
+	private Image image;
+	private Image displayImage;
+	private Double scale;
+	private boolean inverted;
+	private int x;
+	private int y;
 	
-	public ImageViewer(){
+	private IndexerDataModel model;
+	
+	public Batch getBatch(){
+		return batch;
+	}
+	
+	public double getScale(){
+		return scale;
+	}
+	
+	public void setScale(double scale){
+		this.scale = scale;
+		redraw();
+	}
+	
+	public boolean getInverted(){
+		return inverted;
+	}
+	
+	public void setInverted(boolean inverted){
+		this.inverted = inverted;
+		redraw();
+	}
+	
+	public ImageViewer(IndexerDataModel model){
 		super(new FlowLayout(FlowLayout.CENTER));
-		
+		this.model = model;
+		model.addListener(this);
 		this.addMouseWheelListener(mouseWheelListener);
 		this.setLayout(null);
 		this.setBackground(new Color(128,128,128));
@@ -45,6 +69,7 @@ public class ImageViewer extends JPanel{
 		try{
 			scale = 0.7;
 			inverted = false;
+			this.batch = batch;
 			image = ImageIO.read(new URL(batch.getImageURL()));
 			redraw();
 			paintComponent(getGraphics());
@@ -99,5 +124,11 @@ public class ImageViewer extends JPanel{
 				zoomOut();
 		}
 	};
+
+	@Override
+	public void cellSelect(int row, int col){}
+
+	@Override
+	public void dataChange(int row, int col, String data){}
 	
 }

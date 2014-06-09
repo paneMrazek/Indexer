@@ -126,6 +126,24 @@ public class ClientCommunicator{
 		return result;
 	}
 	
+	public DownloadBatch_Result getBatch(GetBatch_Params params){
+		DownloadBatch_Result result = (DownloadBatch_Result) doGet("/GetBatch/" + params.getBatchId(),params);
+		if(result == null){
+			result = new DownloadBatch_Result();
+			result.setError(true);
+		}
+		if(result.getBatch() == null)
+			return result;
+		for(Field field : result.getBatch().getFields()){
+			if(field.getHelpFile() != null && !field.getHelpFile().equals(""))
+				field.setHelpFile("http://" + host + ":" + port + "/" + field.getHelpFile());
+			if(field.getKnownData() != null && !field.getKnownData().equals(""))
+				field.setKnownData("http://" + host + ":" + port + "/" + field.getKnownData());
+		}
+		result.getBatch().setImageURL("http://" + host + ":" + port + "/" + result.getBatch().getImageURL());
+		return result;
+	}
+	
 	/**
 	 * Submits the indexed record field values for a batch to the Server. Unassigns the
 	 * User from the given batch and increments the Users indexed record count.
