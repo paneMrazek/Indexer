@@ -4,11 +4,14 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
-import main.indexer.client.panels.IndexerDataModel.IndexerDataListener;
+import main.indexer.client.models.IndexerDataModel;
+import main.indexer.client.models.IndexerDataModel.IndexerDataListener;
+import main.indexer.client.models.QualityChecker;
 import main.indexer.shared.models.Batch;
 
 public class TableEntryPanel extends JPanel implements IndexerDataListener{
@@ -16,12 +19,15 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener{
 	private String[] columnNames;
 	private Object[][] rowData;
 	private IndexerDataModel model;
+	
+	QualityChecker checker;
 
 	private static final long serialVersionUID = 1L;
 	
-	public TableEntryPanel(IndexerDataModel model){
+	public TableEntryPanel(IndexerDataModel model, QualityChecker checker){
 		super(new BorderLayout());
 		this.model = model;
+		this.checker = checker;
 		model.addListener(this);
 	}
 	
@@ -45,12 +51,16 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener{
 		
 		table.setCellSelectionEnabled(true);
 		table.getSelectionModel().addListSelectionListener(selectionListener);
+		table.getColumnModel().getSelectionModel().addListSelectionListener(selectionListener);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		this.add(table.getTableHeader(),BorderLayout.PAGE_START);
 		this.add(table,BorderLayout.CENTER);
-		
-		
-		
+	}
+	
+	public void removeBatch(){
+		this.removeAll();
+		this.paintAll(getGraphics());
 	}
 	
 	AbstractTableModel tableModel = new AbstractTableModel(){
@@ -84,7 +94,7 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener{
 		@Override
 		public void setValueAt(Object value, int row, int col) {
 	        rowData[row][col] = value;
-	        model.dataChange(row,col,(String) value);
+	        model.dataChange(row,col-1,(String) value);
 	        fireTableCellUpdated(row, col);
 	    }
 	};
@@ -94,15 +104,19 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener{
 		@Override
 		public void valueChanged(ListSelectionEvent e){
 			if(!e.getValueIsAdjusting())
-				model.cellSelect(table.getSelectedRow(),table.getSelectedColumn());
+				model.cellSelect(table.getSelectedRow(),table.getSelectedColumn()-1);
 		}
 		
 	};
 
 	@Override
-	public void cellSelect(int row, int col){}
+	public void cellSelect(int row, int col){
+		table.changeSelection(row,col+1,false,false);
+	}
 
 	@Override
-	public void dataChange(int row, int col, String data){}
+	public void dataChange(int row, int col, String data){
+		rowData[row][col+1] = data;
+	}
 	
 }

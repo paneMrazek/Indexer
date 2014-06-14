@@ -1,33 +1,166 @@
 package main.indexer.client.panels;
 
-import javax.swing.JPanel;
+import java.awt.Dimension;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.util.ArrayList;
+import java.util.List;
 
-import main.indexer.client.panels.IndexerDataModel.IndexerDataListener;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpringLayout;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import main.indexer.client.models.IndexerDataModel;
+import main.indexer.client.models.IndexerDataModel.IndexerDataListener;
 import main.indexer.shared.models.Batch;
 
-public class FormEntryPanel extends JPanel implements IndexerDataListener{
+public class FormEntryPanel extends JSplitPane implements IndexerDataListener{
 
 	private static final long serialVersionUID = 1L;
 	
 	private IndexerDataModel model;
+	private FormEntryInput selected;
+	
+	private JList<Integer> list;
+	private JPanel panel;
+	
+	private List<FormEntryInput> inputs;
+	
+	private String[] fieldNames;
+	private Integer[] recordNums;
+	private Object[][] data;
+	
 	
 	public FormEntryPanel(IndexerDataModel model){
-		super();
+		super(JSplitPane.HORIZONTAL_SPLIT);
+		inputs = new ArrayList<>();
 		this.model = model;
 		model.addListener(this);
-		createComponents();
+	}
+	
+	public Object[][] getRecordValues(){
+		return data;
 	}
 
-	private void createComponents(){
+	public void setBatch(Batch batch){
+		fieldNames = new String[batch.getFields().size()];
+		for(int i = 0; i < batch.getFields().size(); i++){
+			fieldNames[i] = batch.getFields().get(i).getTitle();
+		}
 		
+		data = new String[batch.getRecordNum()][batch.getFields().size()];
+		
+		recordNums = new Integer[batch.getRecordNum()];
+		for(int i = 0; i < recordNums.length; i++)
+			recordNums[i] = i+1;
+		
+		list = new JList<>(recordNums);
+		list.addListSelectionListener(selectionListener);
+		list.setSelectedIndex(0);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		JScrollPane listScroller = new JScrollPane(list);
+		this.setLeftComponent(listScroller);
+		
+		panel = new JPanel(new SpringLayout());
+		JScrollPane panelScroller = new JScrollPane(panel);
+		
+		this.setRightComponent(panelScroller);
+		this.setDividerLocation(30);
+		
+		for(int i = 0; i < fieldNames.length; i++){
+			String fieldName = fieldNames[i];
+			JLabel lable = new JLabel(fieldName, JLabel.TRAILING);
+            panel.add(lable);
+            FormEntryInput textField = new FormEntryInput(lable, i);
+            textField.addFocusListener(focusAdapter);
+            inputs.add(textField);
+            panel.add(textField);			
+		}
+		
+		//Lay out the panel.
+        SpringUtilities.makeCompactGrid(panel,
+                                        fieldNames.length, 2, 	//rows, cols
+                                        20, 20,        			//initX, initY
+                                        40, 20);       			//xPad, yPad
+	}
+	
+	public void removeBatch(){
+		this.removeAll();
+		this.paintAll(this.getGraphics());
+	}
+	
+	private void updateFields(){
+		for(FormEntryInput input : inputs){
+			String value = (String) data[list.getSelectedIndex()][input.getIndex()];
+			if(data != null)
+				input.setText(value); 
+		}
+	}
+	
+	private ListSelectionListener selectionListener = new ListSelectionListener(){
+
+		@Override
+		public void valueChanged(ListSelectionEvent e){
+			if(!e.getValueIsAdjusting() && list != null && selected != null){
+				model.cellSelect(list.getSelectedIndex(), selected.getIndex());
+			}
+			updateFields();
+		}
+		
+	};
+	
+	private FocusAdapter focusAdapter = new FocusAdapter(){
+		public void focusGained(FocusEvent e) {
+			selected = (FormEntryInput) e.getSource();
+			model.cellSelect(list.getSelectedIndex(), selected.getIndex());
+		}
+		
+		public void focusLost(FocusEvent e) {
+			FormEntryInput input = (FormEntryInput) e.getSource();
+			model.dataChange(list.getSelectedIndex(), input.getIndex(),input.getText());
+		}
+	};
+	
+
+	@Override
+	public void cellSelect(int row, int col){
+		list.setSelectedIndex(row);
+		inputs.get(col).requestFocusInWindow();
 	}
 
-	public void setBatch(Batch batch){}
-
 	@Override
-	public void cellSelect(int row, int col){}
+	public void dataChange(int row, int col, String data){
+		this.data[row][col] = data;
+		updateFields();
+	}
+	
+	private class FormEntryInput extends JTextField{
+		
+		private static final long serialVersionUID = 1L;
+		
+		private int index;
 
-	@Override
-	public void dataChange(int row, int col, String data){}
+		public FormEntryInput(JLabel lable, int index){
+			lable.setLabelFor(this);
+			this.setMinimumSize(new Dimension(40,20));
+            this.setPreferredSize(new Dimension(80,20));
+            this.setMaximumSize(new Dimension(200,20));
+            this.setIndex(index);
+		}
+
+		public int getIndex(){
+			return index;
+		}
+		public void setIndex(int index){
+			this.index = index;
+		}
+	}
 	
 }

@@ -1,4 +1,4 @@
-package main.indexer.client.panels;
+package main.indexer.client.models;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,8 @@ public class IndexerDataModel{
 	}
 	
 	public void cellSelect(int row, int col){
+		if(row < 0 || col < 0)
+			return;
 		for(IndexerDataListener listener : listeners){
 			listener.cellSelect(row,col);
 		}
@@ -27,8 +29,17 @@ public class IndexerDataModel{
 		}
 	}
 	
+	public void updateData(String[][] recordValues){
+		for(int i = 0; i < recordValues.length; i++){
+			for(int j = 0; j < recordValues[i].length; j++){
+				dataChange(i,j,recordValues[i][j]);
+			}
+		}
+	}
+	
 	public interface IndexerDataListener{
 		public void cellSelect(int row, int col);
 		public void dataChange(int row, int col, String data);
 	}
+
 }

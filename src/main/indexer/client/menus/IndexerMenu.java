@@ -38,10 +38,16 @@ public class IndexerMenu extends JMenuBar{
         exitMenuItem = new JMenuItem("Exit", KeyEvent.VK_E);
         exitMenuItem.addActionListener(actionListener);
         menu.add(exitMenuItem);
+        
+        setHasBatch(false);
 	}
 	
 	public void addListener(MenuListener listener){
 		this.listeners.add(listener);
+	}
+	
+	public void setHasBatch(Boolean hasBatch){
+		downloadBatchMenuItem.setEnabled(!hasBatch);
 	}
 	
 	private ActionListener actionListener = new ActionListener() {
@@ -58,7 +64,9 @@ public class IndexerMenu extends JMenuBar{
 	        	}
 	        }
 	        else if (e.getSource() == exitMenuItem) {
-	            System.exit(0);
+	        	for(MenuListener listener : listeners){
+	        		listener.exit();
+	        	}
 	        }
 	    }
     };
@@ -67,5 +75,6 @@ public class IndexerMenu extends JMenuBar{
     	
     	public void requestBatch();
     	public void logout();
+    	public void exit();
     }
 }

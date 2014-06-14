@@ -87,7 +87,7 @@ public class LoginWindow extends JFrame{
 	private void displayInvalidLogin(){
 		JOptionPane.showMessageDialog(this, 
 				"Invalid username and/or password",
-				"LoginWindow Failed",JOptionPane.ERROR_MESSAGE);
+				"Login Failed",JOptionPane.ERROR_MESSAGE);
 	}
 	
 	private void displayValidLogin(User user){

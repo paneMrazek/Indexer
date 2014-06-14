@@ -1,12 +1,14 @@
 package main.indexer.client;
 
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
+import main.indexer.client.models.IndexerDataModel;
+import main.indexer.client.models.QualityChecker;
 import main.indexer.client.panels.FieldHelpPanel;
 import main.indexer.client.panels.FormEntryPanel;
 import main.indexer.client.panels.ImageNavPanel;
-import main.indexer.client.panels.IndexerDataModel;
 import main.indexer.client.panels.TableEntryPanel;
 import main.indexer.shared.models.Batch;
 
@@ -24,22 +26,25 @@ public class IndexerFooter extends JSplitPane{
 	
 	public IndexerFooter(IndexerDataModel model){
 		super(JSplitPane.HORIZONTAL_SPLIT);
-		setDividerLocation(600);
 		createComponents(model);
 	}
 
 	private void createComponents(IndexerDataModel model){
+		
+		QualityChecker checker = new QualityChecker();
 				
 		leftTabbedPane = new JTabbedPane();
-		tableEntryPanel = new TableEntryPanel(model);
-		formEntryPanel = new FormEntryPanel(model);
-		leftTabbedPane.addTab("Table Entry",tableEntryPanel);
+		tableEntryPanel = new TableEntryPanel(model, checker);
+		JScrollPane tableScrollPane = new JScrollPane(tableEntryPanel);
+		formEntryPanel = new FormEntryPanel(model, checker);
+		leftTabbedPane.addTab("Table Entry",tableScrollPane);
 		leftTabbedPane.addTab("Form Entry",formEntryPanel);
 		
 		rightTabbedPane = new JTabbedPane();
 		fieldHelpPanel = new FieldHelpPanel(model);
+		JScrollPane helpScrollPane = new JScrollPane(fieldHelpPanel);
 		imageNavPanel = new ImageNavPanel(model);
-		rightTabbedPane.addTab("Field Help",fieldHelpPanel);
+		rightTabbedPane.addTab("Field Help",helpScrollPane);
 		rightTabbedPane.addTab("Image Navigation",imageNavPanel);
 		
 		this.setLeftComponent(leftTabbedPane);
@@ -53,5 +58,24 @@ public class IndexerFooter extends JSplitPane{
 		imageNavPanel.setBatch(batch);
 		
 	}
+	
+	public void removeBatch(){
+		tableEntryPanel.removeBatch();
+		formEntryPanel.removeBatch();
+		fieldHelpPanel.removeBatch();
+		imageNavPanel.removeBatch();
+	}
+	
+	@Override
+	public void setDividerLocation(int value){
+		if(value < 45)
+			value = 45;
+		super.setDividerLocation(value);
+	}
+
+	public Object[][] getRecordValues(){
+		return formEntryPanel.getRecordValues();
+	}
+
 	
 }

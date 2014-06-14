@@ -4,13 +4,15 @@ import java.awt.Color;
 
 import javax.swing.JPanel;
 
-import main.indexer.client.panels.IndexerDataModel.IndexerDataListener;
+import main.indexer.client.models.IndexerDataModel;
+import main.indexer.client.models.IndexerDataModel.IndexerDataListener;
 import main.indexer.shared.models.Batch;
 
 public class ImageNavPanel extends JPanel implements IndexerDataListener{
 
 	private static final long serialVersionUID = 1L;
 	
+	@SuppressWarnings("unused")
 	private IndexerDataModel model;
 	
 	public ImageNavPanel(IndexerDataModel model){
@@ -27,6 +29,10 @@ public class ImageNavPanel extends JPanel implements IndexerDataListener{
 
 	public void setBatch(Batch batch){
 		
+	}
+	
+	public void removeBatch(){
+		this.removeAll();
 	}
 
 	@Override
