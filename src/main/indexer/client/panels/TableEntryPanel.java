@@ -1,6 +1,7 @@
 package main.indexer.client.panels;
 
-import java.awt.BorderLayout;
+import java.awt.*;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -8,19 +9,25 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 
 import main.indexer.client.models.IndexerDataModel;
 import main.indexer.client.models.IndexerDataModel.IndexerDataListener;
 import main.indexer.client.models.QualityChecker;
 import main.indexer.shared.models.Batch;
+import main.indexer.shared.models.Field;
 
-public class TableEntryPanel extends JPanel implements IndexerDataListener{
+public class TableEntryPanel extends JPanel implements IndexerDataListener, QualityChecker.QualityCheckerListener {
 	
 	private String[] columnNames;
 	private Object[][] rowData;
 	private IndexerDataModel model;
 	
-	QualityChecker checker;
+	private QualityChecker checker;
+    private List<Field> fields;
+
+    private boolean[][] invalid;
 
 	private static final long serialVersionUID = 1L;
 	
@@ -29,19 +36,22 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener{
 		this.model = model;
 		this.checker = checker;
 		model.addListener(this);
+        checker.addListener(this);
 	}
-	
-	JTable table;
+
+	JTable table = new JTable();
 
 	public void setBatch(Batch batch){
-		
+		this.fields = batch.getFields();
+
 		columnNames = new String[batch.getFields().size() + 1];
 		columnNames[0] = "Record Number";
 		for(int i = 0; i < batch.getFields().size(); i++){
 			columnNames[i+1] = batch.getFields().get(i).getTitle();
 		}
-		
-		rowData = new String[batch.getRecordNum()][batch.getFields().size()+1];
+
+        invalid = new boolean[batch.getRecordNum()][batch.getFields().size()+1];
+        rowData = new String[batch.getRecordNum()][batch.getFields().size()+1];
 		for(int i = 0; i < batch.getRecordNum(); i++){
 			rowData[i][0] = Integer.toString(i+1);
 		}
@@ -53,6 +63,8 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener{
 		table.getSelectionModel().addListSelectionListener(selectionListener);
 		table.getColumnModel().getSelectionModel().addListSelectionListener(selectionListener);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        table.setDefaultRenderer(Color.class,renderer);
 		
 		this.add(table.getTableHeader(),BorderLayout.PAGE_START);
 		this.add(table,BorderLayout.CENTER);
@@ -63,7 +75,7 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener{
 		this.paintAll(getGraphics());
 	}
 	
-	AbstractTableModel tableModel = new AbstractTableModel(){
+	private AbstractTableModel tableModel = new AbstractTableModel(){
 		private static final long serialVersionUID = 1L;
 
 		@Override
@@ -98,6 +110,22 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener{
 	        fireTableCellUpdated(row, col);
 	    }
 	};
+
+    private DefaultTableCellRenderer renderer = new DefaultTableCellRenderer(){
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            System.out.println(invalid[row][column]);
+            if (invalid == null)
+                return c;
+
+            if (invalid[row][column])
+                c.setBackground(new Color(0xff0000));
+            else
+                c.setBackground(Color.WHITE);
+
+            return c;
+        }
+    };
 	
 	private ListSelectionListener selectionListener = new ListSelectionListener(){
 
@@ -112,11 +140,20 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener{
 	@Override
 	public void cellSelect(int row, int col){
 		table.changeSelection(row,col+1,false,false);
+        checker.fieldchange(this.fields.get(col).getKnownData());
 	}
 
 	@Override
 	public void dataChange(int row, int col, String data){
 		rowData[row][col+1] = data;
+        checker.isValidEntry(row, col, data);
 	}
-	
+
+    @Override
+    public void setInvalid(int row, int col, boolean invalid) {
+        if(this.invalid != null){
+            this.invalid[row][col + 1] = invalid;
+            table.repaint();
+        }
+    }
 }

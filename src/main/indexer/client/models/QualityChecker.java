@@ -2,27 +2,47 @@ package main.indexer.client.models;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class QualityChecker{
-	
-	private Trie trie;
+
+    private List<QualityCheckerListener> listeners = new ArrayList<>();
+
+    private Trie trie;
+
+    private boolean hasKnownData;
+
+    public void addListener(QualityCheckerListener listener){
+        listeners.add(listener);
+    }
 	
 	public void fieldchange(String knowndata){
+        if(knowndata == null || knowndata.equals("")){
+            hasKnownData = false;
+            return;
+        }
+        hasKnownData = true;
 		trie = new Trie();
 		try{
 			Scanner in = new Scanner(new URL(knowndata).openStream());
 			in.useDelimiter(",");
 			while(in.hasNext())
-				trie.add(in.next());
+				trie.add(in.next().toLowerCase());
 			in.close();
 		}catch(IOException e){
 			e.printStackTrace();
 		}
 	}
 	
-	public boolean isValidEntry(String value){
-		return trie.find(value) != null;
+	public void isValidEntry(int row, int col, String value){
+		if(trie != null && hasKnownData) {
+            boolean invalid = trie.find(value.toLowerCase()) == null;
+            for(QualityCheckerListener listener : listeners){
+                listener.setInvalid(row, col,invalid);
+            }
+        }
 	}
 
 	private class Trie{
@@ -37,7 +57,7 @@ public class QualityChecker{
 			return root.find(word.toLowerCase());
 		}
 		
-	};
+	}
 	
 	private class Node{
 		int count = 0;
@@ -89,5 +109,8 @@ public class QualityChecker{
 		}
 	}
 
+    public interface QualityCheckerListener{
+        public void setInvalid(int row, int col, boolean invalid);
+    }
 
 }

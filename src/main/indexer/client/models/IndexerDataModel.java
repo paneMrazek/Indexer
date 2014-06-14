@@ -1,5 +1,7 @@
 package main.indexer.client.models;
 
+import main.indexer.shared.models.Field;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,10 +31,12 @@ public class IndexerDataModel{
 		}
 	}
 	
-	public void updateData(String[][] recordValues){
-		for(int i = 0; i < recordValues.length; i++){
-			for(int j = 0; j < recordValues[i].length; j++){
-				dataChange(i,j,recordValues[i][j]);
+	public void updateData(String[][] recordValues,QualityChecker checker, List<Field> fields){
+		for(int j = 0; j < fields.size(); j++){
+            checker.fieldchange(fields.get(j).getKnownData());
+			for(int i = 0; i < recordValues.length; i++){
+                if(recordValues[i] != null && j < recordValues[i].length)
+				    dataChange(i,j,recordValues[i][j]);
 			}
 		}
 	}

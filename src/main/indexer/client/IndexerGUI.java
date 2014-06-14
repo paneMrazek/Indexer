@@ -21,6 +21,7 @@ import main.indexer.client.menus.IndexerButtonMenu.ButtonMenuListener;
 import main.indexer.client.menus.IndexerMenu.MenuListener;
 import main.indexer.client.models.IndexerDataModel;
 import main.indexer.client.models.IndexerProperties;
+import main.indexer.client.models.QualityChecker;
 import main.indexer.client.panels.ImageViewer;
 import main.indexer.client.popups.DownloadBatchWindow;
 import main.indexer.client.popups.LoginWindow;
@@ -46,6 +47,7 @@ public class IndexerGUI extends JFrame implements LoginListener, MenuListener, B
 	private LoginWindow login;
 	private IndexerMenu menu;
 	private IndexerDataModel model;
+    private QualityChecker checker;
 	private IndexerButtonMenu buttonToolBar;
 	private ImageViewer imageViewer;
 	private IndexerFooter footer;
@@ -74,9 +76,10 @@ public class IndexerGUI extends JFrame implements LoginListener, MenuListener, B
 		buttonToolBar.addListener(this);
 		
 		model = new IndexerDataModel();
+        checker = new QualityChecker();
 		
 		imageViewer = new ImageViewer(model);	
-		footer = new IndexerFooter(model);
+		footer = new IndexerFooter(model, checker);
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,imageViewer,footer);
 		splitPane.setDividerLocation(properties.getProperty("verticalSplitPosition",400));
 		this.add(splitPane, BorderLayout.CENTER);
@@ -155,7 +158,7 @@ public class IndexerGUI extends JFrame implements LoginListener, MenuListener, B
 			footer.setBatch(batch);
 			imageViewer.setBatch(batch);
 			menu.setHasBatch(true);
-			properties.updateValues(model);
+			properties.updateValues(model,checker,batch.getFields());
 		}
 	}
 	

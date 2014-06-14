@@ -24,14 +24,12 @@ public class IndexerFooter extends JSplitPane{
 	private FieldHelpPanel fieldHelpPanel;
 	private ImageNavPanel imageNavPanel;
 	
-	public IndexerFooter(IndexerDataModel model){
+	public IndexerFooter(IndexerDataModel model, QualityChecker checker){
 		super(JSplitPane.HORIZONTAL_SPLIT);
-		createComponents(model);
+		createComponents(model, checker);
 	}
 
-	private void createComponents(IndexerDataModel model){
-		
-		QualityChecker checker = new QualityChecker();
+	private void createComponents(IndexerDataModel model, QualityChecker checker){
 				
 		leftTabbedPane = new JTabbedPane();
 		tableEntryPanel = new TableEntryPanel(model, checker);

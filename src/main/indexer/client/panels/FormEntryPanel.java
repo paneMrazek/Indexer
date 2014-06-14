@@ -1,6 +1,6 @@
 package main.indexer.client.panels;
 
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.ArrayList;
@@ -19,9 +19,11 @@ import javax.swing.event.ListSelectionListener;
 
 import main.indexer.client.models.IndexerDataModel;
 import main.indexer.client.models.IndexerDataModel.IndexerDataListener;
+import main.indexer.client.models.QualityChecker;
 import main.indexer.shared.models.Batch;
+import main.indexer.shared.models.Field;
 
-public class FormEntryPanel extends JSplitPane implements IndexerDataListener{
+public class FormEntryPanel extends JSplitPane implements IndexerDataListener, QualityChecker.QualityCheckerListener {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -29,20 +31,19 @@ public class FormEntryPanel extends JSplitPane implements IndexerDataListener{
 	private FormEntryInput selected;
 	
 	private JList<Integer> list;
-	private JPanel panel;
-	
-	private List<FormEntryInput> inputs;
-	
-	private String[] fieldNames;
-	private Integer[] recordNums;
-	private Object[][] data;
+
+    private List<FormEntryInput> inputs;
+
+    private Object[][] data;
+    private boolean[][] invalid;
 	
 	
-	public FormEntryPanel(IndexerDataModel model){
+	public FormEntryPanel(IndexerDataModel model, QualityChecker checker){
 		super(JSplitPane.HORIZONTAL_SPLIT);
 		inputs = new ArrayList<>();
 		this.model = model;
-		model.addListener(this);
+        model.addListener(this);
+        checker.addListener(this);
 	}
 	
 	public Object[][] getRecordValues(){
@@ -50,14 +51,15 @@ public class FormEntryPanel extends JSplitPane implements IndexerDataListener{
 	}
 
 	public void setBatch(Batch batch){
-		fieldNames = new String[batch.getFields().size()];
+        String[] fieldNames = new String[batch.getFields().size()];
 		for(int i = 0; i < batch.getFields().size(); i++){
 			fieldNames[i] = batch.getFields().get(i).getTitle();
 		}
 		
 		data = new String[batch.getRecordNum()][batch.getFields().size()];
-		
-		recordNums = new Integer[batch.getRecordNum()];
+        invalid = new boolean[batch.getRecordNum()][batch.getFields().size()];
+
+        Integer[] recordNums = new Integer[batch.getRecordNum()];
 		for(int i = 0; i < recordNums.length; i++)
 			recordNums[i] = i+1;
 		
@@ -67,8 +69,8 @@ public class FormEntryPanel extends JSplitPane implements IndexerDataListener{
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JScrollPane listScroller = new JScrollPane(list);
 		this.setLeftComponent(listScroller);
-		
-		panel = new JPanel(new SpringLayout());
+
+        JPanel panel = new JPanel(new SpringLayout());
 		JScrollPane panelScroller = new JScrollPane(panel);
 		
 		this.setRightComponent(panelScroller);
@@ -100,7 +102,11 @@ public class FormEntryPanel extends JSplitPane implements IndexerDataListener{
 		for(FormEntryInput input : inputs){
 			String value = (String) data[list.getSelectedIndex()][input.getIndex()];
 			if(data != null)
-				input.setText(value); 
+			    input.setText(value);
+            if(invalid[list.getSelectedIndex()][input.getIndex()])
+                input.setBackground(new Color(0xFF0000));
+            else
+                input.setBackground(Color.WHITE);
 		}
 	}
 	
@@ -140,8 +146,13 @@ public class FormEntryPanel extends JSplitPane implements IndexerDataListener{
 		this.data[row][col] = data;
 		updateFields();
 	}
-	
-	private class FormEntryInput extends JTextField{
+
+    @Override
+    public void setInvalid(int col, int row, boolean invalid) {
+        this.invalid[col][row] = invalid;
+    }
+
+    private class FormEntryInput extends JTextField{
 		
 		private static final long serialVersionUID = 1L;
 		

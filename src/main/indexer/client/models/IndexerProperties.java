@@ -1,5 +1,8 @@
 package main.indexer.client.models;
 
+import main.indexer.shared.models.Field;
+
+import java.util.List;
 import java.util.Properties;
 
 public class IndexerProperties extends Properties{
@@ -56,7 +59,7 @@ public class IndexerProperties extends Properties{
 		this.setProperty("values",valueString);
 	}
 
-	public void updateValues(IndexerDataModel model){
+	public void updateValues(IndexerDataModel model,QualityChecker checker,List<Field> fields){
 		String valueString = this.getProperty("values","");
 		if(!valueString.equals("")){
 			String[] split = valueString.split(";");
@@ -64,7 +67,7 @@ public class IndexerProperties extends Properties{
 			for(int i = 0; i < split.length; i++){
 				recordValues[i]	= split[i].split(",");
 			}
-			model.updateData(recordValues);
+			model.updateData(recordValues,checker,fields);
 		}
 	}
 	
