@@ -54,7 +54,7 @@ public class DownloadBatchWindow extends JDialog{
 		
 		this.listeners = new ArrayList<>();
 		
-		this.setSize(375,120);
+		this.setSize(400,120);
 		this.setLocationRelativeTo(null);
 		
 		label = new JLabel("Project:");
