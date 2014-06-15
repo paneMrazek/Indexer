@@ -2,15 +2,14 @@ package main.indexer.client.models;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class QualityChecker{
 
     private List<QualityCheckerListener> listeners = new ArrayList<>();
 
     private Trie trie;
+    private Map<String, Trie> tries = new HashMap<>();
 
     private boolean hasKnownData;
 
@@ -24,26 +23,116 @@ public class QualityChecker{
             return;
         }
         hasKnownData = true;
-		trie = new Trie();
-		try{
-			Scanner in = new Scanner(new URL(knowndata).openStream());
-			in.useDelimiter(",");
-			while(in.hasNext())
-				trie.add(in.next().toLowerCase());
-			in.close();
-		}catch(IOException e){
-			e.printStackTrace();
-		}
+        if(tries.containsKey(knowndata))
+            trie = tries.get(knowndata);
+        else{
+            trie = new Trie();
+            try{
+                Scanner in = new Scanner(new URL(knowndata).openStream());
+                in.useDelimiter(",");
+                while (in.hasNext())
+                    trie.add(in.next().toLowerCase());
+                in.close();
+                tries.put(knowndata, trie);
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 	}
 	
 	public void isValidEntry(int row, int col, String value){
 		if(trie != null && hasKnownData) {
-            boolean invalid = trie.find(value.toLowerCase()) == null;
+            boolean invalid = !trie.contains(value.toLowerCase());
             for(QualityCheckerListener listener : listeners){
                 listener.setInvalid(row, col,invalid);
             }
         }
 	}
+
+    public List<String> findSuggestions(String inputWord, String knowndata){
+        inputWord = inputWord.toLowerCase();
+        ArrayList<String> possibilities = getAllEditDistanceWords(inputWord);
+        List<String> similar = getAllValidWords(possibilities);
+
+        if(similar.size() == 0){
+            possibilities = getAllEditDistanceWords(possibilities);
+            similar = getAllValidWords(possibilities);
+        }
+        return similar;
+    }
+
+    public ArrayList<String> getAllEditDistanceWords(List<String> words){
+        ArrayList<String> possibilities = new ArrayList<>();
+        for(String inputWord : words){
+            possibilities.addAll(getAllEditDistanceWords(inputWord));
+        }
+        return possibilities;
+    }
+
+    public ArrayList<String> getAllEditDistanceWords(String inputWord){
+        ArrayList<String> possibilities = new ArrayList<String>();
+        possibilities.addAll(getDeletionWords(inputWord));
+        possibilities.addAll(getTranspositionWords(inputWord));
+        possibilities.addAll(getAlterationWords(inputWord));
+        possibilities.addAll(getInsertionWords(inputWord));
+        return possibilities;
+    }
+
+    public ArrayList<String> getDeletionWords(String word){
+        ArrayList<String> deletions = new ArrayList<>();
+        for(int i = 0; i < word.length(); i++){
+            if(word.length() == 1)
+                return deletions;
+            String search = word.substring(0,i) + word.substring(i+1,word.length());
+            deletions.add(search);
+        }
+        return deletions;
+    }
+
+    public ArrayList<String> getTranspositionWords(String word){
+        ArrayList<String> transpositions = new ArrayList<>();
+        for(int i = 0; i < word.length()-1; i++){
+            String search = word.substring(0,i) + word.charAt(i+1) +
+                    word.charAt(i) + word.substring(i+2,word.length());
+            transpositions.add(search);
+        }
+        if(word.length() == 2)
+            transpositions.add("" + word.charAt(1) + word.charAt(0));
+        return transpositions;
+    }
+
+    public ArrayList<String> getAlterationWords(String word){
+        ArrayList<String> alterations = new ArrayList<>();
+        for(int i = 0; i < word.length(); i++){
+            for(int j = 0; j < 26; j++){
+                char c = (char) ('a' + j);
+                String search = word.substring(0,i) + c + word.substring(i+1,word.length());
+                alterations.add(search);
+            }
+        }
+        return alterations;
+    }
+
+    public ArrayList<String> getInsertionWords(String word){
+        ArrayList<String> insertions = new ArrayList<>();
+        for(int i = 0; i < word.length() + 1; i++){
+            for(int j = 0; j < 26; j++){
+                char c = (char) ('a' + j);
+                String search = word.substring(0,i) + c + word.substring(i,word.length());
+                insertions.add(search);
+            }
+        }
+        return insertions;
+    }
+
+    public List<String> getAllValidWords(List<String> possibilities){
+        List<String> similar = new ArrayList<>();
+        for(String word : possibilities){
+            if(trie.contains(word))
+                similar.add(word);
+        }
+        return similar;
+    }
 
 	private class Trie{
 
@@ -53,60 +142,46 @@ public class QualityChecker{
 			root.add(word.toLowerCase());
 		}
 
-		public Node find(String word) {
-			return root.find(word.toLowerCase());
+		public boolean contains(String word) {
+			return root.contains(word.toLowerCase());
 		}
 		
 	}
 	
 	private class Node{
-		int count = 0;
+		boolean valid = false;
 		Node[] children = new Node[26];
-		
-		public int add(String word) {
+
+		public void add(String word) {
 			char c = word.charAt(0);
 			if(c-'a' < 0 || c-'a' > children.length)
-				return 0;
+				return;
+            if(children[c-'a'] == null)
+                children[c-'a'] = new Node();
 			if(word.length() == 1){
-				if(children[c-'a'] == null){
-					children[c-'a'] = new Node();
-					children[c-'a'].count++;
-					return 1;
-				}else{
-					children[c-'a'].count++;
-					return 0;
-				}
+                children[c-'a'].valid = true;
 			}else{
-				if(children[c-'a'] == null){
-					children[c-'a'] = new Node();
-					return 1 + children[c-'a'].add(word.substring(1));
-				}else{
-					return children[c-'a'].add(word.substring(1));
-				}
+				children[c-'a'].add(word.substring(1));
 			}
 		}
-		
-		public Node find(String word){
-			char c = word.charAt(0);
-			if(c-'a' < 0 || c-'a' > children.length)
-				return null;
-			if(word.length() == 1 && children[c-'a'] != null){
-				if(children[c-'a'].getValue() > 0)
-					return children[c-'a'];
-				else
-					return null;
-			}else{
-				if(children[c-'a'] == null){
-					return null;
-				}else{
-					return children[c-'a'].find(word.substring(1));
-				}
-			}
-		}
-	
-		public int getValue(){
-			return count;
-		}
+
+		public boolean contains(String word) {
+            if (word.length() == 0)
+                return true;
+            char c = word.charAt(0);
+            if (c - 'a' < 0 || c - 'a' > children.length)
+                return true;
+            if (word.length() == 1 && children[c - 'a'] != null) {
+                return children[c - 'a'].valid;
+            } else {
+                if (children[c - 'a'] == null) {
+                    return false;
+                } else {
+                    return children[c - 'a'].contains(word.substring(1));
+                }
+            }
+        }
+
 	}
 
     public interface QualityCheckerListener{

@@ -3,23 +3,19 @@ package main.indexer.client.panels;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.SpringLayout;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import main.indexer.client.models.IndexerDataModel;
 import main.indexer.client.models.IndexerDataModel.IndexerDataListener;
 import main.indexer.client.models.QualityChecker;
+import main.indexer.client.popups.SuggestionsWindow;
 import main.indexer.shared.models.Batch;
 import main.indexer.shared.models.Field;
 
@@ -28,12 +24,10 @@ public class FormEntryPanel extends JSplitPane implements IndexerDataListener, Q
 	private static final long serialVersionUID = 1L;
 	
 	private IndexerDataModel model;
+    private QualityChecker checker;
 	private FormEntryInput selected;
-	
 	private JList<Integer> list;
-
     private List<FormEntryInput> inputs;
-
     private Object[][] data;
     private boolean[][] invalid;
 	
@@ -51,10 +45,6 @@ public class FormEntryPanel extends JSplitPane implements IndexerDataListener, Q
 	}
 
 	public void setBatch(Batch batch){
-        String[] fieldNames = new String[batch.getFields().size()];
-		for(int i = 0; i < batch.getFields().size(); i++){
-			fieldNames[i] = batch.getFields().get(i).getTitle();
-		}
 		
 		data = new String[batch.getRecordNum()][batch.getFields().size()];
         invalid = new boolean[batch.getRecordNum()][batch.getFields().size()];
@@ -76,11 +66,12 @@ public class FormEntryPanel extends JSplitPane implements IndexerDataListener, Q
 		this.setRightComponent(panelScroller);
 		this.setDividerLocation(30);
 		
-		for(int i = 0; i < fieldNames.length; i++){
-			String fieldName = fieldNames[i];
+		for(int i = 0; i < batch.getFields().size(); i++){
+            Field field = batch.getFields().get(i);
+			String fieldName = field.getTitle();
 			JLabel lable = new JLabel(fieldName, JLabel.TRAILING);
             panel.add(lable);
-            FormEntryInput textField = new FormEntryInput(lable, i);
+            FormEntryInput textField = new FormEntryInput(lable, i,field.getKnownData());
             textField.addFocusListener(focusAdapter);
             inputs.add(textField);
             panel.add(textField);			
@@ -88,7 +79,7 @@ public class FormEntryPanel extends JSplitPane implements IndexerDataListener, Q
 		
 		//Lay out the panel.
         SpringUtilities.makeCompactGrid(panel,
-                                        fieldNames.length, 2, 	//rows, cols
+                                        batch.getFields().size(), 2, 	//rows, cols
                                         20, 20,        			//initX, initY
                                         40, 20);       			//xPad, yPad
 	}
@@ -103,10 +94,14 @@ public class FormEntryPanel extends JSplitPane implements IndexerDataListener, Q
 			String value = (String) data[list.getSelectedIndex()][input.getIndex()];
 			if(data != null)
 			    input.setText(value);
-            if(invalid[list.getSelectedIndex()][input.getIndex()])
+            if(invalid[list.getSelectedIndex()][input.getIndex()]) {
                 input.setBackground(new Color(0xFF0000));
-            else
+                input.addMouseListener(mouseAdapter);
+            }else{
                 input.setBackground(Color.WHITE);
+                if(input.getMouseListeners().length > 0)
+                    input.removeMouseListener(mouseAdapter);
+            }
 		}
 	}
 	
@@ -133,7 +128,29 @@ public class FormEntryPanel extends JSplitPane implements IndexerDataListener, Q
 			model.dataChange(list.getSelectedIndex(), input.getIndex(),input.getText());
 		}
 	};
-	
+
+    private MouseAdapter mouseAdapter = new MouseAdapter(){
+        public void mouseClicked (MouseEvent e) {
+            if(e.getModifiers() == MouseEvent.BUTTON3_MASK){
+                final int row = list.getSelectedIndex();
+                final int col = ((FormEntryInput) e.getComponent()).getIndex();
+                final String knownData = ((FormEntryInput) e.getComponent()).getKnownData();
+                JPopupMenu popup = new JPopupMenu();
+                JMenuItem menuItem = new JMenuItem("See Suggestions");
+                menuItem.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        super.mouseClicked(e);
+                        SuggestionsWindow window = new SuggestionsWindow(checker.findSuggestions(
+                                (String) data[row][col], knownData),row,col,model);
+                        window.setVisible(true);
+                    }
+                });
+                popup.add(menuItem);
+                popup.show(e.getComponent(),e.getX(), e.getY());
+            }
+        }
+    };
 
 	@Override
 	public void cellSelect(int row, int col){
@@ -157,13 +174,15 @@ public class FormEntryPanel extends JSplitPane implements IndexerDataListener, Q
 		private static final long serialVersionUID = 1L;
 		
 		private int index;
+        private String knownData;
 
-		public FormEntryInput(JLabel lable, int index){
+		public FormEntryInput(JLabel lable, int index, String knownData){
 			lable.setLabelFor(this);
 			this.setMinimumSize(new Dimension(40,20));
             this.setPreferredSize(new Dimension(80,20));
             this.setMaximumSize(new Dimension(200,20));
             this.setIndex(index);
+            this.setKnownData(knownData);
 		}
 
 		public int getIndex(){
@@ -172,6 +191,13 @@ public class FormEntryPanel extends JSplitPane implements IndexerDataListener, Q
 		public void setIndex(int index){
 			this.index = index;
 		}
-	}
+
+        public String getKnownData() {
+            return knownData;
+        }
+        public void setKnownData(String knownData) {
+            this.knownData = knownData;
+        }
+    }
 	
 }

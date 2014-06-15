@@ -1,16 +1,14 @@
 package main.indexer.client.panels;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.*;
 
 import main.indexer.client.models.IndexerDataModel;
 import main.indexer.client.models.IndexerDataModel.IndexerDataListener;
@@ -64,7 +62,12 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener, Qual
 		table.getColumnModel().getSelectionModel().addListSelectionListener(selectionListener);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        table.setDefaultRenderer(Color.class,renderer);
+
+        TableColumnModel columnModel = table.getColumnModel();
+        for (int i = 1; i < tableModel.getColumnCount(); ++i) {
+            TableColumn column = columnModel.getColumn(i);
+            column.setCellRenderer(renderer);
+        }
 		
 		this.add(table.getTableHeader(),BorderLayout.PAGE_START);
 		this.add(table,BorderLayout.CENTER);
@@ -114,14 +117,17 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener, Qual
     private DefaultTableCellRenderer renderer = new DefaultTableCellRenderer(){
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            System.out.println(invalid[row][column]);
             if (invalid == null)
                 return c;
 
-            if (invalid[row][column])
+            if (invalid[row][column]) {
                 c.setBackground(new Color(0xff0000));
-            else
+                c.addMouseListener(mouseAdapter);
+            }else {
                 c.setBackground(Color.WHITE);
+                if(c.getMouseListeners().length > 0)
+                    c.removeMouseListener(mouseAdapter);
+            }
 
             return c;
         }
@@ -136,6 +142,24 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener, Qual
 		}
 		
 	};
+
+    private MouseAdapter mouseAdapter = new MouseAdapter(){
+        public void mouseClicked (MouseEvent e) {
+            if(e.getModifiers() == MouseEvent.BUTTON3_MASK){
+                JPopupMenu popup = new JPopupMenu();
+                JMenuItem menuItem = new JMenuItem("See Suggestions");
+                popup.add(menuItem);
+                popup.show(e.getComponent(),e.getX(), e.getY());
+            }
+        }
+    };
+
+    private MouseAdapter menuMouseAdapter = new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            super.mouseClicked(e);
+        }
+    };
 
 	@Override
 	public void cellSelect(int row, int col){

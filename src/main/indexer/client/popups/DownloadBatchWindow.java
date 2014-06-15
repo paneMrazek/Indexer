@@ -1,19 +1,13 @@
 package main.indexer.client.popups;
 
-import java.awt.BorderLayout;
-import java.awt.Panel;
+import main.indexer.shared.models.Project;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-
-import main.indexer.shared.models.Project;
 
 public class DownloadBatchWindow extends JDialog{
 	
@@ -54,7 +48,7 @@ public class DownloadBatchWindow extends JDialog{
 		
 		this.listeners = new ArrayList<>();
 		
-		this.setSize(400,120);
+		//this.setSize(400,120);
 		this.setLocationRelativeTo(null);
 		
 		label = new JLabel("Project:");
@@ -79,8 +73,8 @@ public class DownloadBatchWindow extends JDialog{
 		
 		this.add(projectPanel, BorderLayout.NORTH);
 		this.add(buttonPanel, BorderLayout.SOUTH);
-		
-		
+		this.pack();
+
 	}
 	
 	private void cancel(){

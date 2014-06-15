@@ -216,7 +216,8 @@ public class Facade{
 				record.setOrderId(orderId);
 				fieldCount = 0;
 				for(String value : values){
-					record.getValues().put(fields.get(fieldCount),value);
+                    if(value != null && !value.equals(""))
+					    record.getValues().put(fields.get(fieldCount),value);
 					fieldCount++;
 				}
 				database.getRecordDAO().createRecord(record);
@@ -241,10 +242,6 @@ public class Facade{
 			return false;
 		if(params.getRecordValues().size() == 0)
 			return false;
-		if(params.getRecordValues().get(0).length == 0)
-			return false;
-		if(params.getRecordValues().get(0)[0].equals(""))
-			return false;
 		return true;
 	}
 
@@ -252,7 +249,7 @@ public class Facade{
 	 * Returns information about all of the fields for the specified project 
 	 * If no project is specified, returns information about all of the fields
 	 * for all projects in the system.
-	 * @param params An object with the username and password of the user
+	 * @param auth An object with the username and password of the user
 	 * and the optional project id.
 	 * @return An object containing the desired fields if succesful, otherwise the word failed.
 	 */

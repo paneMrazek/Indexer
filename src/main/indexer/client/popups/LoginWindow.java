@@ -24,9 +24,6 @@ import main.indexer.shared.models.User;
 
 public class LoginWindow extends JFrame{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JButton loginButton;
 	private JButton exitButton;
