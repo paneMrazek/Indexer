@@ -186,7 +186,8 @@ public class RecordDAO{
 	
 	public List<SearchResult> searchRecord(int fieldId,String searchValue){
 		String sql = "SELECT * FROM recordvalues WHERE fieldid = ? AND value LIKE ?";
-		List<SearchResult> results = new ArrayList<SearchResult>();
+        //noinspection Convert2Diamond
+        List<SearchResult> results = new ArrayList<SearchResult>();
 		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
 			statement.setInt(1,fieldId);
 			statement.setString(2,searchValue);

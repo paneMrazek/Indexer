@@ -12,16 +12,15 @@ import java.util.List;
 public class DownloadBatchWindow extends JDialog{
 	
 	private static final long serialVersionUID = 1L;
-	
-	private JLabel label;
-	private JComboBox<String> projectsComboBox;
+
+    private JComboBox<String> projectsComboBox;
 	private JButton viewSampleButton;
 	private JButton cancelButton;
 	private JButton downloadButton;
 	
-	List<DownloadBatchWindowListener> listeners;
-	List<Project> projects;
-	String[] titles;
+	private List<DownloadBatchWindowListener> listeners;
+	private List<Project> projects;
+	private String[] titles;
 	
 	public void addListener(DownloadBatchWindowListener listener){
 		this.listeners.add(listener);
@@ -37,8 +36,8 @@ public class DownloadBatchWindow extends JDialog{
 	}
 	
 
-	public DownloadBatchWindow(JFrame parent, String title, List<Project> projects){
-		super(parent,title,JDialog.DEFAULT_MODALITY_TYPE);
+	public DownloadBatchWindow(JFrame parent,List<Project> projects){
+		super(parent,"Download Batch",JDialog.DEFAULT_MODALITY_TYPE);
 		this.setProjects(projects);
 		this.setResizable(false);
 		this.createComponents();
@@ -50,9 +49,9 @@ public class DownloadBatchWindow extends JDialog{
 		
 		//this.setSize(400,120);
 		this.setLocationRelativeTo(null);
-		
-		label = new JLabel("Project:");
-		projectsComboBox = new JComboBox<String>(titles);
+
+        JLabel label = new JLabel("Project:");
+		projectsComboBox = new JComboBox<>(titles);
 		
 		viewSampleButton = new JButton("View Sample");
 		viewSampleButton.addActionListener(actionListener);

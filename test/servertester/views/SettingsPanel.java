@@ -12,9 +12,8 @@ public class SettingsPanel extends BasePanel {
 	private JTextField _hostTextField;
 	private JTextField _portTextField;
 	private JComboBox _opComboBox;
-	private JButton _executeButton;
-	
-	public SettingsPanel() {
+
+    public SettingsPanel() {
 		super();
 		
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
@@ -52,7 +51,7 @@ public class SettingsPanel extends BasePanel {
 		add(_opComboBox);
 		add(Box.createRigidArea(TRIPLE_HSPACE));
 
-		_executeButton = new JButton("Execute");
+        JButton _executeButton = new JButton("Execute");
 		add(_executeButton);	
 		add(Box.createRigidArea(DOUBLE_HSPACE));
 		
@@ -68,11 +67,11 @@ public class SettingsPanel extends BasePanel {
 		});
 		
 		_executeButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				getController().executeOperation();
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                getController().executeOperation();
+            }
+        });
 	}
 	
 	public void setHost(String value) {

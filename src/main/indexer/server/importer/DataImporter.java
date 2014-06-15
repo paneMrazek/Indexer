@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
 
 public class DataImporter{
 	
-	Database database = new Database();
+	private Database database = new Database();
 	
 	public static void main(String[] args){
 		new DataImporter().importData(args[0]);
@@ -52,18 +52,18 @@ public class DataImporter{
 	private void parseUsers(NodeList userList){
 		for(int i = 0; i < userList.getLength(); i++){
 			Element userElem = (Element) userList.item(i);
-			String username = ((Element)userElem.getElementsByTagName("username")
-					.item(0)).getTextContent();
-			String password = ((Element)userElem.getElementsByTagName("password")
-					.item(0)).getTextContent();
-			String firstName = ((Element)userElem.getElementsByTagName("firstname")
-					.item(0)).getTextContent();
-			String lastName = ((Element)userElem.getElementsByTagName("lastname")
-					.item(0)).getTextContent();
-			String email = ((Element)userElem.getElementsByTagName("email")
-					.item(0)).getTextContent();
-			String indexedRecords = ((Element)userElem.getElementsByTagName("indexedrecords")
-					.item(0)).getTextContent();
+			String username = userElem.getElementsByTagName("username")
+					.item(0).getTextContent();
+			String password = userElem.getElementsByTagName("password")
+					.item(0).getTextContent();
+			String firstName = userElem.getElementsByTagName("firstname")
+					.item(0).getTextContent();
+			String lastName = userElem.getElementsByTagName("lastname")
+					.item(0).getTextContent();
+			String email = userElem.getElementsByTagName("email")
+					.item(0).getTextContent();
+			String indexedRecords = userElem.getElementsByTagName("indexedrecords")
+					.item(0).getTextContent();
 			
 			User user = new User();
 			user.setUserName(username);
@@ -79,14 +79,14 @@ public class DataImporter{
 	private void parseProjects(NodeList projectList){
 		for(int i = 0; i < projectList.getLength(); i++){
 			Element projectElem = (Element) projectList.item(i);
-			String title = ((Element)projectElem.getElementsByTagName("title")
-					.item(0)).getTextContent();
-			String recordsPerImage = ((Element)projectElem.getElementsByTagName("recordsperimage")
-					.item(0)).getTextContent();
-			String firstYCoord = ((Element)projectElem.getElementsByTagName("firstycoord")
-					.item(0)).getTextContent();
-			String recordHeight = ((Element)projectElem.getElementsByTagName("recordheight")
-					.item(0)).getTextContent();
+			String title = projectElem.getElementsByTagName("title")
+					.item(0).getTextContent();
+			String recordsPerImage = projectElem.getElementsByTagName("recordsperimage")
+					.item(0).getTextContent();
+			String firstYCoord = projectElem.getElementsByTagName("firstycoord")
+					.item(0).getTextContent();
+			String recordHeight = projectElem.getElementsByTagName("recordheight")
+					.item(0).getTextContent();
 			
 			Project project = new Project();
 			project.setTitle(title);
@@ -105,12 +105,12 @@ public class DataImporter{
 		List<Field> fields = new ArrayList<>();
 		for(int i = 0; i < fieldList.getLength(); i++){
 			Element fieldElem = (Element) fieldList.item(i);
-			String title = ((Element)fieldElem.getElementsByTagName("title")
-					.item(0)).getTextContent();
-			String xCoord = ((Element)fieldElem.getElementsByTagName("xcoord")
-					.item(0)).getTextContent();
-			String width = ((Element)fieldElem.getElementsByTagName("width")
-					.item(0)).getTextContent();
+			String title = fieldElem.getElementsByTagName("title")
+					.item(0).getTextContent();
+			String xCoord = fieldElem.getElementsByTagName("xcoord")
+					.item(0).getTextContent();
+			String width = fieldElem.getElementsByTagName("width")
+					.item(0).getTextContent();
 			
 			Element helpHtmlElem = (Element)fieldElem.getElementsByTagName("helphtml")
 					.item(0);
@@ -140,8 +140,8 @@ public class DataImporter{
 	private void parseBatches(NodeList batchList, int recordNum, int projectId, List<Field> fields){
 		for(int i = 0; i < batchList.getLength(); i++){
 			Element batchElem = (Element) batchList.item(i);
-			String imageURL = ((Element)batchElem.getElementsByTagName("file")
-					.item(0)).getTextContent();
+			String imageURL = batchElem.getElementsByTagName("file")
+					.item(0).getTextContent();
 			
 			
 			Batch batch = new Batch();
@@ -149,15 +149,15 @@ public class DataImporter{
 			batch.setImageURL(imageURL);
 			batch.setRecordNum(recordNum);
 			int batchId = database.getBatchDAO().createBatch(batch).getId();
-			parseRecords(batchElem.getElementsByTagName("record"),projectId,batchId,fields);
+			parseRecords(batchElem.getElementsByTagName("record"), batchId,fields);
 		}
 	}
 	
-	private void parseRecords(NodeList recordList, int projectId, int batchId, List<Field> fields){
+	private void parseRecords(NodeList recordList, int batchId, List<Field> fields){
 		for(int i = 0; i < recordList.getLength(); i++){
 			Element recordElem = (Element) recordList.item(i);
 			Record record = new Record();
-			Map<Field,String> recordValues = new HashMap<Field,String>();
+			Map<Field,String> recordValues = new HashMap<>();
 			NodeList values = recordElem.getElementsByTagName("value");
 			for(int j = 0; j < values.getLength(); j++){
 				Element value = (Element) (recordElem.getElementsByTagName("value").item(j));

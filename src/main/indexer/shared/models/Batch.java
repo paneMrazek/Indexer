@@ -9,12 +9,8 @@ import java.util.List;
  *
  */
 public class Batch implements Serializable{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private int id;
+
+    private int id;
 	private String imageURL;
 	private int projectId;
 	private int firstYCoordinate;

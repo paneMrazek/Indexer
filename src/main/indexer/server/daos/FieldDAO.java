@@ -59,7 +59,7 @@ public class FieldDAO{
 		if(projectId > 0){ sql = "SELECT * FROM fields WHERE projectid = ?"; }
 		else{ sql = "SELECT * FROM fields"; }
 		
-		List<Field> fields = new ArrayList<Field>();
+		List<Field> fields = new ArrayList<>();
 		try(PreparedStatement statement = database.getConnection().prepareStatement(sql)){
 			if(projectId > 0){ statement.setInt(1,projectId); }
 			ResultSet rs = statement.executeQuery();

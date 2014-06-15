@@ -7,6 +7,7 @@ import java.util.*;
 public class QualityChecker{
 
     private List<QualityCheckerListener> listeners = new ArrayList<>();
+    private List<SeeSuggestionsListener> suggestionsListeners = new ArrayList<>();
 
     private Trie trie;
     private Map<String, Trie> tries = new HashMap<>();
@@ -16,24 +17,27 @@ public class QualityChecker{
     public void addListener(QualityCheckerListener listener){
         listeners.add(listener);
     }
+    public void addListener(SeeSuggestionsListener listener){
+        suggestionsListeners.add(listener);
+    }
 	
-	public void fieldchange(String knowndata){
-        if(knowndata == null || knowndata.equals("")){
+	public void fieldChange(String knownData){
+        if(knownData == null || knownData.equals("")){
             hasKnownData = false;
             return;
         }
         hasKnownData = true;
-        if(tries.containsKey(knowndata))
-            trie = tries.get(knowndata);
+        if(tries.containsKey(knownData))
+            trie = tries.get(knownData);
         else{
             trie = new Trie();
             try{
-                Scanner in = new Scanner(new URL(knowndata).openStream());
+                Scanner in = new Scanner(new URL(knownData).openStream());
                 in.useDelimiter(",");
                 while (in.hasNext())
                     trie.add(in.next().toLowerCase());
                 in.close();
-                tries.put(knowndata, trie);
+                tries.put(knownData, trie);
             }catch (IOException e) {
                 e.printStackTrace();
             }
@@ -49,28 +53,33 @@ public class QualityChecker{
         }
 	}
 
-    public List<String> findSuggestions(String inputWord, String knowndata){
+    public void findSuggestions(String inputWord, String knownData, int row, int col){
+        trie = tries.get(knownData);
         inputWord = inputWord.toLowerCase();
-        ArrayList<String> possibilities = getAllEditDistanceWords(inputWord);
-        List<String> similar = getAllValidWords(possibilities);
+        Set<String> possibilities = getAllEditDistanceWords(inputWord);
+        Set<String> similar = getAllValidWords(possibilities);
 
         if(similar.size() == 0){
             possibilities = getAllEditDistanceWords(possibilities);
             similar = getAllValidWords(possibilities);
         }
-        return similar;
+        List<String> ret = new ArrayList<>();
+        ret.addAll(similar);
+        for(SeeSuggestionsListener listener : suggestionsListeners){
+            listener.seeSuggestions(ret, row, col);
+        }
     }
 
-    public ArrayList<String> getAllEditDistanceWords(List<String> words){
-        ArrayList<String> possibilities = new ArrayList<>();
+    public Set<String> getAllEditDistanceWords(Set<String> words){
+        Set<String> possibilities = new HashSet<>();
         for(String inputWord : words){
             possibilities.addAll(getAllEditDistanceWords(inputWord));
         }
         return possibilities;
     }
 
-    public ArrayList<String> getAllEditDistanceWords(String inputWord){
-        ArrayList<String> possibilities = new ArrayList<String>();
+    public Set<String> getAllEditDistanceWords(String inputWord){
+        Set<String> possibilities = new HashSet<>();
         possibilities.addAll(getDeletionWords(inputWord));
         possibilities.addAll(getTranspositionWords(inputWord));
         possibilities.addAll(getAlterationWords(inputWord));
@@ -78,8 +87,8 @@ public class QualityChecker{
         return possibilities;
     }
 
-    public ArrayList<String> getDeletionWords(String word){
-        ArrayList<String> deletions = new ArrayList<>();
+    public List<String> getDeletionWords(String word){
+        List<String> deletions = new ArrayList<>();
         for(int i = 0; i < word.length(); i++){
             if(word.length() == 1)
                 return deletions;
@@ -89,8 +98,8 @@ public class QualityChecker{
         return deletions;
     }
 
-    public ArrayList<String> getTranspositionWords(String word){
-        ArrayList<String> transpositions = new ArrayList<>();
+    public List<String> getTranspositionWords(String word){
+        List<String> transpositions = new ArrayList<>();
         for(int i = 0; i < word.length()-1; i++){
             String search = word.substring(0,i) + word.charAt(i+1) +
                     word.charAt(i) + word.substring(i+2,word.length());
@@ -101,8 +110,8 @@ public class QualityChecker{
         return transpositions;
     }
 
-    public ArrayList<String> getAlterationWords(String word){
-        ArrayList<String> alterations = new ArrayList<>();
+    public List<String> getAlterationWords(String word){
+        List<String> alterations = new ArrayList<>();
         for(int i = 0; i < word.length(); i++){
             for(int j = 0; j < 26; j++){
                 char c = (char) ('a' + j);
@@ -113,8 +122,8 @@ public class QualityChecker{
         return alterations;
     }
 
-    public ArrayList<String> getInsertionWords(String word){
-        ArrayList<String> insertions = new ArrayList<>();
+    public List<String> getInsertionWords(String word){
+        List<String> insertions = new ArrayList<>();
         for(int i = 0; i < word.length() + 1; i++){
             for(int j = 0; j < 26; j++){
                 char c = (char) ('a' + j);
@@ -125,8 +134,8 @@ public class QualityChecker{
         return insertions;
     }
 
-    public List<String> getAllValidWords(List<String> possibilities){
-        List<String> similar = new ArrayList<>();
+    public Set<String> getAllValidWords(Set<String> possibilities){
+        Set<String> similar = new TreeSet<>();
         for(String word : possibilities){
             if(trie.contains(word))
                 similar.add(word);
@@ -186,6 +195,10 @@ public class QualityChecker{
 
     public interface QualityCheckerListener{
         public void setInvalid(int row, int col, boolean invalid);
+    }
+
+    public interface SeeSuggestionsListener{
+        public void seeSuggestions(List<String> similar, int row, int col);
     }
 
 }

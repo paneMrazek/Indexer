@@ -16,7 +16,6 @@ public class Server{
 		if(args.length >= 1){
 			portNum = Integer.parseInt(args[0]);
 		}
-		return;
 	}
 	
 	private void run() {

@@ -1,10 +1,7 @@
 package main.indexer.client.panels;
 
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +12,6 @@ import javax.swing.event.ListSelectionListener;
 import main.indexer.client.models.IndexerDataModel;
 import main.indexer.client.models.IndexerDataModel.IndexerDataListener;
 import main.indexer.client.models.QualityChecker;
-import main.indexer.client.popups.SuggestionsWindow;
 import main.indexer.shared.models.Batch;
 import main.indexer.shared.models.Field;
 
@@ -36,6 +32,7 @@ public class FormEntryPanel extends JSplitPane implements IndexerDataListener, Q
 		super(JSplitPane.HORIZONTAL_SPLIT);
 		inputs = new ArrayList<>();
 		this.model = model;
+        this.checker = checker;
         model.addListener(this);
         checker.addListener(this);
 	}
@@ -137,13 +134,10 @@ public class FormEntryPanel extends JSplitPane implements IndexerDataListener, Q
                 final String knownData = ((FormEntryInput) e.getComponent()).getKnownData();
                 JPopupMenu popup = new JPopupMenu();
                 JMenuItem menuItem = new JMenuItem("See Suggestions");
-                menuItem.addMouseListener(new MouseAdapter() {
+                menuItem.addActionListener(new ActionListener() {
                     @Override
-                    public void mouseClicked(MouseEvent e) {
-                        super.mouseClicked(e);
-                        SuggestionsWindow window = new SuggestionsWindow(checker.findSuggestions(
-                                (String) data[row][col], knownData),row,col,model);
-                        window.setVisible(true);
+                    public void actionPerformed(ActionEvent e) {
+                        checker.findSuggestions((String) data[row][col], knownData, row, col);
                     }
                 });
                 popup.add(menuItem);

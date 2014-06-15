@@ -5,10 +5,8 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
@@ -26,9 +24,7 @@ import main.indexer.shared.models.Field;
 
 public class ImageViewer extends JPanel implements IndexerDataListener{
 
-	private static final long serialVersionUID = 1L;
-	
-	private Batch batch;
+    private Batch batch;
 	
 	private Image image;
 	private Image displayImage;
@@ -79,7 +75,15 @@ public class ImageViewer extends JPanel implements IndexerDataListener{
 		this.model = model;
 		highlight = new Rectangle();
 		model.addListener(this);
-		this.addMouseWheelListener(mouseWheelListener);
+        this.addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                if (e.getWheelRotation() > 0)
+                    zoomIn();
+                else
+                    zoomOut();
+            }
+        });
 		this.setLayout(null);
 		this.setBackground(new Color(128,128,128));
 	}
@@ -155,22 +159,12 @@ public class ImageViewer extends JPanel implements IndexerDataListener{
 			}
 		}
 	}
-	
-	private MouseWheelListener mouseWheelListener = new MouseWheelListener(){
-		@Override
-		public void mouseWheelMoved(MouseWheelEvent e){
-			if(e.getWheelRotation() > 0)
-				zoomIn();
-			else
-				zoomOut();
-		}
-	};
-	
-	private MouseAdapter mouseListener = new MouseAdapter(){		
+
+    private MouseAdapter mouseListener = new MouseAdapter(){
 		@Override
 		public void mouseClicked(MouseEvent e){
-			int x = (int) (e.getX() - (getWidth()/2-displayImage.getWidth(null)/2));
-			int y = (int) (e.getY() - (getHeight()/2-displayImage.getHeight(null)/2));
+			int x = e.getX() - (getWidth()/2-displayImage.getWidth(null)/2);
+			int y = e.getY() - (getHeight()/2-displayImage.getHeight(null)/2);
 			int row = (int) ((y - (batch.getFirstYCoordinate()*scale))/(batch.getRecordHeight()*scale));
 			
 			int fieldLength = 0;

@@ -52,7 +52,7 @@ public class BatchDAO{
 	
 	/**
 	 * Reads and returns all batches for a given project from the database.
-	 * @param project the project to be used in the query.
+	 * @param projectId the project to be used in the query.
 	 * @return a list of all batches in the given project.
 	 */
 	public List<Batch> readBatchesForProject(int projectId){
@@ -151,7 +151,7 @@ public class BatchDAO{
 	
 	/**
 	 * Delete the given batch from the database.
-	 * @param batch the batch to be deleted.
+	 * @param batchId the batch to be deleted.
 	 */
 	public void deleteBatch(int batchId){
 		String sql = "DELETE FROM batches WHERE id=?";

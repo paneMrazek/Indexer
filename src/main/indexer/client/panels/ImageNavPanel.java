@@ -10,14 +10,8 @@ import main.indexer.shared.models.Batch;
 
 public class ImageNavPanel extends JPanel implements IndexerDataListener{
 
-	private static final long serialVersionUID = 1L;
-	
-	@SuppressWarnings("unused")
-	private IndexerDataModel model;
-	
-	public ImageNavPanel(IndexerDataModel model){
+    public ImageNavPanel(IndexerDataModel model){
 		super();
-		this.model = model;
 		model.addListener(this);
 		this.setBackground(new Color(128,128,128));
 		createComponents();

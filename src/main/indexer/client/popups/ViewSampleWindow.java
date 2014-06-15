@@ -18,9 +18,7 @@ import javax.swing.JPanel;
 
 public class ViewSampleWindow extends JDialog{
 
-	private static final long serialVersionUID = 1L;
-	
-	public ViewSampleWindow(JFrame parent, String string, String url){
+    public ViewSampleWindow(JFrame parent, String string, String url){
 		super(parent,string,JDialog.DEFAULT_MODALITY_TYPE);
 		try{
 			this.setResizable(false);
@@ -30,7 +28,11 @@ public class ViewSampleWindow extends JDialog{
 			this.add(new JLabel(icon), BorderLayout.CENTER);
 			
 			JButton cancelButton = new JButton("Close");
-			cancelButton.addActionListener(actionListener);
+			cancelButton.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e){
+                    cancel();
+                }
+            });
 			JPanel panel = new JPanel();
 			panel.add(cancelButton);
 			this.add(panel, BorderLayout.SOUTH);
@@ -55,12 +57,6 @@ public class ViewSampleWindow extends JDialog{
 	private void cancel(){
 		this.setVisible(false);
 	}
-	
-	private ActionListener actionListener = new ActionListener(){
-	    public void actionPerformed(ActionEvent e){
-	    	cancel();
-	    }
-    };
 	
 	
 }

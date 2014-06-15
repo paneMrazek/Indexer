@@ -25,6 +25,7 @@ import main.indexer.client.models.QualityChecker;
 import main.indexer.client.panels.ImageViewer;
 import main.indexer.client.popups.DownloadBatchWindow;
 import main.indexer.client.popups.LoginWindow;
+import main.indexer.client.popups.SuggestionsWindow;
 import main.indexer.client.popups.ViewSampleWindow;
 import main.indexer.client.popups.DownloadBatchWindow.DownloadBatchWindowListener;
 import main.indexer.client.popups.LoginWindow.LoginListener;
@@ -40,12 +41,10 @@ import main.indexer.shared.models.Batch;
 import main.indexer.shared.models.Project;
 import main.indexer.shared.models.User;
 
-public class IndexerGUI extends JFrame implements LoginListener, MenuListener, ButtonMenuListener, DownloadBatchWindowListener{
+public class IndexerGUI extends JFrame implements LoginListener, MenuListener, ButtonMenuListener,
+        DownloadBatchWindowListener, QualityChecker.SeeSuggestionsListener {
 
-	private static final long serialVersionUID = 1L;
-	
-	private LoginWindow login;
-	private IndexerMenu menu;
+    private IndexerMenu menu;
 	private IndexerDataModel model;
     private QualityChecker checker;
 	private IndexerButtonMenu buttonToolBar;
@@ -59,8 +58,8 @@ public class IndexerGUI extends JFrame implements LoginListener, MenuListener, B
 	
 	//Creation
 	
-	public IndexerGUI(String title){
-		super(title);
+	public IndexerGUI(){
+		super("Indexer");
 		hasBatch = false;
 	}
 	
@@ -77,6 +76,7 @@ public class IndexerGUI extends JFrame implements LoginListener, MenuListener, B
 		
 		model = new IndexerDataModel();
         checker = new QualityChecker();
+        checker.addListener(this);
 		
 		imageViewer = new ImageViewer(model);	
 		footer = new IndexerFooter(model, checker);
@@ -104,7 +104,7 @@ public class IndexerGUI extends JFrame implements LoginListener, MenuListener, B
 	}
 	
 	private void displayLogin(){
-		login = new LoginWindow("Login to Indexer");
+        LoginWindow login = new LoginWindow();
 		login.setVisible(true);
 		login.addListener(this);
 	}
@@ -128,15 +128,15 @@ public class IndexerGUI extends JFrame implements LoginListener, MenuListener, B
 			properties.store(new PrintWriter(new File("Users/" + user.getUserName() + ".properties")),"");
 		}catch(IOException e){
 			e.printStackTrace();
-		};
-	}
+		}
+    }
 	
 	@Override
 	public void login(User user){
 		properties = new IndexerProperties();
 		try{
 			properties.load(new FileInputStream(new File("Users/" + user.getUserName() + ".properties")));
-		}catch(FileNotFoundException e){
+		}catch(FileNotFoundException ignored){
 			
 		}catch(IOException e){
 			e.printStackTrace();
@@ -169,8 +169,7 @@ public class IndexerGUI extends JFrame implements LoginListener, MenuListener, B
 		params.setPassword(user.getPassword());
 		GetProjects_Result result = ClientCommunicator.getInstance()
 				.getProjects(params);
-		DownloadBatchWindow window = new DownloadBatchWindow(this,"Web Browser",
-				result.getProjects());
+		DownloadBatchWindow window = new DownloadBatchWindow(this,result.getProjects());
 		window.addListener(this);
 		window.setVisible(true);
 	}
@@ -265,8 +264,14 @@ public class IndexerGUI extends JFrame implements LoginListener, MenuListener, B
 		footer.setBatch(batch);
 		imageViewer.setBatch(batch);
 		hasBatch = true;
-		menu.setHasBatch(hasBatch);
+		menu.setHasBatch(true);
 	}
+
+    @Override
+    public void seeSuggestions(List<String> similar, int row, int col) {
+        SuggestionsWindow window = new SuggestionsWindow(this, similar, row, col, model);
+        window.setVisible(true);
+    }
 	
 	private WindowAdapter windowAdapter = new WindowAdapter() {
     	
@@ -275,5 +280,4 @@ public class IndexerGUI extends JFrame implements LoginListener, MenuListener, B
             System.exit(0);
         }
     };
-
 }

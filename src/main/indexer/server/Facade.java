@@ -33,9 +33,8 @@ public class Facade{
 			result.setError(true);
 			return result;
 		}
-		String decoded = auth;
 		Database database = new Database();
-		String[] split = decoded.split(":(?=[^:]+$)");
+		String[] split = auth.split(":(?=[^:]+$)");
 		database.startTransaction();
 		User user = database.getUserDAO().readUser(split[0],split[1]);
 		database.endTransaction();
@@ -70,7 +69,7 @@ public class Facade{
 	
 	/**
 	 * Returns a sample image for the specified project.
-	 * @param params A object with the username and password 
+	 * @param auth A object with the username and password
 	 * and project id of the desired sample image.
 	 * @return An object with the file url if successful, otherwise the word failed.
 	 */
@@ -81,7 +80,7 @@ public class Facade{
 			return result;
 		}
 		Database database = new Database();
-		List<Batch> batches = new ArrayList<>();
+		List<Batch> batches;
 		if(validateUser(auth).isValid()){
 			database.startTransaction();
 			batches = database.getBatchDAO().readBatchesForProject(projectId);
@@ -99,7 +98,7 @@ public class Facade{
 	 * Assigns and downloads a batch for the user to index if the user doesn't already
 	 * have a batch assigned to them. 
 	 * 
-	 * @param params An object with the username and 
+	 * @param auth An object with the username and
 	 * password of the user and the projectId of the desired batch
 	 * @return An object with the new batch if succesful.  Otherwise the word failed.
 	 */
@@ -110,7 +109,7 @@ public class Facade{
 			return result;
 		}
 		Database database = new Database();
-		List<Batch> batches = new ArrayList<>();
+		List<Batch> batches;
 		ValidateUser_Result validationResult = validateUser(auth);
 		if(validationResult.isValid() && validationResult.getUser().getCurrentBatch() == 0){
 			database.startTransaction();
@@ -150,7 +149,7 @@ public class Facade{
 			return result;
 		}
 		Database database = new Database();
-		Batch batch = new Batch();
+		Batch batch;
 		ValidateUser_Result validationResult = validateUser(auth);
 		if(validationResult.isValid() && validationResult.getUser().getCurrentBatch() == batchId){
 			database.startTransaction();
@@ -209,7 +208,7 @@ public class Facade{
 			int orderId = 0;
 			for(String[] values : params.getRecordValues()){
 				orderId++;
-				int fieldCount = 0;
+				int fieldCount;
 				record = new Record();
 				record.setBatchId(params.getBatchId());
 				record.setValues(new HashMap<Field,String>());
@@ -238,12 +237,8 @@ public class Facade{
 	}
 	
 	private boolean validateSubmitBatchParams(SubmitBatch_Params params){
-		if(params.getBatchId() == 0)
-			return false;
-		if(params.getRecordValues().size() == 0)
-			return false;
-		return true;
-	}
+        return params.getBatchId() != 0 && params.getRecordValues().size() != 0;
+    }
 
 	/**
 	 * Returns information about all of the fields for the specified project 
@@ -260,7 +255,7 @@ public class Facade{
 			return result;
 		}
 		Database database = new Database();
-		List<Field> fields = new ArrayList<>();
+		List<Field> fields;
 		if(validateUser(auth).isValid()){
 			database.startTransaction();
 			Project project = database.getProjectDAO().readProject(projectId);
@@ -342,7 +337,8 @@ public class Facade{
 			e.printStackTrace();
 		}finally{
 			try{
-				fileInputStream.close();
+                assert fileInputStream != null;
+                fileInputStream.close();
 			}catch(IOException e){
 				e.printStackTrace();
 			}

@@ -23,9 +23,8 @@ import main.indexer.shared.communication.results.ValidateUser_Result;
 import main.indexer.shared.models.User;
 
 public class LoginWindow extends JFrame{
-	
-	private static final long serialVersionUID = 1L;
-	private JButton loginButton;
+
+    private JButton loginButton;
 	private JButton exitButton;
 	private JTextField usernameField;
 	private JPasswordField passwordField;
@@ -36,8 +35,8 @@ public class LoginWindow extends JFrame{
 		listeners.add(listener);
 	}
 	
-	public LoginWindow(String title){
-		super(title);
+	public LoginWindow(){
+		super("Login to Indexer");
 		this.setResizable(false);
 		listeners = new ArrayList<>();
         createComponents();
@@ -88,7 +87,7 @@ public class LoginWindow extends JFrame{
 	}
 	
 	private void displayValidLogin(User user){
-		JOptionPane.showMessageDialog((Component) this,
+		JOptionPane.showMessageDialog(this,
 			    user.getWelcomeString(),
 			    "Welcome to Indexer",
 			    JOptionPane.PLAIN_MESSAGE);

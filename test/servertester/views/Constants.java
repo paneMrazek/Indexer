@@ -5,8 +5,8 @@ import java.awt.*;
 
 public class Constants {
 
-	public static final int HSPACING = 5;
-	public static final int VSPACING = 5;
+	private static final int HSPACING = 5;
+	private static final int VSPACING = 5;
 	
 	public static final Dimension SINGLE_HSPACE = new Dimension(HSPACING, 0);
 	public static final Dimension DOUBLE_HSPACE = new Dimension(HSPACING * 2, 0);

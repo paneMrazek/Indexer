@@ -11,10 +11,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 public class IndexerMenu extends JMenuBar{
-	
-	private static final long serialVersionUID = 1L;
-	
-	private JMenuItem downloadBatchMenuItem;
+
+    private JMenuItem downloadBatchMenuItem;
     private JMenuItem logoutMenuItem;
     private JMenuItem exitMenuItem;
     
@@ -49,11 +47,11 @@ public class IndexerMenu extends JMenuBar{
 	public void setHasBatch(Boolean hasBatch){
 		downloadBatchMenuItem.setEnabled(!hasBatch);
 	}
-	
+
 	private ActionListener actionListener = new ActionListener() {
-    	
+
 	    public void actionPerformed(ActionEvent e) {
-	    	
+
 	        if(e.getSource() == downloadBatchMenuItem){
 	        	for(MenuListener listener : listeners){
 	        		listener.requestBatch();
@@ -70,7 +68,7 @@ public class IndexerMenu extends JMenuBar{
 	        }
 	    }
     };
-    
+
     public interface MenuListener{
     	
     	public void requestBatch();

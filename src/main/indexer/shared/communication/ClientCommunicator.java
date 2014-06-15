@@ -226,7 +226,7 @@ public class ClientCommunicator{
 	private byte[] extract(InputStream inputStream) throws IOException {	
 		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();				
 		byte[] result = new byte[1024];
-		int read = 0;
+		int read;
 		while ((read = inputStream.read(result, 0, result.length)) != -1) {
 			byteStream.write(result, 0, read);
 		}		

@@ -20,10 +20,6 @@ public class Controller implements IController {
 
 	private IView _view;
 	
-	public Controller() {
-		return;
-	}
-	
 	public IView getView() {
 		return _view;
 	}
@@ -44,7 +40,7 @@ public class Controller implements IController {
 
 	@Override
 	public void operationSelected() {
-		ArrayList<String> paramNames = new ArrayList<String>();
+		ArrayList<String> paramNames = new ArrayList<>();
 		paramNames.add("User");
 		paramNames.add("Password");
 		

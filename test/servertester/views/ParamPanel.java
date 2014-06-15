@@ -21,7 +21,7 @@ public class ParamPanel extends BasePanel {
 	
 	public void setParameterNames(String[] value) {
 		_paramNames = value;
-		_textFields = new ArrayList<JTextField>();
+		_textFields = new ArrayList<>();
 		
 		this.removeAll();
 		
@@ -74,10 +74,10 @@ public class ParamPanel extends BasePanel {
 	}
 	
 	public String[] getParameterValues() {
-		List<String> result = new ArrayList<String>();	
+		List<String> result = new ArrayList<>();
 		for (int i = 0; i < _textFields.size(); ++i) {
 			result.add(_textFields.get(i).getText());
-		}	
+		}
 		return result.toArray(new String[result.size()]);
 	}
 	

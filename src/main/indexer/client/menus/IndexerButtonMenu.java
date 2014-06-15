@@ -11,9 +11,7 @@ import javax.swing.JPanel;
 
 public class IndexerButtonMenu extends JPanel{
 
-	private static final long serialVersionUID = 1L;
-	
-	private JButton zoomInButton;
+    private JButton zoomInButton;
     private JButton zoomOutButton;
     private JButton invertImageButton;
     private JButton toggleHighlightsButton;

@@ -9,8 +9,8 @@ import org.junit.Test;
 
 public class BatchDAOTest{
 	
-	Database database;
-	Batch batch;
+	private Database database;
+	private Batch batch;
 	
 	@Before
 	public void init(){

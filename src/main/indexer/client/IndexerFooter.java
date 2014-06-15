@@ -14,12 +14,7 @@ import main.indexer.shared.models.Batch;
 
 public class IndexerFooter extends JSplitPane{
 
-	private static final long serialVersionUID = 1L;
-	
-	private JTabbedPane leftTabbedPane;
-	private JTabbedPane rightTabbedPane;
-	
-	private TableEntryPanel tableEntryPanel;
+    private TableEntryPanel tableEntryPanel;
 	private FormEntryPanel formEntryPanel;
 	private FieldHelpPanel fieldHelpPanel;
 	private ImageNavPanel imageNavPanel;
@@ -30,20 +25,20 @@ public class IndexerFooter extends JSplitPane{
 	}
 
 	private void createComponents(IndexerDataModel model, QualityChecker checker){
-				
-		leftTabbedPane = new JTabbedPane();
+
+        JTabbedPane leftTabbedPane = new JTabbedPane();
 		tableEntryPanel = new TableEntryPanel(model, checker);
 		JScrollPane tableScrollPane = new JScrollPane(tableEntryPanel);
 		formEntryPanel = new FormEntryPanel(model, checker);
-		leftTabbedPane.addTab("Table Entry",tableScrollPane);
-		leftTabbedPane.addTab("Form Entry",formEntryPanel);
-		
-		rightTabbedPane = new JTabbedPane();
+		leftTabbedPane.addTab("Table Entry", tableScrollPane);
+		leftTabbedPane.addTab("Form Entry", formEntryPanel);
+
+        JTabbedPane rightTabbedPane = new JTabbedPane();
 		fieldHelpPanel = new FieldHelpPanel(model);
 		JScrollPane helpScrollPane = new JScrollPane(fieldHelpPanel);
 		imageNavPanel = new ImageNavPanel(model);
-		rightTabbedPane.addTab("Field Help",helpScrollPane);
-		rightTabbedPane.addTab("Image Navigation",imageNavPanel);
+		rightTabbedPane.addTab("Field Help", helpScrollPane);
+		rightTabbedPane.addTab("Image Navigation", imageNavPanel);
 		
 		this.setLeftComponent(leftTabbedPane);
 		this.setRightComponent(rightTabbedPane);

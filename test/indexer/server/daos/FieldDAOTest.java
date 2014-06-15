@@ -9,8 +9,8 @@ import org.junit.Test;
 
 public class FieldDAOTest{
 	
-	Database database;
-	Field field;
+	private Database database;
+	private Field field;
 	
 	@Before
 	public void init(){

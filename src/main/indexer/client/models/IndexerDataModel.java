@@ -33,7 +33,7 @@ public class IndexerDataModel{
 	
 	public void updateData(String[][] recordValues,QualityChecker checker, List<Field> fields){
 		for(int j = 0; j < fields.size(); j++){
-            checker.fieldchange(fields.get(j).getKnownData());
+            checker.fieldChange(fields.get(j).getKnownData());
 			for(int i = 0; i < recordValues.length; i++){
                 if(recordValues[i] != null && j < recordValues[i].length)
 				    dataChange(i,j,recordValues[i][j]);

@@ -44,8 +44,6 @@ public class FieldHelpPanel extends JEditorPane implements IndexerDataListener{
 	}
 
 	@Override
-	public void dataChange(int row, int col, String data){
-		return;
-	}
+	public void dataChange(int row, int col, String data){}
 	
 }

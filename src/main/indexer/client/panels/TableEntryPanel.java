@@ -164,7 +164,7 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener, Qual
 	@Override
 	public void cellSelect(int row, int col){
 		table.changeSelection(row,col+1,false,false);
-        checker.fieldchange(this.fields.get(col).getKnownData());
+        checker.fieldChange(this.fields.get(col).getKnownData());
 	}
 
 	@Override
