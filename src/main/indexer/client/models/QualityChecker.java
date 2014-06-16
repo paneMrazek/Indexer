@@ -57,12 +57,8 @@ public class QualityChecker{
         trie = tries.get(knownData);
         inputWord = inputWord.toLowerCase();
         Set<String> possibilities = getAllEditDistanceWords(inputWord);
+        possibilities.addAll(getAllEditDistanceWords(possibilities));
         Set<String> similar = getAllValidWords(possibilities);
-
-        if(similar.size() == 0){
-            possibilities = getAllEditDistanceWords(possibilities);
-            similar = getAllValidWords(possibilities);
-        }
         List<String> ret = new ArrayList<>();
         ret.addAll(similar);
         for(SeeSuggestionsListener listener : suggestionsListeners){
@@ -76,7 +72,7 @@ public class QualityChecker{
         List<String> ret = new ArrayList<>();
         Set<String> possibilities = getAllEditDistanceWords(inputWord);
         Set<String> similar = getAllValidWords(possibilities);
-        ret.addAll(possibilities);
+        ret.addAll(similar);
         possibilities = getAllEditDistanceWords(possibilities);
         similar = getAllValidWords(possibilities);
         ret.addAll(similar);
