@@ -7,7 +7,7 @@ public class IndexerClient{
 		String hostname = args[0];
 		int port = Integer.parseInt(args[1]);
 		ClientCommunicator.getInstance().initilize(hostname,port);
-		IndexerGUI gui = new IndexerGUI("Indexer");
+		IndexerGUI gui = new IndexerGUI();
 		gui.start();
 	}
 }

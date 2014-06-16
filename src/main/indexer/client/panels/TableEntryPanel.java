@@ -1,6 +1,8 @@
 package main.indexer.client.panels;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -58,6 +60,7 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener, Qual
 		table.setModel(tableModel);
 		
 		table.setCellSelectionEnabled(true);
+        table.addMouseListener(mouseAdapter);
 		table.getSelectionModel().addListSelectionListener(selectionListener);
 		table.getColumnModel().getSelectionModel().addListSelectionListener(selectionListener);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -122,11 +125,8 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener, Qual
 
             if (invalid[row][column]) {
                 c.setBackground(new Color(0xff0000));
-                c.addMouseListener(mouseAdapter);
             }else {
                 c.setBackground(Color.WHITE);
-                if(c.getMouseListeners().length > 0)
-                    c.removeMouseListener(mouseAdapter);
             }
 
             return c;
@@ -145,31 +145,33 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener, Qual
 
     private MouseAdapter mouseAdapter = new MouseAdapter(){
         public void mouseClicked (MouseEvent e) {
-            if(e.getModifiers() == MouseEvent.BUTTON3_MASK){
+            final int row = table.rowAtPoint(e.getPoint());
+            final int col = table.columnAtPoint(e.getPoint());
+            if(e.getModifiers() == MouseEvent.BUTTON3_MASK && invalid[row][col]){
+                final String knownData = fields.get(col-1).getKnownData();
                 JPopupMenu popup = new JPopupMenu();
                 JMenuItem menuItem = new JMenuItem("See Suggestions");
+                menuItem.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        checker.findSuggestions((String) rowData[row][col], knownData, row, col-1);
+                    }
+                });
                 popup.add(menuItem);
                 popup.show(e.getComponent(),e.getX(), e.getY());
             }
         }
     };
 
-    private MouseAdapter menuMouseAdapter = new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            super.mouseClicked(e);
-        }
-    };
-
 	@Override
 	public void cellSelect(int row, int col){
 		table.changeSelection(row,col+1,false,false);
-        checker.fieldChange(this.fields.get(col).getKnownData());
 	}
 
 	@Override
 	public void dataChange(int row, int col, String data){
 		rowData[row][col+1] = data;
+        checker.fieldChange(this.fields.get(col).getKnownData());
         checker.isValidEntry(row, col, data);
 	}
 
