@@ -128,8 +128,8 @@ public class QualityChecker{
     private List<String> getAlterationWords(String word){
         List<String> alterations = new ArrayList<>();
         for(int i = 0; i < word.length(); i++){
-            for(int j = 0; j < 26; j++){
-                char c = (char) ('a' + j);
+            for(int j = 0; j < 27; j++){
+                char c = j == 26 ? ' ' : (char) ('a' + j);
                 String search = word.substring(0,i) + c + word.substring(i+1,word.length());
                 alterations.add(search);
             }
@@ -140,8 +140,8 @@ public class QualityChecker{
     private List<String> getInsertionWords(String word){
         List<String> insertions = new ArrayList<>();
         for(int i = 0; i < word.length() + 1; i++){
-            for(int j = 0; j < 26; j++){
-                char c = (char) ('a' + j);
+            for(int j = 0; j < 27; j++){
+                char c = j == 26 ? ' ' : (char) ('a' + j);
                 String search = word.substring(0,i) + c + word.substring(i,word.length());
                 insertions.add(search);
             }
@@ -174,18 +174,19 @@ public class QualityChecker{
 	
 	private class Node{
 		boolean valid = false;
-		Node[] children = new Node[26];
+		Node[] children = new Node[27];
 
 		public void add(String word) {
 			char c = word.charAt(0);
-			if(c-'a' < 0 || c-'a' > children.length)
+            int pos = c == ' ' ? 26 : c - 'a';
+			if(pos < 0 || pos > children.length)
 				return;
-            if(children[c-'a'] == null)
-                children[c-'a'] = new Node();
+            if(children[pos] == null)
+                children[pos] = new Node();
 			if(word.length() == 1){
-                children[c-'a'].valid = true;
+                children[pos].valid = true;
 			}else{
-				children[c-'a'].add(word.substring(1));
+				children[pos].add(word.substring(1));
 			}
 		}
 
@@ -193,15 +194,16 @@ public class QualityChecker{
             if (word.length() == 0)
                 return true;
             char c = word.charAt(0);
-            if (c - 'a' < 0 || c - 'a' > children.length)
+            int pos = c == ' ' ? 26 : c - 'a';
+            if (pos < 0 || pos > children.length)
                 return false;
-            if (word.length() == 1 && children[c - 'a'] != null) {
-                return children[c - 'a'].valid;
+            if (word.length() == 1 && children[pos] != null) {
+                return children[pos].valid;
             } else {
-                if (children[c - 'a'] == null) {
+                if (children[pos] == null) {
                     return false;
                 } else {
-                    return children[c - 'a'].contains(word.substring(1));
+                    return children[pos].contains(word.substring(1));
                 }
             }
         }
