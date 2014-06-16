@@ -58,7 +58,6 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener, Qual
 		
 		table = new JTable(rowData,columnNames);
 		table.setModel(tableModel);
-		
 		table.setCellSelectionEnabled(true);
         table.addMouseListener(mouseAdapter);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -120,13 +119,17 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener, Qual
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             if(invalid == null)
                 return c;
-
             if(invalid[row][column]){
-                c.setBackground(new Color(0xff0000));
+                if(isSelected)
+                    c.setBackground(new Color(255,57,50,128));
+                else
+                    c.setBackground(new Color(0xFF0000));
             }else{
-                c.setBackground(Color.WHITE);
+                if(isSelected)
+                    c.setBackground(new Color(173,216,230,225));
+                else
+                    c.setBackground(new Color(0xFFFFFF));
             }
-
             return c;
         }
     };
