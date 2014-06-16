@@ -61,8 +61,6 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener, Qual
 		
 		table.setCellSelectionEnabled(true);
         table.addMouseListener(mouseAdapter);
-		table.getSelectionModel().addListSelectionListener(selectionListener);
-		table.getColumnModel().getSelectionModel().addListSelectionListener(selectionListener);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 
@@ -120,34 +118,24 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener, Qual
     private DefaultTableCellRenderer renderer = new DefaultTableCellRenderer(){
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            if (invalid == null)
+            if(invalid == null)
                 return c;
 
-            if (invalid[row][column]) {
+            if(invalid[row][column]){
                 c.setBackground(new Color(0xff0000));
-            }else {
+            }else{
                 c.setBackground(Color.WHITE);
             }
 
             return c;
         }
     };
-	
-	private ListSelectionListener selectionListener = new ListSelectionListener(){
-
-		@Override
-		public void valueChanged(ListSelectionEvent e){
-			if(!e.getValueIsAdjusting())
-				model.cellSelect(table.getSelectedRow(),table.getSelectedColumn()-1);
-		}
-		
-	};
 
     private MouseAdapter mouseAdapter = new MouseAdapter(){
         public void mouseClicked (MouseEvent e) {
             final int row = table.rowAtPoint(e.getPoint());
             final int col = table.columnAtPoint(e.getPoint());
-            if(e.getModifiers() == MouseEvent.BUTTON3_MASK && invalid[row][col]){
+            if(e.getButton() == MouseEvent.BUTTON3 && invalid[row][col]){
                 final String knownData = fields.get(col-1).getKnownData();
                 JPopupMenu popup = new JPopupMenu();
                 JMenuItem menuItem = new JMenuItem("See Suggestions");
@@ -159,6 +147,8 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener, Qual
                 });
                 popup.add(menuItem);
                 popup.show(e.getComponent(),e.getX(), e.getY());
+            }else if(e.getButton() == MouseEvent.BUTTON1){
+                model.cellSelect(row,col-1);
             }
         }
     };

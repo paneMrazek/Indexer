@@ -25,65 +25,57 @@ import main.indexer.shared.models.Field;
 public class ImageViewer extends JPanel implements IndexerDataListener{
 
     private Batch batch;
-	
+
 	private Image image;
 	private Image displayImage;
 	private Double scale;
 	private Rectangle highlight;
 	private boolean inverted;
 	private boolean highlightOn;
-	@SuppressWarnings("unused")
-	private int x;
-	@SuppressWarnings("unused")
-	private int y;
-	
-	
+	private int xDragStart;
+	private int yDragStart;
+    private int photoX;
+    private int photoY;
+
+
 	@SuppressWarnings("unused")
 	private IndexerDataModel model;
-	
+
 	public Batch getBatch(){
 		return batch;
 	}
-	
+
 	public double getScale(){
 		return scale;
 	}
-	
+
 	public void setScale(double scale){
 		this.scale = scale;
 	}
-	
+
 	public boolean isInverted(){
 		return inverted;
 	}
-	
+
 	public void setInverted(boolean inverted){
 		this.inverted = inverted;
 	}
-	
+
 	public boolean isHighlightOn(){
 		return highlightOn;
 	}
-	
+
 	public void setHighlightOn(boolean highlightOn){
 		this.highlightOn = highlightOn;
 	}
-	
+
 	public ImageViewer(IndexerDataModel model){
 		super(new FlowLayout(FlowLayout.CENTER));
 		this.scale = 1.0;
 		this.model = model;
 		highlight = new Rectangle();
 		model.addListener(this);
-        this.addMouseWheelListener(new MouseWheelListener() {
-            @Override
-            public void mouseWheelMoved(MouseWheelEvent e) {
-                if (e.getWheelRotation() > 0)
-                    zoomIn();
-                else
-                    zoomOut();
-            }
-        });
+        this.addMouseWheelListener(mouseListener);
 		this.setLayout(null);
 		this.setBackground(new Color(128,128,128));
 	}
@@ -96,45 +88,50 @@ public class ImageViewer extends JPanel implements IndexerDataListener{
 			redraw();
 			paintComponent(getGraphics());
 			this.addMouseListener(mouseListener);
+            this.addMouseMotionListener(mouseListener);
 		}catch(IOException e){
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void removeBatch(){
 		this.removeAll();
 		displayImage = null;
 		this.paintAll(this.getGraphics());
 	}
-	
+
 	public void zoomIn(){
 		scale += 0.1;
 		redraw();
 	}
-	
+
 	public void zoomOut(){
 		scale -= 0.1;
 		if(scale < 0.1)
 			scale = 0.1;
 		redraw();
 	}
-	
+
 	public void invertImage(){
 		inverted = !inverted;
 		redraw();
 	}
-	
+
 	public void toggleHighlight(){
 		highlightOn = !highlightOn;
 		redraw();
 	}
-	
+
 	private void redraw(){
 		if(batch == null)
 			return;
 		int newImageWidth = (int) (image.getWidth(null) * scale);
 		int newImageHeight = (int) (image.getHeight(null) * scale);
 		displayImage = new BufferedImage(newImageWidth , newImageHeight, ((BufferedImage) image).getType());
+        /*if(photoX == 0){
+            photoX = this.getWidth()/2 - displayImage.getWidth(null)/2;
+            photoY = this.getHeight()/2 - displayImage.getHeight(null)/2;
+        }*/
 		Graphics2D g = ((BufferedImage) displayImage).createGraphics();
 		g.drawImage(image, 0, 0, newImageWidth , newImageHeight , null);
 		g.dispose();
@@ -144,15 +141,16 @@ public class ImageViewer extends JPanel implements IndexerDataListener{
 		}
 		paintComponent(getGraphics());
 	}
-	
+
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if(displayImage != null){
-			int x = this.getWidth()/2-displayImage.getWidth(null)/2;
-			int y = this.getHeight()/2-displayImage.getHeight(null)/2;
-			g.drawImage(displayImage, x, y, null);
+			g.drawImage(displayImage, photoX + (this.getWidth()/2 - displayImage.getWidth(null)/2),
+                    photoY + (this.getHeight()/2 - displayImage.getHeight(null)/2), null);
 			g.setColor(new Color(173,216,230,128));
+            int x = photoX + (this.getWidth()/2 - displayImage.getWidth(null)/2);
+            int y = photoY + (this.getHeight()/2 - displayImage.getHeight(null)/2);
 			if(highlightOn){
 				g.fillRect((int) (x+highlight.getX()*scale),(int) (y+highlight.getY()*scale),
 						(int) (highlight.getWidth()*scale),(int) (highlight.getHeight()*scale));
@@ -163,15 +161,15 @@ public class ImageViewer extends JPanel implements IndexerDataListener{
     private MouseAdapter mouseListener = new MouseAdapter(){
 		@Override
 		public void mouseClicked(MouseEvent e){
-			int x = e.getX() - (getWidth()/2-displayImage.getWidth(null)/2);
-			int y = e.getY() - (getHeight()/2-displayImage.getHeight(null)/2);
+            int x = (e.getX() - (getWidth()/2-displayImage.getWidth(null)/2))-photoX;
+			int y = (e.getY() - (getHeight()/2-displayImage.getHeight(null)/2))-photoY;
 			int row = (int) ((y - (batch.getFirstYCoordinate()*scale))/(batch.getRecordHeight()*scale));
-			
+
 			int fieldLength = 0;
 			for(Field field : batch.getFields()){
 				fieldLength += (field.getWidth()*scale);
 			}
-			
+
 			int col = batch.getFields().size() - 1;
 			while(col >= 0){
 				int fieldWidth = (int) (batch.getFields().get(col).getWidth()*scale);
@@ -184,6 +182,33 @@ public class ImageViewer extends JPanel implements IndexerDataListener{
 			}
 			model.cellSelect(row,col);
 		}
+
+        @Override
+        public void mouseDragged(MouseEvent e){
+            if(xDragStart != 0) {
+                int deltaX = e.getX() - xDragStart;
+                int deltaY = e.getY() - yDragStart;
+                photoX += deltaX;
+                photoY += deltaY;
+                repaint();
+            }
+            xDragStart = e.getX();
+            yDragStart = e.getY();
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e){
+            xDragStart = 0;
+            yDragStart = 0;
+        }
+
+        @Override
+        public void mouseWheelMoved(MouseWheelEvent e) {
+            if (e.getWheelRotation() > 0)
+                zoomIn();
+            else
+                zoomOut();
+        }
 	};
 
 	//y = firstY + (row*height);
@@ -199,7 +224,7 @@ public class ImageViewer extends JPanel implements IndexerDataListener{
 
 	@Override
 	public void dataChange(int row, int col, String data){}
-	
+
 	private class Rectangle{
 		private int x;
 		private int y;
@@ -229,9 +254,9 @@ public class ImageViewer extends JPanel implements IndexerDataListener{
 		public void setHeight(int height){
 			this.height = height;
 		}
-		
-		
+
+
 	}
 
-	
+
 }

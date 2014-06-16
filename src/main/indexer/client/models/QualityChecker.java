@@ -70,7 +70,22 @@ public class QualityChecker{
         }
     }
 
-    public Set<String> getAllEditDistanceWords(Set<String> words){
+    public List<String> findSuggestions(String inputWord, String knownData){
+        trie = tries.get(knownData);
+        inputWord = inputWord.toLowerCase();
+        Set<String> possibilities = getAllEditDistanceWords(inputWord);
+        Set<String> similar = getAllValidWords(possibilities);
+
+        if(similar.size() == 0){
+            possibilities = getAllEditDistanceWords(possibilities);
+            similar = getAllValidWords(possibilities);
+        }
+        List<String> ret = new ArrayList<>();
+        ret.addAll(similar);
+        return ret;
+    }
+
+    private Set<String> getAllEditDistanceWords(Set<String> words){
         Set<String> possibilities = new HashSet<>();
         for(String inputWord : words){
             possibilities.addAll(getAllEditDistanceWords(inputWord));
@@ -78,7 +93,7 @@ public class QualityChecker{
         return possibilities;
     }
 
-    public Set<String> getAllEditDistanceWords(String inputWord){
+    private Set<String> getAllEditDistanceWords(String inputWord){
         Set<String> possibilities = new HashSet<>();
         possibilities.addAll(getDeletionWords(inputWord));
         possibilities.addAll(getTranspositionWords(inputWord));
@@ -87,7 +102,7 @@ public class QualityChecker{
         return possibilities;
     }
 
-    public List<String> getDeletionWords(String word){
+    private List<String> getDeletionWords(String word){
         List<String> deletions = new ArrayList<>();
         for(int i = 0; i < word.length(); i++){
             if(word.length() == 1)
@@ -98,7 +113,7 @@ public class QualityChecker{
         return deletions;
     }
 
-    public List<String> getTranspositionWords(String word){
+    private List<String> getTranspositionWords(String word){
         List<String> transpositions = new ArrayList<>();
         for(int i = 0; i < word.length()-1; i++){
             String search = word.substring(0,i) + word.charAt(i+1) +
@@ -110,7 +125,7 @@ public class QualityChecker{
         return transpositions;
     }
 
-    public List<String> getAlterationWords(String word){
+    private List<String> getAlterationWords(String word){
         List<String> alterations = new ArrayList<>();
         for(int i = 0; i < word.length(); i++){
             for(int j = 0; j < 26; j++){
@@ -122,7 +137,7 @@ public class QualityChecker{
         return alterations;
     }
 
-    public List<String> getInsertionWords(String word){
+    private List<String> getInsertionWords(String word){
         List<String> insertions = new ArrayList<>();
         for(int i = 0; i < word.length() + 1; i++){
             for(int j = 0; j < 26; j++){
@@ -134,7 +149,7 @@ public class QualityChecker{
         return insertions;
     }
 
-    public Set<String> getAllValidWords(Set<String> possibilities){
+    private Set<String> getAllValidWords(Set<String> possibilities){
         Set<String> similar = new TreeSet<>();
         for(String word : possibilities){
             if(trie.contains(word))
@@ -179,7 +194,7 @@ public class QualityChecker{
                 return true;
             char c = word.charAt(0);
             if (c - 'a' < 0 || c - 'a' > children.length)
-                return true;
+                return false;
             if (word.length() == 1 && children[c - 'a'] != null) {
                 return children[c - 'a'].valid;
             } else {
