@@ -215,8 +215,10 @@ public class Facade{
 				record.setOrderId(orderId);
 				fieldCount = 0;
 				for(String value : values){
-                    if(value != null && !value.equals(""))
+                    if(value != null)
 					    record.getValues().put(fields.get(fieldCount),value);
+                    else
+                        record.getValues().put(fields.get(fieldCount),"");
 					fieldCount++;
 				}
 				database.getRecordDAO().createRecord(record);
