@@ -74,6 +74,14 @@ public class ClientUnitTests {
         Assert.assertTrue(suggestions.get(1).equals("m"));
     }
 
+    @Test
+    public void checkSpaceInput(){
+        List<String> suggestions = checker.findSuggestions(" ",KNOWN_GENDER_DATA);
+        Assert.assertEquals(2,suggestions.size());
+        Assert.assertTrue(suggestions.get(0).equals("f"));
+        Assert.assertTrue(suggestions.get(1).equals("m"));
+    }
+
 	public static void main(String[] args) {
 
 		String[] testClasses = new String[] {

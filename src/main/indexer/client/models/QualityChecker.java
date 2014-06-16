@@ -71,10 +71,8 @@ public class QualityChecker{
         inputWord = inputWord.toLowerCase();
         List<String> ret = new ArrayList<>();
         Set<String> possibilities = getAllEditDistanceWords(inputWord);
+        possibilities.addAll(getAllEditDistanceWords(possibilities));
         Set<String> similar = getAllValidWords(possibilities);
-        ret.addAll(similar);
-        possibilities = getAllEditDistanceWords(possibilities);
-        similar = getAllValidWords(possibilities);
         ret.addAll(similar);
         return ret;
     }

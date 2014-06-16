@@ -60,6 +60,8 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener, Qual
 		table.setModel(tableModel);
 		table.setCellSelectionEnabled(true);
         table.addMouseListener(mouseAdapter);
+        table.getSelectionModel().addListSelectionListener(selectionListener);
+        table.getColumnModel().getSelectionModel().addListSelectionListener(selectionListener);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 
@@ -154,6 +156,16 @@ public class TableEntryPanel extends JPanel implements IndexerDataListener, Qual
                 model.cellSelect(row,col-1);
             }
         }
+    };
+
+    private ListSelectionListener selectionListener = new ListSelectionListener(){
+        @Override
+        public void valueChanged(ListSelectionEvent e){
+            if(!e.getValueIsAdjusting()) {
+                model.cellSelect(table.getSelectedRow(), table.getSelectedColumn() - 1);
+            }
+        }
+
     };
 
 	@Override
