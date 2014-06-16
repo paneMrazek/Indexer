@@ -8,7 +8,6 @@ import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.io.IOException;
@@ -37,8 +36,6 @@ public class ImageViewer extends JPanel implements IndexerDataListener{
     private int photoX;
     private int photoY;
 
-
-	@SuppressWarnings("unused")
 	private IndexerDataModel model;
 
 	public Batch getBatch(){
@@ -128,10 +125,6 @@ public class ImageViewer extends JPanel implements IndexerDataListener{
 		int newImageWidth = (int) (image.getWidth(null) * scale);
 		int newImageHeight = (int) (image.getHeight(null) * scale);
 		displayImage = new BufferedImage(newImageWidth , newImageHeight, ((BufferedImage) image).getType());
-        /*if(photoX == 0){
-            photoX = this.getWidth()/2 - displayImage.getWidth(null)/2;
-            photoY = this.getHeight()/2 - displayImage.getHeight(null)/2;
-        }*/
 		Graphics2D g = ((BufferedImage) displayImage).createGraphics();
 		g.drawImage(image, 0, 0, newImageWidth , newImageHeight , null);
 		g.dispose();
@@ -161,6 +154,7 @@ public class ImageViewer extends JPanel implements IndexerDataListener{
     private MouseAdapter mouseListener = new MouseAdapter(){
 		@Override
 		public void mouseClicked(MouseEvent e){
+
             int x = (e.getX() - (getWidth()/2-displayImage.getWidth(null)/2))-photoX;
 			int y = (e.getY() - (getHeight()/2-displayImage.getHeight(null)/2))-photoY;
 			int row = (int) ((y - (batch.getFirstYCoordinate()*scale))/(batch.getRecordHeight()*scale));
@@ -180,7 +174,8 @@ public class ImageViewer extends JPanel implements IndexerDataListener{
 					break;
 				}
 			}
-			model.cellSelect(row,col);
+            if(row < batch.getRecordNum())
+			    model.cellSelect(row,col);
 		}
 
         @Override
